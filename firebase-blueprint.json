@@ -1,0 +1,110 @@
+{
+  "entities": {
+    "PhotographerProfile": {
+      "title": "PhotographerProfile",
+      "description": "Details of photographers on the platform",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "city": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 200 },
+        "phone": { "type": "string", "maxLength": 32 },
+        "email": { "type": "string", "maxLength": 128 },
+        "bio": { "type": "string", "maxLength": 1000 },
+        "specialties": { "type": "string", "maxLength": 1000 },
+        "experienceYears": { "type": "number" },
+        "avatarColor": { "type": "string", "maxLength": 64 },
+        "avatarUrl": { "type": "string", "maxLength": 500 },
+        "loginEmail": { "type": "string", "maxLength": 128 },
+        "loginPassword": { "type": "string", "maxLength": 128 }
+      },
+      "required": ["id", "name", "city", "phone", "email"]
+    },
+    "ShootBooking": {
+      "title": "ShootBooking",
+      "description": "Shoot reservation details and client briefs",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "photographerId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "clientName": { "type": "string", "maxLength": 128 },
+        "clientPhone": { "type": "string", "maxLength": 32 },
+        "clientEmail": { "type": "string", "maxLength": 128 },
+        "cityVenue": { "type": "string", "maxLength": 256 },
+        "shootType": { "type": "string", "maxLength": 128 },
+        "moodBoardUrl": { "type": "string", "maxLength": 500 },
+        "shootBrief": { "type": "string", "maxLength": 2000 },
+        "timingStart": { "type": "string", "maxLength": 32 },
+        "timingEnd": { "type": "string", "maxLength": 32 },
+        "durationHours": { "type": "string", "maxLength": 64 },
+        "approxIdea": { "type": "string", "maxLength": 1000 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "source": { "type": "string", "enum": ["client_booking", "photographer_direct"] },
+        "createdAt": { "type": "string", "maxLength": 64 },
+        "status": { "type": "string", "enum": ["confirmed", "in_progress", "completed", "cancelled"] }
+      },
+      "required": ["id", "photographerId", "date", "clientName", "status"]
+    },
+    "AvailabilityRecord": {
+      "title": "AvailabilityRecord",
+      "description": "Availability matrix for a photographer",
+      "type": "object",
+      "properties": {
+        "photographerId": { "type": "string", "maxLength": 128 },
+        "date": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["available", "booked"] }
+      },
+      "required": ["photographerId", "date", "status"]
+    },
+    "NotificationItem": {
+      "title": "NotificationItem",
+      "description": "Alerts for new bookings and calendar changes",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "maxLength": 128 },
+        "photographerId": { "type": "string", "maxLength": 128 },
+        "title": { "type": "string", "maxLength": 128 },
+        "message": { "type": "string", "maxLength": 500 },
+        "date": { "type": "string", "maxLength": 32 },
+        "read": { "type": "boolean" },
+        "createdAt": { "type": "string", "maxLength": 64 }
+      },
+      "required": ["id", "photographerId", "title", "message", "read"]
+    },
+    "AdminProfile": {
+      "title": "AdminProfile",
+      "description": "Administrator account metadata",
+      "type": "object",
+      "properties": {
+        "email": { "type": "string", "maxLength": 128 },
+        "name": { "type": "string", "maxLength": 128 },
+        "role": { "type": "string", "enum": ["admin"] }
+      },
+      "required": ["email", "role"]
+    }
+  },
+  "firestore": {
+    "/photographers/{photographerId}": {
+      "schema": "PhotographerProfile",
+      "description": "Public and studio profiles for photographers"
+    },
+    "/shoots/{shootId}": {
+      "schema": "ShootBooking",
+      "description": "Shoot bookings and client appointments"
+    },
+    "/availability/{availabilityId}": {
+      "schema": "AvailabilityRecord",
+      "description": "Individual day status records for photographers"
+    },
+    "/notifications/{notificationId}": {
+      "schema": "NotificationItem",
+      "description": "Notification records for photographer and admin alerts"
+    },
+    "/admins/{adminId}": {
+      "schema": "AdminProfile",
+      "description": "Admin users permitted to manage photographer accounts"
+    }
+  }
+}

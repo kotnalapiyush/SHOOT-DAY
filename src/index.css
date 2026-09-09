@@ -1,0 +1,30 @@
+@import "tailwindcss";
+
+/* Date input configuration */
+input[type="date"] {
+  color-scheme: dark;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  opacity: 0;
+  cursor: pointer;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 24s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}

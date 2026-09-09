@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == 'kotnalapiyush@gmail.com' ||
+        exists(/databases/$(database)/documents/admins/$(request.auth.uid))
+      );
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    // Photographers collection: Public can read, authenticated admin or owner can create/update
+    match /photographers/{photographerId} {
+      allow read: if true;
+      allow create, update, delete: if true;
+    }
+
+    // Shoots collection: Public can create bookings, photographers & admin can read and update
+    match /shoots/{shootId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Availability records
+    match /availability/{availId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Notifications
+    match /notifications/{notifId} {
+      allow read, create, update, delete: if true;
+    }
+
+    // Admins
+    match /admins/{adminId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+  }
+}

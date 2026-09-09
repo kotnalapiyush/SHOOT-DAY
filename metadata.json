@@ -1,0 +1,7 @@
+{
+  "name": "Shoot Social BAE",
+  "description": "Shoot Social BAE — Premier photographer availability and event booking platform for commercial campaigns, F&B, hotel interiors, fashion lookbooks, and product shoots.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
+
