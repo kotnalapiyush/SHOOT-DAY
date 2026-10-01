@@ -17,7 +17,10 @@
         "avatarColor": { "type": "string", "maxLength": 64 },
         "avatarUrl": { "type": "string", "maxLength": 500 },
         "loginEmail": { "type": "string", "maxLength": 128 },
-        "loginPassword": { "type": "string", "maxLength": 128 }
+        "loginPassword": { "type": "string", "maxLength": 128 },
+        "status": { "type": "string", "enum": ["active", "on_hold"] },
+        "holdReason": { "type": "string", "maxLength": 500 },
+        "registeredAt": { "type": "string", "maxLength": 64 }
       },
       "required": ["id", "name", "city", "phone", "email"]
     },

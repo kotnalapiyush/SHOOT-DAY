@@ -12,9 +12,11 @@ import {
   Shield,
   Camera,
   ChevronDown,
+  KeyRound,
+  Users,
 } from 'lucide-react';
 import { NotificationItem, PhotographerProfile, AuthSession } from '../types';
-import { SocialBaeLogo } from './SocialBaeLogo';
+import { ShootLobbyLogo } from './ShootLobbyLogo';
 
 interface HeaderProps {
   authSession: AuthSession | null;
@@ -27,7 +29,13 @@ interface HeaderProps {
   onSelectPhotographer: (id: string) => void;
   notifications: NotificationItem[];
   onOpenNotifications: () => void;
-  onOpenCreateProfile: () => void;
+  onOpenCreateProfile?: () => void;
+  onOpenPhotographerSignUp?: () => void;
+  onOpenPhotographersManager?: () => void;
+  onOpenSelfEditProfile?: () => void;
+  onOpenAdminAccounts?: () => void;
+  theme?: 'light' | 'dark';
+  onToggleTheme?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -42,6 +50,10 @@ export const Header: React.FC<HeaderProps> = ({
   notifications,
   onOpenNotifications,
   onOpenCreateProfile,
+  onOpenPhotographerSignUp,
+  onOpenPhotographersManager,
+  onOpenSelfEditProfile,
+  onOpenAdminAccounts,
 }) => {
   const [copied, setCopied] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
@@ -55,7 +67,7 @@ export const Header: React.FC<HeaderProps> = ({
 
   const handleCopyLink = () => {
     const url = new URL(window.location.href);
-    url.searchParams.delete('view'); // Clean public client portal
+    url.searchParams.delete('view');
     navigator.clipboard.writeText(url.toString());
     setCopied(true);
     setTimeout(() => setCopied(false), 2400);
@@ -65,168 +77,145 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       <header
         id="app-main-header"
-        className="sticky top-0 z-30 bg-[#0b1733]/95 backdrop-blur-md text-stone-100 border-b border-[#1d3870] shadow-2xl"
+        className="sticky top-0 z-40 bg-[#F6F3EC]/90 backdrop-blur-md text-[#073B2F] border-b border-[#DCE7D4] shadow-2xs transition-colors duration-200"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-18 gap-4">
-            {/* Logo & Product Name */}
-            <div className="flex items-center gap-3 min-w-0">
-              <SocialBaeLogo size="md" variant="light" showBadge={false} />
-              
-              <div className="hidden lg:block border-l border-[#1d3870] pl-3 py-1">
-                <p className="text-[11px] text-stone-400 leading-tight">
-                  {authSession?.role === 'admin'
-                    ? 'Studio Admin Master Dashboard'
-                    : authSession?.role === 'photographer'
-                    ? 'Partner Photographer Dashboard'
-                    : 'Shoot Social BAE • Photography Productions'}
-                </p>
-                <p className="text-[10px] text-[#d4f770] font-bold tracking-wider">
-                  {authSession?.role === 'admin'
-                    ? 'ADMIN CONTROL SYSTEM'
-                    : authSession?.role === 'photographer'
-                    ? 'PHOTOGRAPHER CALENDAR'
-                    : 'CLIENT BOOKING PORTAL'}
-                </p>
-              </div>
+          <div className="flex items-center justify-between h-14 sm:h-16 gap-3">
+            {/* Logo */}
+            <div className="flex items-center gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => setViewMode('client')}
+                className="cursor-pointer focus:outline-none text-left"
+                title="Shoot Lobby - Home"
+              >
+                <ShootLobbyLogo size="md" theme="green" variant="wordmark" />
+              </button>
+
+              {authSession && (
+                <div className="hidden md:flex flex-col border-l border-[#DCE7D4] pl-2.5 sm:pl-3 py-0.5 shrink-0 select-none">
+                  <div className="flex items-center gap-1.5">
+                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                    <p className="text-[11px] text-[#5C6E5E] leading-tight font-semibold whitespace-nowrap">
+                      {authSession.role === 'admin'
+                        ? 'Admin Panel'
+                        : 'Partner Photographer'}
+                    </p>
+                  </div>
+                  <p className="text-[10px] text-[#073B2F] font-bold tracking-wider uppercase whitespace-nowrap">
+                    {authSession.role === 'admin'
+                      ? 'Master Control'
+                      : 'Dashboard'}
+                  </p>
+                </div>
+              )}
             </div>
 
-            {/* Middle Section depends on authentication */}
-            {authSession?.role === 'admin' ? (
-              // ADMIN CONTROL BAR: Switch between photographers & toggle Client View preview
-              <div className="hidden md:flex items-center gap-3 bg-[#060e22] p-1.5 rounded-2xl border border-[#1d3870]">
-                <div className="flex items-center gap-2 pl-2">
-                  <span className="text-[11px] text-stone-400 font-semibold">Photographer:</span>
-                  <div className="relative">
-                    <select
-                      id="admin-photographer-select"
-                      value={activePhotographer.id}
-                      onChange={(e) => onSelectPhotographer(e.target.value)}
-                      className="bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-1.5 text-xs text-white font-medium focus:outline-none focus:border-[#d4f770] cursor-pointer pr-8 appearance-none"
-                    >
-                      {photographers.map((p) => (
-                        <option key={p.id} value={p.id}>
-                          {p.name} ({p.city})
-                        </option>
-                      ))}
-                    </select>
-                    <ChevronDown className="w-3.5 h-3.5 text-stone-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-                  </div>
-                </div>
-
-                <div className="h-4 w-px bg-[#1d3870]" />
-
-                <div className="flex items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('photographer')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition ${
-                      viewMode === 'photographer'
-                        ? 'bg-[#d4f770] text-[#0a152e]'
-                        : 'text-stone-400 hover:text-white'
-                    }`}
-                  >
-                    Calendar & Shoots
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setViewMode('client')}
-                    className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 ${
-                      viewMode === 'client'
-                        ? 'bg-[#d4f770] text-[#0a152e]'
-                        : 'text-stone-400 hover:text-white'
-                    }`}
-                  >
-                    <Eye className="w-3.5 h-3.5" />
-                    <span>Client View</span>
-                  </button>
-                </div>
-              </div>
-            ) : authSession?.role === 'photographer' ? (
-              // PHOTOGRAPHER LOGGED IN BADGE
-              <div className="hidden sm:flex items-center gap-2 bg-[#060e22] px-3.5 py-2 rounded-2xl border border-[#1d3870]">
-                <div className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-                <span className="text-xs font-semibold text-stone-300">
-                  Logged in as <strong className="text-white">{authSession.name}</strong>
+            {/* Middle Section if logged in as photographer */}
+            {authSession?.role === 'photographer' ? (
+              <div className="hidden lg:flex items-center gap-2.5 bg-white px-3 py-1.5 rounded-2xl border border-[#DCE7D4]">
+                <img
+                  src={activePhotographer.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
+                  alt=""
+                  referrerPolicy="no-referrer"
+                  className="w-6 h-6 rounded-full object-cover border border-[#DCE7D4]"
+                />
+                <span className="text-xs font-semibold text-[#5C6E5E]">
+                  Logged in as <strong className="text-[#073B2F]">{authSession.name}</strong>
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#d4f770]/15 text-[#d4f770] border border-[#d4f770]/30 font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold">
                   {activePhotographer.city}
                 </span>
               </div>
             ) : null}
 
             {/* Right Action Controls */}
-            <div className="flex items-center gap-2 shrink-0">
+            <div className="flex items-center gap-1.5 sm:gap-2 shrink-0">
               {authSession ? (
                 <>
-                  {/* Admin can Add Photographer */}
-                  {authSession.role === 'admin' && (
+                  {viewMode === 'client' && (
                     <button
-                      id="btn-admin-add-photographer"
+                      id="btn-return-to-portal"
                       type="button"
-                      onClick={onOpenCreateProfile}
-                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] transition shadow-sm"
-                      title="Create new photographer profile with portal credentials"
+                      onClick={() => setViewMode('photographer')}
+                      className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition shadow-xs cursor-pointer active:scale-95"
+                      title="Return to Calendar & Dashboard"
                     >
-                      <UserPlus className="w-3.5 h-3.5" />
-                      <span>+ Add Photographer</span>
+                      <CalendarIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                      <span className="hidden sm:inline">Calendar & Dashboard</span>
+                      <span className="sm:hidden">Calendar</span>
                     </button>
                   )}
 
-                  {/* Share Link */}
                   <button
                     id="btn-share-client-calendar"
                     type="button"
                     onClick={() => setShowShareModal(true)}
-                    className="hidden sm:inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-semibold bg-[#060e22] hover:bg-[#112349] text-stone-200 border border-[#1d3870] transition"
-                    title="Share client booking portal"
+                    className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-white hover:bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] transition shadow-2xs cursor-pointer active:scale-95"
+                    title="Share Shoot Lobby"
                   >
-                    <Share2 className="w-3.5 h-3.5 text-[#d4f770]" />
-                    <span className="hidden md:inline">Share Link</span>
+                    <Share2 className="w-3.5 h-3.5 text-[#5C6E5E]" />
+                    <span className="hidden xs:inline">Share</span>
                   </button>
 
-                  {/* Notification Bell */}
                   <button
                     id="btn-open-notifications"
                     type="button"
                     onClick={onOpenNotifications}
-                    className="relative p-2 rounded-xl text-stone-300 hover:text-white bg-[#060e22] hover:bg-[#112349] border border-[#1d3870] transition"
+                    className="relative p-1.5 sm:p-2 rounded-xl text-[#073B2F] hover:text-black bg-white hover:bg-[#F6F3EC] border border-[#DCE7D4] transition shadow-2xs cursor-pointer"
                     aria-label="Booking Notifications"
                   >
                     <Bell className="w-4 h-4" />
                     {unreadCount > 0 && (
                       <span
                         id="unread-notifications-badge"
-                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#d4f770] text-[#0a152e] text-[10px] font-extrabold flex items-center justify-center animate-pulse"
+                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FF6A45] text-white text-[10px] font-extrabold flex items-center justify-center animate-pulse"
                       >
                         {unreadCount}
                       </span>
                     )}
                   </button>
 
-                  {/* Logout Button */}
+                  {/* Always prominent and accessible Logout button */}
                   <button
                     id="btn-user-logout"
                     type="button"
                     onClick={onLogout}
-                    className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-medium bg-[#1c0e14] hover:bg-[#2d1424] text-rose-300 border border-rose-900/40 transition"
-                    title="Sign Out"
+                    className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer active:scale-[0.98] ${
+                      authSession.role === 'admin'
+                        ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-extrabold shadow-xs'
+                        : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
+                    }`}
+                    title={authSession.role === 'admin' ? 'Logout of Admin Panel' : 'Logout of portal'}
                   >
-                    <LogOut className="w-3.5 h-3.5" />
-                    <span className="hidden sm:inline">Logout</span>
+                    <LogOut className="w-3.5 h-3.5 shrink-0 text-rose-600" />
+                    <span>{authSession.role === 'admin' ? 'Logout Admin' : 'Logout'}</span>
                   </button>
                 </>
               ) : (
-                /* Public Visitor: Simple, Elegant Photographer / Admin Login Button */
-                <button
-                  id="btn-open-portal-login"
-                  type="button"
-                  onClick={onOpenLogin}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#0b1733] hover:bg-[#112349] text-[#d4f770] border border-[#d4f770]/40 transition shadow-sm hover:shadow-[#d4f770]/10"
-                >
-                  <Lock className="w-3.5 h-3.5" />
-                  <span>Photographer / Admin Login</span>
-                </button>
+                /* Public Visitor: Photographer Sign Up & Login Buttons */
+                <div className="flex items-center gap-2">
+                  <button
+                    id="btn-photographer-signup-header"
+                    type="button"
+                    onClick={onOpenPhotographerSignUp}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl font-bold text-xs bg-white hover:bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] shadow-2xs transition active:scale-[0.98] cursor-pointer"
+                    title="Register as a photographer to list your calendar"
+                  >
+                    <UserPlus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <span className="hidden sm:inline">Join as Photographer</span>
+                    <span className="sm:hidden">Sign Up</span>
+                  </button>
+                  <button
+                    id="btn-open-portal-login"
+                    type="button"
+                    onClick={onOpenLogin}
+                    className="inline-flex items-center gap-1.5 px-3.5 sm:px-4 py-1.5 sm:py-2 rounded-xl font-bold text-xs sm:text-sm bg-[#FF6A45] hover:bg-[#e55835] text-white shadow-xs transition active:scale-[0.98] cursor-pointer"
+                  >
+                    <Lock className="w-3.5 h-3.5" />
+                    <span>Login</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
@@ -237,19 +226,19 @@ export const Header: React.FC<HeaderProps> = ({
       {showShareModal && (
         <div
           id="share-calendar-modal"
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4"
         >
-          <div className="bg-[#0b1733] border border-[#1d3870] rounded-3xl max-w-lg w-full p-6 text-stone-100 shadow-2xl space-y-4">
+          <div className="bg-white border border-[#DCE7D4] rounded-3xl max-w-lg w-full p-6 text-[#073B2F] shadow-2xl space-y-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-xl bg-[#d4f770]/15 text-[#d4f770] flex items-center justify-center">
+                <div className="w-9 h-9 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center">
                   <Share2 className="w-4 h-4" />
                 </div>
                 <div>
-                  <h3 className="text-base font-bold text-white">
-                    Send Shoot Social BAE to Clients
+                  <h3 className="text-base font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                    Share Shoot Lobby to Clients
                   </h3>
-                  <p className="text-xs text-stone-400">
+                  <p className="text-xs text-[#5C6E5E]">
                     Clients can check dates across photographers and book instantly.
                   </p>
                 </div>
@@ -257,14 +246,14 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setShowShareModal(false)}
-                className="text-stone-400 hover:text-white text-sm px-2 py-1"
+                className="text-[#5C6E5E] hover:text-[#073B2F] text-sm px-2 py-1"
               >
                 ✕
               </button>
             </div>
 
-            <div className="bg-[#060e22] p-4 rounded-2xl border border-[#1d3870]">
-              <label className="text-[11px] uppercase tracking-wider text-stone-400 block mb-1.5 font-semibold">
+            <div className="bg-[#F6F3EC] p-4 rounded-2xl border border-[#DCE7D4]">
+              <label className="text-[11px] uppercase tracking-wider text-[#5C6E5E] block mb-1.5 font-semibold">
                 Client Booking Portal Link
               </label>
               <div className="flex items-center gap-2">
@@ -273,13 +262,13 @@ export const Header: React.FC<HeaderProps> = ({
                   type="text"
                   readOnly
                   value={`${window.location.origin}${window.location.pathname}`}
-                  className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-stone-200 select-all focus:outline-none focus:border-[#d4f770]"
+                  className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs text-[#073B2F] font-mono select-all focus:outline-none focus:border-[#073B2F]"
                 />
                 <button
                   id="btn-copy-shareable-link"
                   type="button"
                   onClick={handleCopyLink}
-                  className="px-4 py-2 rounded-xl bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] text-xs font-bold shrink-0 flex items-center gap-1 transition shadow-sm"
+                  className="px-4 py-2 rounded-xl bg-[#073B2F] hover:bg-[#052920] text-white text-xs font-bold shrink-0 flex items-center gap-1 transition shadow-xs"
                 >
                   {copied ? (
                     <>
@@ -300,7 +289,7 @@ export const Header: React.FC<HeaderProps> = ({
                   setShowShareModal(false);
                   setViewMode('client');
                 }}
-                className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#060e22] hover:bg-[#112349] text-white border border-[#1d3870] flex items-center gap-1.5 transition"
+                className="px-4 py-2.5 rounded-xl text-xs font-bold bg-[#F0FFDA] hover:bg-[#e4fabc] text-[#073B2F] border border-[#DCE7D4] flex items-center gap-1.5 transition"
               >
                 <ExternalLink className="w-3.5 h-3.5" />
                 <span>Open Client Portal</span>
@@ -308,7 +297,7 @@ export const Header: React.FC<HeaderProps> = ({
               <button
                 type="button"
                 onClick={() => setShowShareModal(false)}
-                className="px-4 py-2.5 rounded-xl text-xs font-medium bg-[#112349] hover:bg-[#162f63] text-stone-300 transition"
+                className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-[#F6F3EC] hover:bg-[#ebd5c0]/30 text-[#5C6E5E] transition"
               >
                 Close
               </button>
@@ -319,3 +308,4 @@ export const Header: React.FC<HeaderProps> = ({
     </>
   );
 };
+

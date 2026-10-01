@@ -10,7 +10,9 @@ export type ShootType =
   | 'Fashion Shoot'
   | 'Jewellery Shoot'
   | 'Product Shoot'
-  | 'Other / Custom Requirement';
+  | 'Other / Custom'
+  | 'Other / Custom Requirement'
+  | (string & {});
 
 export interface PhotographerProfile {
   id: string;
@@ -24,9 +26,15 @@ export interface PhotographerProfile {
   experienceYears: number;
   avatarColor: string;
   avatarUrl?: string;
-  portfolioSamples?: string[];
+  // Category showcase: map from category name -> exactly 6 photo URLs
+  categoryGalleries?: Record<string, string[]>;
+  portfolioSamples?: string[]; // Fallback sample shoot photos
   loginEmail?: string;
   loginPassword?: string;
+  status?: 'active' | 'on_hold'; // 'active' (default) or 'on_hold' (suspended/paused)
+  holdReason?: string;
+  registeredAt?: string;
+  portfolioUrl?: string;
 }
 
 export type UserRole = 'public_client' | 'photographer' | 'admin';
@@ -72,4 +80,5 @@ export interface NotificationItem {
   shootType?: string;
   read: boolean;
   createdAt: string;
+  type?: 'booking' | 'photographer_registration';
 }

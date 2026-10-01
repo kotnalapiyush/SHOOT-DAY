@@ -1,14 +1,15 @@
 import { PhotographerProfile, ShootBooking, NotificationItem, DayStatus } from '../types';
 
-export const APP_CURRENT_YEAR = 2026;
-export const APP_CURRENT_MONTH = 8; // September (0-indexed: 8 is September)
+const _seedNow = new Date();
+export const APP_CURRENT_YEAR = _seedNow.getFullYear();
+export const APP_CURRENT_MONTH = _seedNow.getMonth();
 
 const STORAGE_KEYS = {
-  PHOTOGRAPHERS: 'shoot_socialbae_photographers_v9',
-  AVAILABILITY: 'shoot_socialbae_availability_v9',
-  SHOOTS: 'shoot_socialbae_shoots_v9',
-  NOTIFICATIONS: 'shoot_socialbae_notifications_v9',
-  ACTIVE_PHOTOGRAPHER: 'shoot_socialbae_active_id_v9',
+  PHOTOGRAPHERS: 'shoot_socialbae_photographers_v10',
+  AVAILABILITY: 'shoot_socialbae_availability_v10',
+  SHOOTS: 'shoot_socialbae_shoots_v10',
+  NOTIFICATIONS: 'shoot_socialbae_notifications_v10',
+  ACTIVE_PHOTOGRAPHER: 'shoot_socialbae_active_id_v10',
 };
 
 export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
@@ -26,10 +27,6 @@ export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
     experienceYears: 10,
     avatarColor: 'from-amber-600 to-amber-700',
     avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
-    portfolioSamples: [
-      'https://lh3.googleusercontent.com/d/1JVv3-7I96sXiGHj1m1urYCjOOSjR-7qM=w800',
-      'https://lh3.googleusercontent.com/d/1xv5YD4WUN7q87V3LgzU6Wh5Hwi_krNHY=w800',
-    ],
   },
   {
     id: 'photo-2',
@@ -45,10 +42,6 @@ export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
     experienceYears: 7,
     avatarColor: 'from-rose-600 to-pink-700',
     avatarUrl: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80',
-    portfolioSamples: [
-      'https://lh3.googleusercontent.com/d/1Lw27Dr6-tUunDEgpyzJfe7rvJbMiFqwH=w800',
-      'https://lh3.googleusercontent.com/d/1cH1tBDE5kth8P5_1JFxuwouYt5YUDVxo=w800',
-    ],
   },
   {
     id: 'photo-3',
@@ -64,10 +57,6 @@ export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
     experienceYears: 12,
     avatarColor: 'from-orange-600 to-amber-800',
     avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&auto=format&fit=crop&q=80',
-    portfolioSamples: [
-      'https://lh3.googleusercontent.com/d/1zV3YbVnxByADcL6RTSC5UkAVSLd6edKM=w800',
-      'https://lh3.googleusercontent.com/d/1FkbwGIWRVLGeEfTQfXkO4kcZxOyqljkI=w800',
-    ],
   },
   {
     id: 'photo-4',
@@ -83,10 +72,6 @@ export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
     experienceYears: 8,
     avatarColor: 'from-emerald-600 to-teal-800',
     avatarUrl: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&auto=format&fit=crop&q=80',
-    portfolioSamples: [
-      'https://lh3.googleusercontent.com/d/1WI7nCdwz_7qqXoiNAUlZVmRAqNfL4f1p=w800',
-      'https://lh3.googleusercontent.com/d/14-__BKMCoG2EgTJLSSOXOFyFJl1Yt0pU=w800',
-    ],
   },
   {
     id: 'photo-5',
@@ -102,10 +87,6 @@ export const INITIAL_PHOTOGRAPHERS: PhotographerProfile[] = [
     experienceYears: 6,
     avatarColor: 'from-cyan-600 to-blue-800',
     avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=400&auto=format&fit=crop&q=80',
-    portfolioSamples: [
-      'https://lh3.googleusercontent.com/d/1TxB4JJ79ZYWpleSsGy_WDd663gvyNqyu=w800',
-      'https://lh3.googleusercontent.com/d/1EpQpuJuh3nnTPkOn3qQIo_yYXlBKDi_F=w800',
-    ],
   },
 ];
 
@@ -482,8 +463,11 @@ export function loadPhotographers(): PhotographerProfile[] {
       const parsed: PhotographerProfile[] = JSON.parse(raw);
       const populated = parsed.map((p) => {
         const cleanFirst = p.name?.split(' ')[0]?.toLowerCase() || 'photog';
+        const defaultProfile = INITIAL_PHOTOGRAPHERS.find((ip) => ip.id === p.id);
+        const hasValidSamples = p.portfolioSamples && p.portfolioSamples.length > 0 && !p.portfolioSamples[0].includes('googleusercontent.com');
         return {
           ...p,
+          portfolioSamples: hasValidSamples ? p.portfolioSamples : (defaultProfile?.portfolioSamples || []),
           loginEmail: p.loginEmail || p.email,
           loginPassword: p.loginPassword || `${cleanFirst}123`,
         };

@@ -1,44 +1,52 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   Calendar as CalendarIcon,
   MapPin,
-  CheckCircle2,
-  Phone,
-  Mail,
-  ArrowRight,
-  Sparkles,
-  Download,
-  Filter,
   Check,
-  MessageCircle,
-  Link as LinkIcon,
-  Clock,
-  FileText,
-  User,
+  ArrowRight,
   Camera,
+  ChevronDown,
+  ChevronLeft,
+  ChevronRight,
+  Filter,
+  FileText,
 } from 'lucide-react';
 import { PhotographerProfile, ShootBooking, DayStatus } from '../types';
 import { formatDateKey, formatDateDayMonth, APP_CURRENT_YEAR, APP_CURRENT_MONTH } from '../utils/storage';
-import { CustomDatePicker } from './CustomDatePicker';
+import { getCategoryPhotos } from '../utils/categoryGalleries';
+import { BrandLogos } from './BrandLogos';
+import { ClientBookingModal } from './ClientBookingModal';
+import { JoinNetworkModal } from './JoinNetworkModal';
+import { PhotographerScheduleModal } from './PhotographerScheduleModal';
+import { PortfolioShowcaseModal } from './PortfolioShowcaseModal';
+import { ShootLobbyLogo } from './ShootLobbyLogo';
+import heroStudioImage from '../assets/images/photographer_studio_hero_1789075441635.jpg';
 
 interface ClientBookingViewProps {
   photographers: PhotographerProfile[];
   availability: Record<string, Record<string, DayStatus>>;
   shoots: ShootBooking[];
   onBookShoot: (booking: Omit<ShootBooking, 'id' | 'createdAt'>) => ShootBooking;
+  onOpenPhotographerSignUp?: () => void;
 }
 
 const SHOOT_TYPES: string[] = [
   'Commercial Shoot',
-  'One Day Shoot',
-  'F&B Shoot',
-  'Restaurant & Cafe Shoot',
-  'Interior Shoot',
-  'Hotel Shoot',
   'Fashion Shoot',
   'Jewellery Shoot',
+  'Hotel Shoot',
+  'Interior Shoot',
+  'Restaurant & Cafe Shoot',
+  'F&B Shoot',
+  'One Day Shoot',
   'Product Shoot',
-  'Other / Custom Requirement',
+  'Other Shoot',
+];
+
+// Month names short
+const MONTHS_SHORT = [
+  'Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun',
+  'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec',
 ];
 
 export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
@@ -46,952 +54,790 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
   availability,
   shoots,
   onBookShoot,
+  onOpenPhotographerSignUp,
 }) => {
-  // 1. Shoot Date / Event Date (default: 18th of current month September 2026)
-  const [targetDate, setTargetDate] = useState<string>(() => {
-    return formatDateKey(new Date(APP_CURRENT_YEAR, APP_CURRENT_MONTH, 18));
+  // 1. Shoot Date (defaults to dynamic today's date)
+  const [selectedDate, setSelectedDate] = useState<string>(() => {
+    return formatDateKey(new Date());
   });
 
-  // 2. Type of Shoot (default: Commercial Shoot)
-  const [selectedShootType, setSelectedShootType] = useState<string>(
-    'Commercial Shoot'
-  );
+  // Automatically update selectedDate if day changes and selected date is in the past
+  useEffect(() => {
+    const today = formatDateKey(new Date());
+    if (selectedDate < today) {
+      setSelectedDate(today);
+    }
+  }, [selectedDate]);
 
-  // 3. Optional third column when "Other / Custom Requirement" is selected
-  const [customRequirementText, setCustomRequirementText] = useState<string>('');
+  // 2. Type of Shoot (default: Commercial Shoot matching screenshot)
+  const [selectedShootType, setSelectedShootType] = useState<string>('Commercial Shoot');
+  const [customShootQuery, setCustomShootQuery] = useState<string>('');
 
-  // Active photographer chosen for booking modal
+  // Popover states for Date Picker and Shoot Type Picker
+  const [isDatePopoverOpen, setIsDatePopoverOpen] = useState(false);
+  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState(false);
+
+  // Month navigation for Date Popover
+  const [popoverMonth, setPopoverMonth] = useState<Date>(() => {
+    const now = new Date();
+    return new Date(now.getFullYear(), now.getMonth(), 1);
+  });
+
+  const datePickerRef = useRef<HTMLDivElement>(null);
+  const typeDropdownRef = useRef<HTMLDivElement>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  // Modals
   const [activePhotographerForBooking, setActivePhotographerForBooking] =
     useState<PhotographerProfile | null>(null);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [activePhotographerForSchedule, setActivePhotographerForSchedule] =
+    useState<PhotographerProfile | null>(null);
+  const [isScheduleModalOpen, setIsScheduleModalOpen] = useState(false);
+  const [isJoinNetworkOpen, setIsJoinNetworkOpen] = useState(false);
+  const [portfolioShowcasePhotographer, setPortfolioShowcasePhotographer] =
+    useState<PhotographerProfile | null>(null);
+  const [cardActiveCategory, setCardActiveCategory] = useState<Record<string, string>>({});
+  const [selectedShowcaseCategory, setSelectedShowcaseCategory] = useState<string | undefined>(undefined);
 
-  // Booking Flow Steps: 'calendar' first, then 'details', then confirmed
-  const [bookingStep, setBookingStep] = useState<'calendar' | 'details'>('calendar');
-  const [selectedBookingDate, setSelectedBookingDate] = useState<string>(() => {
-    return formatDateKey(new Date(APP_CURRENT_YEAR, APP_CURRENT_MONTH, 18));
-  });
-  const [popupCalendarDate, setPopupCalendarDate] = useState<Date>(
-    () => new Date(APP_CURRENT_YEAR, APP_CURRENT_MONTH, 1)
-  );
+  // Close popovers on click outside
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent) => {
+      if (datePickerRef.current && !datePickerRef.current.contains(e.target as Node)) {
+        setIsDatePopoverOpen(false);
+      }
+      if (typeDropdownRef.current && !typeDropdownRef.current.contains(e.target as Node)) {
+        setIsTypeDropdownOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
-  // Booking Form State (ordered strictly per user requirements)
-  // Field 1: What type of shoot
-  const [formShootType, setFormShootType] = useState<string>('Commercial Shoot');
-  const [formCustomShootType, setFormCustomShootType] = useState<string>('');
+  // Format "18 Sep 2026"
+  const formatFilterDateDisplay = (dateKey: string) => {
+    if (!dateKey) return 'Select Date';
+    const parts = dateKey.split('-');
+    if (parts.length < 3) return dateKey;
+    const y = parts[0];
+    const m = parseInt(parts[1], 10);
+    const d = parseInt(parts[2], 10);
+    return `${d} ${MONTHS_SHORT[m - 1] || ''} ${y}`;
+  };
 
-  // Field 2: Client information (Name, Phone, Email ID)
-  const [clientName, setClientName] = useState<string>('');
-  const [clientPhone, setClientPhone] = useState<string>('+91 ');
-  const [clientEmail, setClientEmail] = useState<string>('');
-
-  // Field 3: Timing of the shoot (Start and End)
-  const [timingStart, setTimingStart] = useState<string>('14:00');
-  const [timingEnd, setTimingEnd] = useState<string>('22:00');
-
-  // Field 4: Mood board link
-  const [moodBoardLink, setMoodBoardLink] = useState<string>('');
-
-  // Field 5: Briefs
-  const [shootBrief, setShootBrief] = useState<string>('');
-
-  // Field 6 (Last Thing): Shoot Location / Venue
-  const [shootLocation, setShootLocation] = useState<string>('');
-
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [confirmedShoot, setConfirmedShoot] = useState<ShootBooking | null>(null);
-  const [popupFeedbackMsg, setPopupFeedbackMsg] = useState<string | null>(null);
-
-  // Filter available photographers on the selected targetDate who match the required shoot type
+  // Filter available photographers for the chosen date & shoot type
   const availablePhotographers = photographers.filter((p) => {
+    // Photographers on hold are suspended from accepting bookings and cannot appear in results
+    if (p.status === 'on_hold') return false;
+
     const pAvail = availability[p.id] || {};
-    const status = pAvail[targetDate] || 'available';
-    const isAvailable = status === 'available';
-    if (!isAvailable) return false;
+    const status = pAvail[selectedDate] || 'available';
+    if (status !== 'available') return false;
 
-    // Compatibility check
-    if (selectedShootType === 'Other / Custom Requirement') {
-      if (!customRequirementText.trim()) return true;
-      const q = customRequirementText.toLowerCase().trim();
-      return (
-        p.specialties.some((s) => s.toLowerCase().includes(q)) ||
-        p.title.toLowerCase().includes(q) ||
-        p.bio.toLowerCase().includes(q)
-      );
-    }
-
-    const shootKeyword = selectedShootType.toLowerCase().split(' ')[0];
-    const matchesSpecialty = p.specialties.some((spec) =>
-      spec.toLowerCase().includes(shootKeyword)
-    );
-    const matchesTitle = p.title.toLowerCase().includes(shootKeyword);
-    const matchesBio = p.bio.toLowerCase().includes(shootKeyword);
+    // Specialty or title compatibility
+    const q = selectedShootType.toLowerCase();
+    if (q === 'other shoot' || q.includes('other')) return true;
+    const matchesSpecialty = p.specialties.some((s) => s.toLowerCase().includes(q) || q.includes(s.toLowerCase()));
+    const matchesTitle = p.title.toLowerCase().includes(q);
+    const matchesBio = p.bio.toLowerCase().includes(q);
 
     return matchesSpecialty || matchesTitle || matchesBio;
   });
 
-  // Open booking modal for a photographer: MUST POP UP CALENDAR FIRST!
-  const handleOpenBookingModal = (p: PhotographerProfile) => {
-    setActivePhotographerForBooking(p);
-    setConfirmedShoot(null);
-    setBookingStep('calendar'); // Show Calendar popup first!
-    setSelectedBookingDate(targetDate);
-    // Initialize popup calendar month from targetDate
-    const [tY, tM] = targetDate.split('-').map(Number);
-    if (!isNaN(tY) && !isNaN(tM)) {
-      setPopupCalendarDate(new Date(tY, tM - 1, 1));
-    } else {
-      setPopupCalendarDate(new Date());
+  // Ensure Ananya Sen, Vikramaditya Verma, and Kabir Mehta are top prioritized if they match
+  const priorityIds = ['photo-2', 'photo-3', 'photo-5'];
+  const displayPhotographers = [...availablePhotographers].sort((a, b) => {
+    const aIdx = priorityIds.indexOf(a.id);
+    const bIdx = priorityIds.indexOf(b.id);
+    if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
+    if (aIdx !== -1) return -1;
+    if (bIdx !== -1) return 1;
+    return 0;
+  });
+
+  const handleBookClick = (photographer: PhotographerProfile) => {
+    setActivePhotographerForBooking(photographer);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleOpenSchedule = (photographer: PhotographerProfile) => {
+    setActivePhotographerForSchedule(photographer);
+    setIsScheduleModalOpen(true);
+  };
+
+  const handleScheduleDateSelected = (photographer: PhotographerProfile, date: string) => {
+    setIsScheduleModalOpen(false);
+    setSelectedDate(date);
+    setActivePhotographerForBooking(photographer);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleFindClick = () => {
+    if (resultsRef.current) {
+      resultsRef.current.scrollIntoView({ behavior: 'smooth' });
     }
-    setFormShootType(selectedShootType);
-    setFormCustomShootType(customRequirementText);
-    setShootLocation(p.city);
-    setPopupFeedbackMsg(null);
   };
 
-  const handleConfirmBooking = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!activePhotographerForBooking || !clientName.trim() || !clientPhone.trim()) {
-      return;
-    }
+  // Calendar math for Popover
+  const calYear = popoverMonth.getFullYear();
+  const calMonth = popoverMonth.getMonth();
+  const firstDayIndex = new Date(calYear, calMonth, 1).getDay();
+  const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
 
-    const effectiveShootType =
-      formShootType === 'Other / Custom Requirement' && formCustomShootType.trim()
-        ? formCustomShootType.trim()
-        : formShootType;
-
-    setIsSubmitting(true);
-    setTimeout(() => {
-      const newBooking = onBookShoot({
-        photographerId: activePhotographerForBooking.id,
-        date: selectedBookingDate,
-        clientName: clientName.trim(),
-        clientPhone: clientPhone.trim(),
-        clientEmail: clientEmail.trim() || 'client@booking.in',
-        shootType: effectiveShootType,
-        timingStart,
-        timingEnd,
-        moodBoardUrl: moodBoardLink.trim(),
-        shootBrief: shootBrief.trim(),
-        cityVenue: shootLocation.trim() || activePhotographerForBooking.city,
-        notes: `Timing: ${timingStart} - ${timingEnd}. Brief: ${shootBrief.trim()}`,
-        source: 'client_booking',
-        status: 'confirmed',
-      });
-
-      setConfirmedShoot(newBooking);
-      setIsSubmitting(false);
-    }, 400);
-  };
-
-  const handleDownloadICS = () => {
-    if (!confirmedShoot || !activePhotographerForBooking) return;
-
-    const dtStart = confirmedShoot.date.replace(/-/g, '');
-    const icsContent = [
-      'BEGIN:VCALENDAR',
-      'VERSION:2.0',
-      'PRODID:-//Shoot Social BAE Calendar//EN',
-      'BEGIN:VEVENT',
-      `SUMMARY:${confirmedShoot.shootType} with ${activePhotographerForBooking.name}`,
-      `DESCRIPTION:${confirmedShoot.shootBrief || 'Photography Shoot'}\\nTiming: ${confirmedShoot.timingStart || ''} to ${confirmedShoot.timingEnd || ''}\\nClient: ${confirmedShoot.clientName} (${confirmedShoot.clientPhone} / ${confirmedShoot.clientEmail})`,
-      `LOCATION:${confirmedShoot.cityVenue}`,
-      `DTSTART;VALUE=DATE:${dtStart}`,
-      `DTEND;VALUE=DATE:${dtStart}`,
-      'STATUS:CONFIRMED',
-      'END:VEVENT',
-      'END:VCALENDAR',
-    ].join('\r\n');
-
-    const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `shoot-${confirmedShoot.date}-${activePhotographerForBooking.name.replace(/\s+/g, '_')}.ics`;
-    link.click();
-    URL.revokeObjectURL(url);
-  };
-
-  // Popup calendar helpers
-  const popYear = popupCalendarDate.getFullYear();
-  const popMonth = popupCalendarDate.getMonth();
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December',
-  ];
-  const popDaysInMonth = new Date(popYear, popMonth + 1, 0).getDate();
-  const popFirstDayIndex = new Date(popYear, popMonth, 1).getDay();
+  const todayKey = formatDateKey(new Date());
+  const now = new Date();
+  const isCurrentOrPastMonth =
+    calYear < now.getFullYear() ||
+    (calYear === now.getFullYear() && calMonth <= now.getMonth());
 
   return (
-    <div id="client-portal-root" className="space-y-8 max-w-7xl mx-auto">
-      {/* Starting Section: Hero Header & Date Booking Bar */}
-      <div
-        id="commercial-date-booking-section"
-        className="bg-[#0b1733] border border-[#1d3870] rounded-3xl p-5 sm:p-8 text-stone-100 shadow-xl relative z-20"
-      >
-        <div className="space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#d4f770]/15 text-[#d4f770] border border-[#d4f770]/30 text-xs font-bold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Shoot Social BAE • Premier Photography Network</span>
-          </div>
+    <div id="shoot-lobby-page-root" className="w-full bg-[#F6F3EC]/40 text-[#073B2F] pb-16">
+      {/* 1. Integrated Hero & Filter Section */}
+      <section className="relative z-30 bg-white border-b border-[#DCE7D4]">
+        {/* Studio Photographer Background Visual on right side with seamless gradient fade */}
+        <div className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] md:w-[50%] lg:w-[46%] pointer-events-none overflow-hidden select-none z-0">
+          <img
+            src={heroStudioImage}
+            alt="Commercial photoshoot studio with camera operator and lighting"
+            referrerPolicy="no-referrer"
+            className="w-full h-full object-cover object-[75%_center] sm:object-center opacity-70 sm:opacity-90"
+          />
+          {/* Smooth horizontal gradient fade to white on the left ensuring crisp text contrast */}
+          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 via-35% sm:via-white/70 to-transparent" />
+          {/* Subtle top/bottom edge feather */}
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/40 sm:hidden" />
+        </div>
 
-          <div className="space-y-2">
-            <h1 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-[1.15]">
-              Your shoot will be handled by us, <br className="hidden sm:inline" />
-              <span className="text-[#d4f770]">just book your dates.</span>
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-9 lg:pt-10 pb-7 sm:pb-8 z-10">
+          {/* Left Hero Content */}
+          <div className="max-w-3xl lg:max-w-4xl">
+            {/* Main Headline - "Are you free?" in vibrant brand orange */}
+            <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#073B2F] tracking-tight leading-[1.2] mb-3 font-['Space_Grotesk',sans-serif]">
+              <span>Stop asking Photographers,</span>
+              <span className="block mt-1 sm:mt-1.5 text-[#FF6A45] font-extrabold underline decoration-[#FF6A45]/40 decoration-4 underline-offset-8">
+                Are you free?
+              </span>
             </h1>
-            <p className="text-sm sm:text-lg font-bold text-stone-200">
-              We provide the best photographers available in Delhi NCR and across India.
-            </p>
-            <p className="text-xs sm:text-sm text-stone-400 max-w-2xl leading-relaxed">
-              We click photos — we do click millions of photos a day! From high-impact commercial campaigns, F&amp;B and restaurant shoots, fashion lookbooks, hotel interiors, and product campaigns, Shoot Social BAE manages verified premier photographers ready for your exact shoot date.
-            </p>
-          </div>
 
-          {/* Animated Film-Strip Ticker */}
-          <div className="pt-2 pb-1 overflow-hidden rounded-2xl bg-[#060e22] border border-[#1d3870]">
-            <div className="animate-marquee py-2 text-[11px] font-mono tracking-widest text-stone-300">
-              <span className="flex items-center gap-4 px-4 shrink-0">
-                <span className="w-2 h-2 rounded-full bg-[#d4f770]" />
-                <strong className="text-white">DELHI NCR VERIFIED NETWORK</strong>
-                <span>•</span>
-                <span className="text-[#d4f770]">100% REAL-TIME CALENDAR DATES</span>
-                <span>•</span>
-                <span>DIRECT BOOKING WITH ZERO BROKERAGE</span>
-                <span>•</span>
-                <span className="text-white">MILLIONS OF CLICKS DELIVERED</span>
-                <span>•</span>
-                <span className="text-[#d4f770]">COMMERCIAL, F&amp;B &amp; FASHION</span>
-                <span>•</span>
-                <span>1-CLICK ICS CALENDAR SYNC</span>
-                <span>•</span>
+            {/* Subheadline - Clean Shoot Lobby text without extra icon */}
+            <p className="text-[#5C6E5E] text-base sm:text-lg font-normal leading-relaxed mb-6 max-w-2xl flex flex-wrap items-center gap-x-2 gap-y-1">
+              <span>Check their schedule and plan your shoot with</span>
+              <span className="font-bold tracking-[0.12em] uppercase text-[#073B2F]">
+                Shoot Lobby
               </span>
-              <span className="flex items-center gap-4 px-4 shrink-0">
-                <span className="w-2 h-2 rounded-full bg-[#d4f770]" />
-                <strong className="text-white">DELHI NCR VERIFIED NETWORK</strong>
-                <span>•</span>
-                <span className="text-[#d4f770]">100% REAL-TIME CALENDAR DATES</span>
-                <span>•</span>
-                <span>DIRECT BOOKING WITH ZERO BROKERAGE</span>
-                <span>•</span>
-                <span className="text-white">MILLIONS OF CLICKS DELIVERED</span>
-                <span>•</span>
-                <span className="text-[#d4f770]">COMMERCIAL, F&amp;B &amp; FASHION</span>
-                <span>•</span>
-                <span>1-CLICK ICS CALENDAR SYNC</span>
-                <span>•</span>
-              </span>
-            </div>
-          </div>
-        </div>
-
-        {/* Filter Bar: Shoot Date & Type of Shoot */}
-        <div className="mt-6 bg-[#060e22] p-4 sm:p-5 rounded-2xl border border-[#1d3870] relative z-30">
-          <div
-            className={`grid gap-4 ${
-              selectedShootType === 'Other / Custom Requirement'
-                ? 'grid-cols-1 sm:grid-cols-3'
-                : 'grid-cols-1 sm:grid-cols-2'
-            }`}
-          >
-            {/* Column 1: Shoot Date / Event Date */}
-            <div>
-              <label className="block text-[11px] font-semibold text-stone-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <CalendarIcon className="w-3.5 h-3.5 text-white" />
-                <span>Shoot Date / Event Date:</span>
-              </label>
-              <CustomDatePicker
-                id="input-check-event-date"
-                value={targetDate}
-                onChange={(newDate) => setTargetDate(newDate)}
-                minDate={`${APP_CURRENT_YEAR}-09-01`}
-              />
-            </div>
-
-            {/* Column 2: Type of Shoot */}
-            <div>
-              <label className="block text-[11px] font-semibold text-stone-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                <Filter className="w-3.5 h-3.5 text-[#d4f770]" />
-                <span>Type of Shoot:</span>
-              </label>
-              <select
-                id="select-shoot-type-filter"
-                value={selectedShootType}
-                onChange={(e) => setSelectedShootType(e.target.value)}
-                className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3.5 py-2.5 text-xs font-semibold text-white focus:outline-none focus:border-[#d4f770] cursor-pointer"
-              >
-                {SHOOT_TYPES.map((t) => (
-                  <option key={t} value={t}>
-                    {t}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            {/* Column 3: Appears ONLY when client chooses "Other / Custom Requirement" */}
-            {selectedShootType === 'Other / Custom Requirement' && (
-              <div>
-                <label className="block text-[11px] font-semibold text-stone-300 uppercase tracking-wider mb-1.5 flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-[#d4f770]" />
-                  <span>Write about the shoot requirement:</span>
-                </label>
-                <input
-                  id="input-other-shoot-requirement"
-                  type="text"
-                  placeholder="e.g. Traditional puja, jewelry lookbook, pet portraits..."
-                  value={customRequirementText}
-                  onChange={(e) => setCustomRequirementText(e.target.value)}
-                  className="w-full bg-[#0b1733] border border-[#d4f770]/60 rounded-xl px-3.5 py-2.5 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                />
-              </div>
-            )}
-          </div>
-
-          {/* Quick Date Availability Banner */}
-          <div className="flex items-center justify-between pt-3.5 mt-3.5 border-t border-[#182f5e] text-xs">
-            <div className="text-stone-300 flex items-center gap-2">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#d4f770] inline-block animate-pulse" />
-              <span>
-                <strong className="text-[#d4f770] font-bold">{availablePhotographers.length}</strong>{' '}
-                photographer{availablePhotographers.length === 1 ? '' : 's'} available for{' '}
-                <strong className="text-white">{selectedShootType}</strong> on{' '}
-                <strong className="text-[#d4f770] font-bold">{formatDateDayMonth(targetDate)}</strong>
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Available Photographers for this Date & Shoot Type */}
-      <div className="bg-[#0b1733] border border-[#1d3870] rounded-3xl p-5 sm:p-6 text-stone-100 shadow-xl space-y-4">
-        <div className="border-b border-[#182f5e] pb-3 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-          <div>
-            <h2 className="text-lg font-bold text-white tracking-tight flex items-center gap-2">
-              <Camera className="w-5 h-5 text-[#d4f770]" />
-              <span>
-                Available Photographers ({availablePhotographers.length}) — Date: {formatDateDayMonth(targetDate)}
-              </span>
-            </h2>
-            <p className="text-xs text-stone-400 mt-0.5">
-              Verified available on <strong className="text-white">{formatDateDayMonth(targetDate)}</strong> for {selectedShootType}.
             </p>
-          </div>
-        </div>
 
-        {availablePhotographers.length === 0 ? (
-          <div className="p-12 text-center text-stone-400 bg-[#060e22] rounded-2xl border border-[#1d3870]">
-            <CalendarIcon className="w-10 h-10 text-stone-600 mx-auto mb-2" />
-            <h3 className="text-sm font-semibold text-stone-200">
-              No photographers available on {formatDateDayMonth(targetDate)} for this shoot type
-            </h3>
-            <p className="text-xs text-stone-500 mt-1 max-w-sm mx-auto">
-              Try picking another nearby date on the date picker above to see who is available.
-            </p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {availablePhotographers.map((p) => (
+            {/* Search / Filter Bar Card */}
+            <div
+              className={`bg-white rounded-2xl border border-[#DCE7D4] p-2.5 sm:p-3 transition-all duration-200 w-full shadow-sm ${
+                selectedShootType === 'Other Shoot' ? 'max-w-3xl lg:max-w-5xl' : 'max-w-3xl lg:max-w-4xl'
+              }`}
+            >
               <div
-                key={p.id}
-                id={`available-photographer-card-${p.id}`}
-                className="rounded-3xl p-5 border bg-[#060e22] border-[#1d3870] hover:border-[#2d529d] transition flex flex-col justify-between shadow-md group"
+                className={`grid gap-2.5 items-center ${
+                  selectedShootType === 'Other Shoot'
+                    ? 'grid-cols-1 md:grid-cols-[1fr_1fr_1.35fr_auto]'
+                    : 'grid-cols-1 sm:grid-cols-[1fr_1fr_auto]'
+                }`}
               >
-                <div>
-                  {/* Name, City, Experience & Available Tag */}
-                  <div className="flex items-start justify-between gap-2 mb-3">
-                    <div className="flex items-center gap-3">
-                      {p.avatarUrl ? (
-                        <img
-                          src={p.avatarUrl}
-                          alt={p.name}
-                          referrerPolicy="no-referrer"
-                          className="w-12 h-12 rounded-2xl object-cover border border-[#1d3870]"
-                        />
-                      ) : (
-                        <div
-                          className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${p.avatarColor} text-white flex items-center justify-center font-bold text-base shadow-sm`}
-                        >
-                          {p.name.charAt(0)}
-                        </div>
-                      )}
-                      <div>
-                        <h3 className="text-base font-bold text-white leading-tight group-hover:text-[#d4f770] transition-colors">
-                          {p.name}
-                        </h3>
-                        <p className="text-xs text-stone-400 flex items-center gap-1 mt-0.5">
-                          <MapPin className="w-3.5 h-3.5 text-[#d4f770]" />
-                          <span>{p.city} • {p.experienceYears}+ yrs exp</span>
-                        </p>
+                {/* Column 1: Select Date */}
+                <div ref={datePickerRef} className="relative flex">
+                  <button
+                    type="button"
+                    id="btn-select-date-picker"
+                    onClick={() => {
+                      setIsDatePopoverOpen(!isDatePopoverOpen);
+                      setIsTypeDropdownOpen(false);
+                    }}
+                    className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
+                      isDatePopoverOpen
+                        ? 'border-[#073B2F] ring-1 ring-[#073B2F]/40 bg-[#F6F3EC]'
+                        : 'border-[#DCE7D4] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#073B2F]/50'
+                    }`}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
+                      <CalendarIcon className="w-5 h-5 text-[#073B2F]" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
+                        Shoot Date
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-[#073B2F] whitespace-nowrap truncate">
+                        {formatFilterDateDisplay(selectedDate)}
                       </div>
                     </div>
+                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#073B2F] transition shrink-0 ml-auto" />
+                  </button>
 
-                    <span className="text-[10px] font-bold px-2.5 py-1 rounded-full bg-[#d4f770] text-[#0a152e] flex items-center gap-1 shrink-0">
-                      <Check className="w-3 h-3 stroke-3" />
-                      <span>Available</span>
-                    </span>
-                  </div>
-
-                  <p className="text-xs text-[#d4f770] font-bold mb-1.5">
-                    {p.title}
-                  </p>
-
-                  <p className="text-xs text-stone-300 line-clamp-3 leading-relaxed mb-4">
-                    {p.bio}
-                  </p>
-
-                  {/* Specialties Chips */}
-                  <div className="flex flex-wrap gap-1.5 mb-4">
-                    {p.specialties.map((spec) => (
-                      <span
-                        key={spec}
-                        className="px-2 py-0.5 rounded-md bg-[#0b1733] border border-[#1d3870] text-[10px] text-stone-300"
+                  {/* Date Popover Calendar: Centered on mobile so top/bottom are never cut off, anchored on desktop */}
+                  {isDatePopoverOpen && (
+                    <>
+                      {/* Mobile Centered Backdrop Modal */}
+                      <div
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs sm:hidden"
+                        onClick={() => setIsDatePopoverOpen(false)}
                       >
-                        {spec}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Direct 1-Click Action to Book for this date */}
-                <div className="pt-3 border-t border-[#182f5e]">
-                  <button
-                    id={`btn-book-photographer-${p.id}`}
-                    type="button"
-                    onClick={() => handleOpenBookingModal(p)}
-                    className="w-full py-2.5 px-4 rounded-xl bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] text-xs font-bold transition flex items-center justify-center gap-2 shadow-sm"
-                  >
-                    <span>Book for {formatDateDayMonth(targetDate)}</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* POPUP BOOKING FORM MODAL */}
-      {activePhotographerForBooking && (
-        <div
-          id="client-booking-modal-backdrop"
-          className="fixed inset-0 z-50 bg-black/85 backdrop-blur-sm flex items-center justify-center p-3 sm:p-4 overflow-y-auto"
-          onClick={() => setActivePhotographerForBooking(null)}
-        >
-          <div
-            id="client-booking-modal-card"
-            className="bg-[#0b1733] border border-[#1d3870] rounded-3xl max-w-2xl w-full p-5 sm:p-7 text-stone-100 shadow-2xl space-y-4 my-auto"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[#182f5e] pb-3">
-              <div>
-                <h3 className="text-base sm:text-lg font-bold text-white tracking-tight">
-                  Book {activePhotographerForBooking.name}
-                </h3>
-                <p className="text-xs text-stone-400 flex items-center gap-2 mt-0.5">
-                  <span>Date: <strong className="text-[#d4f770] font-bold">{formatDateDayMonth(targetDate)}</strong></span>
-                  <span>•</span>
-                  <span className="text-[#d4f770] font-semibold">{activePhotographerForBooking.city}</span>
-                  <span>•</span>
-                  <span>{activePhotographerForBooking.title}</span>
-                </p>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => setActivePhotographerForBooking(null)}
-                className="text-stone-400 hover:text-white p-1.5 rounded-lg hover:bg-[#112349] text-sm"
-              >
-                ✕
-              </button>
-            </div>
-
-            {/* Confirmation State */}
-            {confirmedShoot ? (
-              <div className="p-6 text-center space-y-4 bg-[#060e22] rounded-2xl border border-[#d4f770]/40">
-                <div className="w-14 h-14 rounded-full bg-[#d4f770]/20 text-[#d4f770] flex items-center justify-center mx-auto">
-                  <CheckCircle2 className="w-8 h-8 stroke-2" />
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-bold text-white tracking-tight">Shoot Confirmed & Booked!</h3>
-                  <p className="text-xs text-stone-300 mt-1 max-w-md mx-auto">
-                    The date <strong className="text-[#d4f770] font-bold">{formatDateDayMonth(confirmedShoot.date)}</strong> is now reserved on {activePhotographerForBooking.name}'s calendar via Shoot Social BAE.
-                  </p>
-                </div>
-
-                {/* Summary Card with all entered details */}
-                <div className="bg-[#0b1733] p-4 rounded-2xl border border-[#1d3870] text-left text-xs space-y-2.5">
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Shoot Date:</span>
-                    <span className="text-[#d4f770] font-bold">{formatDateDayMonth(confirmedShoot.date)}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Type of Shoot:</span>
-                    <span className="text-white font-semibold">{confirmedShoot.shootType}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Client Name:</span>
-                    <span className="text-white font-medium">{confirmedShoot.clientName}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Phone / WhatsApp:</span>
-                    <span className="text-white font-medium">{confirmedShoot.clientPhone}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Email ID:</span>
-                    <span className="text-white font-medium">{confirmedShoot.clientEmail}</span>
-                  </div>
-                  <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                    <span className="text-stone-400">Timing (Start & End):</span>
-                    <span className="text-[#d4f770] font-bold">
-                      {confirmedShoot.timingStart} - {confirmedShoot.timingEnd}
-                    </span>
-                  </div>
-                  {confirmedShoot.moodBoardUrl && (
-                    <div className="flex justify-between border-b border-[#182f5e] pb-2">
-                      <span className="text-stone-400">Mood Board:</span>
-                      <a
-                        href={confirmedShoot.moodBoardUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-[#d4f770] hover:underline flex items-center gap-1 max-w-[200px] truncate"
-                      >
-                        <LinkIcon className="w-3 h-3" />
-                        <span className="truncate">{confirmedShoot.moodBoardUrl}</span>
-                      </a>
-                    </div>
-                  )}
-                  {confirmedShoot.shootBrief && (
-                    <div className="border-b border-[#182f5e] pb-2">
-                      <span className="text-stone-400 block mb-0.5">Brief of Shoot:</span>
-                      <p className="text-stone-300 italic bg-[#060e22] p-2.5 rounded-lg border border-[#1d3870]">
-                        "{confirmedShoot.shootBrief}"
-                      </p>
-                    </div>
-                  )}
-                  <div className="flex justify-between pt-1">
-                    <span className="text-stone-400">Shoot Location:</span>
-                    <span className="text-white font-semibold">{confirmedShoot.cityVenue}</span>
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-wrap items-center justify-center gap-3 pt-2">
-                  <a
-                    href={`https://wa.me/${activePhotographerForBooking.phone.replace(/[^0-9]/g, '')}?text=${encodeURIComponent(
-                      `Namaste ${activePhotographerForBooking.name}, I have booked you for ${confirmedShoot.shootType} on ${confirmedShoot.date} at ${confirmedShoot.cityVenue}. Timing: ${confirmedShoot.timingStart} - ${confirmedShoot.timingEnd}. Client: ${confirmedShoot.clientName} (${confirmedShoot.clientPhone}, ${confirmedShoot.clientEmail}). Booked via Shoot Social BAE.`
-                    )}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="px-4 py-2.5 rounded-xl bg-[#060e22] hover:bg-[#112349] text-[#d4f770] border border-[#1d3870] hover:border-[#d4f770]/50 text-xs font-bold inline-flex items-center gap-2 transition shadow-sm"
-                  >
-                    <MessageCircle className="w-4 h-4 text-[#d4f770]" />
-                    <span>WhatsApp Photographer</span>
-                  </a>
-
-                  <button
-                    type="button"
-                    onClick={handleDownloadICS}
-                    className="px-4 py-2.5 rounded-xl bg-[#112349] hover:bg-[#162f63] text-white text-xs inline-flex items-center gap-2 border border-[#1d3870]"
-                  >
-                    <Download className="w-4 h-4 text-[#d4f770]" />
-                    <span>Download Calendar (.ics)</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={() => setActivePhotographerForBooking(null)}
-                    className="px-4 py-2.5 rounded-xl bg-[#060e22] hover:bg-[#112349] text-stone-300 text-xs"
-                  >
-                    Close
-                  </button>
-                </div>
-              </div>
-            ) : bookingStep === 'calendar' ? (
-              /* STEP 1: CALENDAR POPUP FIRST (as requested by user) */
-              <div className="space-y-4">
-                {/* Step indicator */}
-                <div className="flex items-center justify-between bg-[#060e22] p-3 rounded-2xl border border-[#1d3870]">
-                  <div className="flex items-center gap-2">
-                    <span className="w-6 h-6 rounded-full bg-[#d4f770] text-[#0a152e] font-black text-xs flex items-center justify-center">
-                      1
-                    </span>
-                    <span className="text-xs font-bold text-white">
-                      Step 1: Check Availability & Confirm Date on Calendar
-                    </span>
-                  </div>
-                  <span className="text-[11px] text-[#d4f770]">
-                    2 Steps
-                  </span>
-                </div>
-
-                {/* Month Navigator */}
-                <div className="flex items-center justify-between">
-                  <h4 className="text-sm font-bold text-white flex items-center gap-2">
-                    <CalendarIcon className="w-4 h-4 text-[#d4f770]" />
-                    <span>
-                      {monthNames[popMonth]} {popYear}
-                    </span>
-                  </h4>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      disabled={popYear === APP_CURRENT_YEAR && popMonth <= APP_CURRENT_MONTH}
-                      onClick={() =>
-                        setPopupCalendarDate(new Date(popYear, popMonth - 1, 1))
-                      }
-                      className="px-2.5 py-1 rounded-lg bg-[#060e22] hover:bg-[#112349] disabled:opacity-40 text-xs text-stone-300 border border-[#1d3870] transition"
-                    >
-                      ← Prev
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        setPopupCalendarDate(new Date(popYear, popMonth + 1, 1))
-                      }
-                      className="px-2.5 py-1 rounded-lg bg-[#060e22] hover:bg-[#112349] text-xs text-stone-300 border border-[#1d3870] transition"
-                    >
-                      Next →
-                    </button>
-                  </div>
-                </div>
-
-                {/* Calendar Grid */}
-                <div className="p-3 bg-[#060e22] rounded-2xl border border-[#1d3870]">
-                  <div className="grid grid-cols-7 gap-1 text-center text-[10px] font-semibold text-stone-400 pb-2 border-b border-[#182f5e]">
-                    <span>Sun</span>
-                    <span>Mon</span>
-                    <span>Tue</span>
-                    <span>Wed</span>
-                    <span>Thu</span>
-                    <span>Fri</span>
-                    <span>Sat</span>
-                  </div>
-
-                  <div className="grid grid-cols-7 gap-1 pt-2">
-                    {/* Blank offset days */}
-                    {Array.from({ length: popFirstDayIndex }).map((_, i) => (
-                      <div key={`pop-empty-${i}`} className="h-11 sm:h-12 rounded-lg bg-transparent" />
-                    ))}
-
-                    {/* Day numbers */}
-                    {Array.from({ length: popDaysInMonth }).map((_, idx) => {
-                      const dayNum = idx + 1;
-                      const dateKey = `${popYear}-${String(popMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
-                      const photogAvail = availability[activePhotographerForBooking.id] || {};
-                      const status = photogAvail[dateKey] || 'available';
-                      const isBooked = status === 'booked';
-                      const isSelected = selectedBookingDate === dateKey;
-
-                      return (
-                        <button
-                          key={dateKey}
-                          type="button"
-                          onClick={() => {
-                            if (isBooked) {
-                              setPopupFeedbackMsg(
-                                `${formatDateDayMonth(dateKey)} is booked for another shoot. Please choose an available date.`
-                              );
-                            } else {
-                              setSelectedBookingDate(dateKey);
-                              setPopupFeedbackMsg(null);
-                            }
-                          }}
-                          className={`h-12 sm:h-14 rounded-xl p-1.5 text-left flex flex-col justify-between transition relative border ${
-                            isSelected
-                              ? 'ring-2 ring-[#d4f770] border-[#d4f770] bg-[#112349] shadow-md shadow-[#d4f770]/20'
-                              : isBooked
-                              ? 'bg-[#d4f770]/12 hover:bg-[#d4f770]/20 border-[#d4f770]/40 cursor-not-allowed'
-                              : 'bg-[#0b1733] hover:bg-[#112349] border-[#1d3870] hover:border-[#2d529d]'
-                          }`}
+                        <div
+                          className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-[320px] border border-[#DCE7D4] animate-in fade-in zoom-in-95 duration-150"
+                          onClick={(e) => e.stopPropagation()}
                         >
-                          <div className="flex items-center justify-between w-full">
-                            <span
-                              className={`text-[11px] sm:text-xs font-bold leading-none ${
-                                isSelected
-                                  ? 'text-white'
-                                  : isBooked
-                                  ? 'text-[#d4f770]'
-                                  : 'text-stone-200'
+                          <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#DCE7D4]">
+                            <button
+                              type="button"
+                              disabled={isCurrentOrPastMonth}
+                              onClick={() => {
+                                if (isCurrentOrPastMonth) return;
+                                setPopoverMonth(
+                                  new Date(calYear, calMonth - 1, 1)
+                                );
+                              }}
+                              className={`p-2 rounded-lg transition ${
+                                isCurrentOrPastMonth
+                                  ? 'text-stone-300 cursor-not-allowed opacity-30'
+                                  : 'hover:bg-[#F6F3EC] text-[#073B2F]'
                               }`}
+                              title={isCurrentOrPastMonth ? 'Cannot navigate to past months' : 'Previous Month'}
                             >
-                              {dayNum}
+                              <ChevronLeft className="w-5 h-5" />
+                            </button>
+                            <span className="font-bold text-base text-[#073B2F]">
+                              {MONTHS_SHORT[calMonth]} {calYear}
                             </span>
-                            {isBooked ? (
-                              <Camera className="w-3 h-3 text-[#d4f770]" />
-                            ) : isSelected ? (
-                              <Check className="w-3 h-3 text-[#d4f770] stroke-[3]" />
-                            ) : null}
+                            <button
+                              type="button"
+                              onClick={() =>
+                                setPopoverMonth(
+                                  new Date(calYear, calMonth + 1, 1)
+                                )
+                              }
+                              className="p-2 rounded-lg hover:bg-[#F6F3EC] text-[#073B2F]"
+                            >
+                              <ChevronRight className="w-5 h-5" />
+                            </button>
                           </div>
 
-                          {isBooked && (
-                            <div className="w-full">
-                              <span className="text-[8px] sm:text-[9px] font-bold px-1 py-0.5 rounded bg-[#d4f770] text-[#0a152e] tracking-wider block text-center leading-tight">
-                                BOOKED
-                              </span>
+                          <div className="grid grid-cols-7 text-center text-[10px] font-bold uppercase text-[#5C6E5E] mb-2">
+                            {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                              <div key={d} className="py-1">
+                                {d}
+                              </div>
+                            ))}
+                          </div>
+
+                          <div className="grid grid-cols-7 gap-1 text-sm">
+                            {Array.from({ length: firstDayIndex }).map((_, i) => (
+                              <div key={`empty-${i}`} className="h-9" />
+                            ))}
+                            {Array.from({ length: daysInMonth }).map((_, i) => {
+                              const dayNum = i + 1;
+                              const dateKey = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                              const isSelected = dateKey === selectedDate;
+                              const isPast = dateKey < todayKey;
+
+                              return (
+                                <button
+                                  key={dateKey}
+                                  type="button"
+                                  disabled={isPast}
+                                  onClick={() => {
+                                    if (isPast) return;
+                                    setSelectedDate(dateKey);
+                                    setIsDatePopoverOpen(false);
+                                  }}
+                                  className={`h-9 w-9 mx-auto rounded-xl flex items-center justify-center font-bold transition ${
+                                    isPast
+                                      ? 'text-stone-300 bg-stone-50 cursor-not-allowed opacity-35 select-none'
+                                      : isSelected
+                                      ? 'bg-[#073B2F] text-white shadow-sm'
+                                      : 'text-[#073B2F] hover:bg-[#F6F3EC] hover:text-[#073B2F]'
+                                  }`}
+                                  title={isPast ? 'Past date cannot be selected' : undefined}
+                                >
+                                  {dayNum}
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          <div className="mt-4 pt-3 border-t border-[#DCE7D4] flex items-center justify-between">
+                            <span className="text-xs text-[#5C6E5E]">Selected: <strong className="text-[#073B2F]">{formatFilterDateDisplay(selectedDate)}</strong></span>
+                            <button
+                              type="button"
+                              onClick={() => setIsDatePopoverOpen(false)}
+                              className="px-3 py-1.5 rounded-lg bg-[#F6F3EC] hover:bg-[#ece8df] border border-[#DCE7D4] text-xs font-bold text-[#073B2F]"
+                            >
+                              Close
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Anchored Dropdown Popover */}
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-80 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-4 z-50 text-[#073B2F] animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#DCE7D4]">
+                          <button
+                            type="button"
+                            disabled={isCurrentOrPastMonth}
+                            onClick={() => {
+                              if (isCurrentOrPastMonth) return;
+                              setPopoverMonth(
+                                new Date(calYear, calMonth - 1, 1)
+                              );
+                            }}
+                            className={`p-1.5 rounded-lg transition outline-none focus:outline-none ${
+                              isCurrentOrPastMonth
+                                ? 'text-stone-300 cursor-not-allowed opacity-30'
+                                : 'hover:bg-[#F6F3EC] text-[#073B2F]'
+                            }`}
+                            title={isCurrentOrPastMonth ? 'Cannot navigate to past months' : 'Previous Month'}
+                          >
+                            <ChevronLeft className="w-4 h-4" />
+                          </button>
+                          <span className="font-bold text-sm text-[#073B2F]">
+                            {MONTHS_SHORT[calMonth]} {calYear}
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setPopoverMonth(
+                                new Date(calYear, calMonth + 1, 1)
+                              )
+                            }
+                            className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#073B2F] outline-none focus:outline-none"
+                          >
+                            <ChevronRight className="w-4 h-4" />
+                          </button>
+                        </div>
+
+                        <div className="grid grid-cols-7 text-center text-[10px] font-bold uppercase text-[#5C6E5E] mb-1">
+                          {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((d) => (
+                            <div key={d} className="py-1">
+                              {d}
                             </div>
-                          )}
-                        </button>
-                      );
-                    })}
-                  </div>
+                          ))}
+                        </div>
+
+                        <div className="grid grid-cols-7 gap-1 text-xs">
+                          {Array.from({ length: firstDayIndex }).map((_, i) => (
+                            <div key={`empty-${i}`} className="h-8" />
+                          ))}
+                          {Array.from({ length: daysInMonth }).map((_, i) => {
+                            const dayNum = i + 1;
+                            const dateKey = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                            const isSelected = dateKey === selectedDate;
+                            const isPast = dateKey < todayKey;
+
+                            return (
+                              <button
+                                key={dateKey}
+                                type="button"
+                                disabled={isPast}
+                                onClick={() => {
+                                  if (isPast) return;
+                                  setSelectedDate(dateKey);
+                                  setIsDatePopoverOpen(false);
+                                }}
+                                className={`h-8 w-8 mx-auto rounded-xl flex items-center justify-center font-bold transition outline-none focus:outline-none ${
+                                  isPast
+                                    ? 'text-stone-300 bg-stone-50 cursor-not-allowed opacity-35 select-none'
+                                    : isSelected
+                                    ? 'bg-[#073B2F] text-white shadow-sm'
+                                    : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                                }`}
+                                title={isPast ? 'Past date cannot be selected' : undefined}
+                              >
+                                {dayNum}
+                              </button>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    </>
+                  )}
                 </div>
 
-                {popupFeedbackMsg && (
-                  <div className="p-2.5 rounded-xl bg-amber-500/15 border border-amber-500/40 text-amber-300 text-xs flex items-center gap-2">
-                    <span>⚠️</span>
-                    <span>{popupFeedbackMsg}</span>
+                {/* Column 2: Type of Shoot */}
+                <div ref={typeDropdownRef} className="relative flex">
+                  <button
+                    type="button"
+                    id="btn-select-shoot-type"
+                    onClick={() => {
+                      setIsTypeDropdownOpen(!isTypeDropdownOpen);
+                      setIsDatePopoverOpen(false);
+                    }}
+                    className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
+                      isTypeDropdownOpen
+                        ? 'border-[#073B2F] ring-1 ring-[#073B2F]/40 bg-[#F6F3EC]'
+                        : 'border-[#DCE7D4] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#073B2F]/50'
+                    }`}
+                  >
+                    <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
+                      <Camera className="w-5 h-5 text-[#073B2F]" />
+                    </div>
+                    <div className="flex-1 min-w-0 pr-1">
+                      <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
+                        Type of Shoot
+                      </div>
+                      <div className="text-xs sm:text-sm font-bold text-[#073B2F] whitespace-nowrap truncate">
+                        {selectedShootType}
+                      </div>
+                    </div>
+                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#073B2F] transition shrink-0 ml-auto" />
+                  </button>
+
+                  {/* Type Dropdown Menu: Centered on mobile, anchored on desktop */}
+                  {isTypeDropdownOpen && (
+                    <>
+                      {/* Mobile Centered Backdrop Modal */}
+                      <div
+                        className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs sm:hidden"
+                        onClick={() => setIsTypeDropdownOpen(false)}
+                      >
+                        <div
+                          className="bg-white border border-[#DCE7D4] rounded-2xl shadow-2xl p-3 w-full max-w-[320px] z-50 animate-in fade-in zoom-in-95 duration-150 max-h-[75vh] overflow-y-auto"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <div className="text-xs font-bold text-[#5C6E5E] uppercase tracking-wider px-2 py-2 mb-1 border-b border-[#DCE7D4] flex items-center justify-between">
+                            <span>Select Type of Shoot</span>
+                            <button
+                              type="button"
+                              onClick={() => setIsTypeDropdownOpen(false)}
+                              className="text-[#5C6E5E] hover:text-[#073B2F] text-xs"
+                            >
+                              ✕
+                            </button>
+                          </div>
+                          <div className="space-y-1">
+                            {SHOOT_TYPES.map((type) => {
+                              const isSelected = type === selectedShootType;
+                              return (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedShootType(type);
+                                    setIsTypeDropdownOpen(false);
+                                  }}
+                                  className={`w-full px-3 py-2.5 rounded-xl text-xs font-semibold text-left flex items-center justify-between transition ${
+                                    isSelected
+                                      ? 'bg-[#073B2F] text-white font-bold'
+                                      : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                                  }`}
+                                >
+                                  <span>{type}</span>
+                                  {isSelected && <Check className="w-4 h-4 text-[#F0FFDA]" />}
+                                </button>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Desktop Anchored Dropdown */}
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-full sm:w-72 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
+                        {SHOOT_TYPES.map((type) => {
+                          const isSelected = type === selectedShootType;
+                          return (
+                            <button
+                              key={type}
+                              type="button"
+                              onClick={() => {
+                                setSelectedShootType(type);
+                                setIsTypeDropdownOpen(false);
+                              }}
+                              className={`w-full px-3 py-2 rounded-xl text-xs font-semibold text-left flex items-center justify-between transition outline-none focus:outline-none ${
+                                isSelected
+                                  ? 'bg-[#073B2F] text-white font-bold'
+                                  : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                              }`}
+                            >
+                              <span>{type}</span>
+                              {isSelected && <Check className="w-3.5 h-3.5 text-[#F0FFDA]" />}
+                            </button>
+                          );
+                        })}
+                      </div>
+                    </>
+                  )}
+                </div>
+
+                {/* Column 3: Specify Shoot (separate column appearing when 'Other Shoot' is selected) */}
+                {selectedShootType === 'Other Shoot' && (
+                  <div className="relative flex animate-in fade-in zoom-in-95 duration-150">
+                    <div className="w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border border-[#DCE7D4] bg-white hover:border-[#073B2F]/50 focus-within:border-[#073B2F] focus-within:ring-1 focus-within:ring-[#073B2F]/40 transition text-left group">
+                      <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
+                        <FileText className="w-5 h-5 text-[#073B2F]" />
+                      </div>
+                      <div className="flex-1 min-w-0 pr-1">
+                        <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
+                          What type of shoot is it?
+                        </div>
+                        <input
+                          type="text"
+                          placeholder="e.g. Drone, Maternity..."
+                          value={customShootQuery}
+                          onChange={(e) => setCustomShootQuery(e.target.value)}
+                          className="w-full bg-transparent text-xs sm:text-sm font-bold text-[#073B2F] focus:outline-none placeholder:text-[#5C6E5E]/60 truncate"
+                          autoFocus
+                        />
+                      </div>
+                    </div>
                   </div>
                 )}
 
-                {/* Selected Date Summary & CTA to Proceed to Shoot Details */}
-                <div className="p-3.5 rounded-2xl bg-[#060e22] border border-[#1d3870] flex flex-col sm:flex-row items-center justify-between gap-3">
-                  <div>
-                    <span className="text-[10px] uppercase tracking-wider text-stone-400 block">
-                      Target Shoot Date Selected
-                    </span>
-                    <div className="flex items-center gap-2 mt-0.5">
-                      <span className="text-sm sm:text-base font-bold text-[#d4f770]">
-                        {formatDateDayMonth(selectedBookingDate)}
-                      </span>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const photogAvail = availability[activePhotographerForBooking.id] || {};
-                      if (photogAvail[selectedBookingDate] === 'booked') {
-                        setPopupFeedbackMsg('The selected date is already booked. Please choose an available date.');
-                        return;
-                      }
-                      setBookingStep('details');
-                    }}
-                    className="w-full sm:w-auto px-5 py-2.5 rounded-xl bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] text-xs font-bold transition flex items-center justify-center gap-2 shadow-md"
-                  >
-                    <span>Confirm {formatDateDayMonth(selectedBookingDate)} & Enter Details</span>
-                    <ArrowRight className="w-4 h-4" />
-                  </button>
-                </div>
+                {/* Column Action: Check Availability Button (always in the same row / grid) */}
+                <button
+                  type="button"
+                  id="btn-find-available-photographers"
+                  onClick={handleFindClick}
+                  className="w-full sm:w-auto h-[52px] sm:h-[54px] px-6 sm:px-7 bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-[0.98] text-white font-bold rounded-xl flex items-center justify-center gap-2 transition text-xs sm:text-sm whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none shrink-0 shadow-xs cursor-pointer"
+                >
+                  <span>Check Availability</span>
+                  <ArrowRight className="w-4 h-4" />
+                </button>
               </div>
-            ) : (
-              /* STEP 2: SHOOT DETAILS FEED (after user confirms date in popup calendar) */
-              <form onSubmit={handleConfirmBooking} className="space-y-4">
-                {/* Back button and summary header */}
-                <div className="flex items-center justify-between bg-[#060e22] p-3 rounded-2xl border border-[#1d3870]">
-                  <button
-                    type="button"
-                    onClick={() => setBookingStep('calendar')}
-                    className="text-xs text-[#d4f770] hover:underline font-bold flex items-center gap-1"
-                  >
-                    <span>← Change Date on Calendar</span>
-                  </button>
-
-                  <div className="flex items-center gap-2">
-                    <span className="text-[11px] text-stone-400">Shoot Date:</span>
-                    <span className="text-xs font-bold text-[#d4f770] bg-[#0b1733] px-2.5 py-1 rounded-lg border border-[#1d3870]">
-                      {formatDateDayMonth(selectedBookingDate)}
-                    </span>
-                  </div>
-                </div>
-
-                {/* 1. What type of shoot is it? (First Thing) */}
-                <div>
-                  <label className="block text-xs font-semibold text-stone-200 mb-1">
-                    1. What type of shoot is it? *
-                  </label>
-                  <select
-                    id="input-form-shoot-type"
-                    value={formShootType}
-                    onChange={(e) => setFormShootType(e.target.value)}
-                    className="w-full bg-[#060e22] border border-[#1d3870] rounded-xl px-3.5 py-2 text-xs text-white focus:outline-none focus:border-[#d4f770] cursor-pointer"
-                  >
-                    {SHOOT_TYPES.map((t) => (
-                      <option key={t} value={t}>
-                        {t}
-                      </option>
-                    ))}
-                  </select>
-
-                  {formShootType === 'Other / Custom Requirement' && (
-                    <input
-                      type="text"
-                      placeholder="Write about the shoot requirement..."
-                      value={formCustomShootType}
-                      onChange={(e) => setFormCustomShootType(e.target.value)}
-                      className="w-full mt-2 bg-[#060e22] border border-[#d4f770]/60 rounded-xl px-3.5 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                    />
-                  )}
-                </div>
-
-                {/* 2. Client Information: Name, Phone Number, Email ID */}
-                <div className="p-3.5 bg-[#060e22] rounded-2xl border border-[#1d3870] space-y-3">
-                  <div className="text-[11px] font-semibold text-[#d4f770] flex items-center gap-1.5 uppercase tracking-wider">
-                    <User className="w-3.5 h-3.5" />
-                    <span>2. Client Information</span>
-                  </div>
-
-                  <div>
-                    <label className="block text-[11px] text-stone-400 mb-1">
-                      Client Full Name *
-                    </label>
-                    <input
-                      id="input-form-client-name"
-                      type="text"
-                      required
-                      placeholder="e.g. Client Name / Couple Name / Creative Lead"
-                      value={clientName}
-                      onChange={(e) => setClientName(e.target.value)}
-                      className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[11px] text-stone-400 mb-1 flex items-center gap-1">
-                        <Phone className="w-3 h-3 text-[#d4f770]" />
-                        <span>Phone / WhatsApp (+91) *</span>
-                      </label>
-                      <input
-                        id="input-form-client-phone"
-                        type="tel"
-                        required
-                        placeholder="+91 98765 43210"
-                        value={clientPhone}
-                        onChange={(e) => setClientPhone(e.target.value)}
-                        className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[11px] text-stone-400 mb-1 flex items-center gap-1">
-                        <Mail className="w-3 h-3 text-[#d4f770]" />
-                        <span>Email ID *</span>
-                      </label>
-                      <input
-                        id="input-form-client-email"
-                        type="email"
-                        required
-                        placeholder="client@gmail.com"
-                        value={clientEmail}
-                        onChange={(e) => setClientEmail(e.target.value)}
-                        className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. Timing of the shoot: Start and End */}
-                <div className="p-3.5 bg-[#060e22] rounded-2xl border border-[#1d3870] space-y-2.5">
-                  <div className="text-[11px] font-semibold text-[#d4f770] flex items-center gap-1.5 uppercase tracking-wider">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>3. Timing of the Shoot (Start & End)</span>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-3">
-                    <div>
-                      <label className="block text-[10px] text-stone-400 mb-1">
-                        Start Time *
-                      </label>
-                      <input
-                        id="input-form-time-start"
-                        type="time"
-                        required
-                        value={timingStart}
-                        onChange={(e) => setTimingStart(e.target.value)}
-                        className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#d4f770]"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-[10px] text-stone-400 mb-1">
-                        End Time *
-                      </label>
-                      <input
-                        id="input-form-time-end"
-                        type="time"
-                        required
-                        value={timingEnd}
-                        onChange={(e) => setTimingEnd(e.target.value)}
-                        className="w-full bg-[#0b1733] border border-[#1d3870] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#d4f770]"
-                      />
-                    </div>
-                  </div>
-                </div>
-
-                {/* 4. Mood board link */}
-                <div>
-                  <label className="block text-xs font-semibold text-stone-200 mb-1 flex items-center gap-1">
-                    <LinkIcon className="w-3.5 h-3.5 text-[#d4f770]" />
-                    <span>4. Mood board link (Pinterest / Google Drive / Canva / Instagram)</span>
-                  </label>
-                  <input
-                    id="input-form-moodboard"
-                    type="url"
-                    placeholder="https://pinterest.com/pin/... or Google Drive link"
-                    value={moodBoardLink}
-                    onChange={(e) => setMoodBoardLink(e.target.value)}
-                    className="w-full bg-[#060e22] border border-[#1d3870] rounded-xl px-3.5 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                  />
-                </div>
-
-                {/* 5. Brief of a shoot */}
-                <div>
-                  <label className="block text-xs font-semibold text-stone-200 mb-1 flex items-center gap-1">
-                    <FileText className="w-3.5 h-3.5 text-[#d4f770]" />
-                    <span>5. Brief of a shoot *</span>
-                  </label>
-                  <textarea
-                    id="input-form-brief"
-                    rows={2}
-                    required
-                    placeholder="Deliverables, ceremony/shot list, aesthetic vibe, reference details..."
-                    value={shootBrief}
-                    onChange={(e) => setShootBrief(e.target.value)}
-                    className="w-full bg-[#060e22] border border-[#1d3870] rounded-xl px-3.5 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                  />
-                </div>
-
-                {/* 6. Shoot Location / Venue (Last Thing) */}
-                <div>
-                  <label className="block text-xs font-semibold text-stone-200 mb-1 flex items-center gap-1">
-                    <MapPin className="w-3.5 h-3.5 text-[#d4f770]" />
-                    <span>6. Shoot Location / Venue (Last Thing) *</span>
-                  </label>
-                  <input
-                    id="input-form-location"
-                    type="text"
-                    required
-                    placeholder="e.g. ITC Maurya New Delhi, The Leela Palace Chanakyapuri, Farmhouse Chattarpur"
-                    value={shootLocation}
-                    onChange={(e) => setShootLocation(e.target.value)}
-                    className="w-full bg-[#060e22] border border-[#1d3870] rounded-xl px-3.5 py-2 text-xs text-white placeholder-stone-500 focus:outline-none focus:border-[#d4f770]"
-                  />
-                </div>
-
-                {/* Submit Action */}
-                <div className="pt-2">
-                  <button
-                    id="btn-confirm-shoot-booking"
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="w-full py-3 rounded-xl bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] font-bold text-xs transition flex items-center justify-center gap-2 shadow-md disabled:opacity-50"
-                  >
-                    {isSubmitting ? (
-                      <span>Reserving Date on Calendar...</span>
-                    ) : (
-                      <>
-                        <span>Confirm & Book Shoot for {formatDateDayMonth(selectedBookingDate)}</span>
-                        <ArrowRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
+            </div>
           </div>
         </div>
-      )}
+      </section>
+
+      {/* 2. Available Photographers Section */}
+      <section ref={resultsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10">
+        {/* Section Heading without extra icon */}
+        <div className="mb-6 sm:mb-8">
+          <h2 className="text-lg sm:text-2xl font-bold text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif]">
+            Available Photographers ({displayPhotographers.length})
+          </h2>
+        </div>
+
+        {/* Photographers Grid */}
+        {displayPhotographers.length === 0 ? (
+          <div className="text-center py-16 px-4 bg-white rounded-3xl border border-[#DCE7D4]">
+            <Camera className="w-12 h-12 text-[#5C6E5E]/40 mx-auto mb-3" />
+            <h3 className="text-base font-bold text-[#073B2F]">No photographers available for this exact date</h3>
+            <p className="text-xs text-[#5C6E5E] mt-1 max-w-sm mx-auto">
+              Try picking another nearby date or selecting a different shoot category.
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {displayPhotographers.map((p) => {
+              return (
+                <div
+                  key={p.id}
+                  id={`photographer-card-${p.id}`}
+                  className="bg-white rounded-2xl sm:rounded-3xl border border-[#DCE7D4] hover:border-[#073B2F]/40 p-5 sm:p-6 transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
+                >
+                  <div>
+                    {/* Top Row: Avatar, Name, Available Badge, Location & Exp */}
+                    <div className="flex items-start gap-4">
+                      <img
+                        src={p.avatarUrl || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80'}
+                        alt={p.name}
+                        referrerPolicy="no-referrer"
+                        className="w-16 h-16 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+                      />
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between gap-1 flex-wrap">
+                          <h3 className="text-base font-bold text-[#073B2F] truncate">
+                            {p.name}
+                          </h3>
+                          <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                            <span>Available</span>
+                          </span>
+                        </div>
+                        <div className="flex items-center gap-1 text-xs text-[#5C6E5E] mt-1 font-medium">
+                          <MapPin className="w-3.5 h-3.5 text-[#5C6E5E] shrink-0" />
+                          <span>{p.city} • {p.experienceYears}+ yrs exp</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Headline / Specialty Title */}
+                    <h4 className="text-[14px] sm:text-[15px] font-bold text-[#073B2F] mt-4 leading-snug">
+                      {p.title}
+                    </h4>
+
+                    {/* Bio Description */}
+                    <p className="text-xs sm:text-[13px] text-[#5C6E5E] leading-relaxed mt-2 line-clamp-3 font-normal">
+                      {p.bio}
+                    </p>
+
+                    {/* Tappable Specialization Categories */}
+                    {(() => {
+                      const activeCardCategory = cardActiveCategory[p.id] || p.specialties[0] || 'Commercial Shoot';
+                      const category6Photos = getCategoryPhotos(p, activeCardCategory, 6);
+
+                      return (
+                        <>
+                          <div className="mt-4">
+                            <div className="flex flex-wrap gap-1.5">
+                              {p.specialties.map((spec) => {
+                                const isSelected = spec === activeCardCategory;
+                                return (
+                                  <button
+                                    key={spec}
+                                    type="button"
+                                    onClick={() => {
+                                      setCardActiveCategory((prev) => ({ ...prev, [p.id]: spec }));
+                                    }}
+                                    className={`text-xs font-bold px-3 py-1.5 rounded-xl transition cursor-pointer active:scale-95 ${
+                                      isSelected
+                                        ? 'bg-[#073B2F] text-white shadow-xs'
+                                        : 'bg-[#F6F3EC] text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                                    }`}
+                                  >
+                                    <span>{spec}</span>
+                                  </button>
+                                );
+                              })}
+                            </div>
+                          </div>
+
+                          {/* Category Photos Showcase Strip (6 preview photos) */}
+                          <div className="mt-4 pt-3 border-t border-[#DCE7D4]/60">
+                            <div className="flex items-center justify-between mb-2">
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedShowcaseCategory(activeCardCategory);
+                                  setPortfolioShowcasePhotographer(p);
+                                }}
+                                className="text-xs font-bold text-[#073B2F] hover:text-[#0c4e3f] flex items-center gap-1.5 hover:underline cursor-pointer group"
+                              >
+                                <span>{activeCardCategory} see more</span>
+                                <ArrowRight className="w-3.5 h-3.5 text-[#FF6A45] transition-transform group-hover:translate-x-0.5" />
+                              </button>
+                            </div>
+
+                            {/* Work Sample Thumbnails */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedShowcaseCategory(activeCardCategory);
+                                setPortfolioShowcasePhotographer(p);
+                              }}
+                              className="w-full group/sample text-left transition cursor-pointer"
+                            >
+                              <div className="grid grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] group-hover/sample:border-[#073B2F] transition">
+                                {category6Photos.map((sampleImg, sIdx) => (
+                                  <div key={sIdx} className="relative aspect-4/3 overflow-hidden rounded-lg bg-stone-200">
+                                    <img
+                                      src={sampleImg}
+                                      alt=""
+                                      referrerPolicy="no-referrer"
+                                      className="w-full h-full object-cover transition-transform duration-300 group-hover/sample:scale-105"
+                                    />
+                                  </div>
+                                ))}
+                              </div>
+                            </button>
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+
+                  {/* Action Buttons: Forest Green for booking */}
+                  <div className="mt-6 space-y-2">
+                    <button
+                      type="button"
+                      onClick={() => handleBookClick(p)}
+                      className="w-full py-3 px-4 bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-[0.98] text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs"
+                    >
+                      <span>Book for {formatDateDayMonth(selectedDate)}</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleOpenSchedule(p)}
+                      className="w-full py-2.5 px-3 text-xs text-[#073B2F] hover:text-[#073B2F] font-bold hover:bg-[#F6F3EC] rounded-xl transition flex items-center justify-center gap-1.5 border border-[#DCE7D4]"
+                    >
+                      <CalendarIcon className="w-3.5 h-3.5 text-[#073B2F]" />
+                      <span>Schedule of {p.name.split(' ')[0]} for this month</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+
+        {/* 4. Social Proof & Brand Partners Section */}
+        <div className="border-t border-[#DCE7D4] pt-8 mt-16 pb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
+            <div>
+              <h3 className="text-base sm:text-lg font-bold text-[#073B2F]">
+                Trusted by leading agencies and brands
+              </h3>
+              <p className="text-xs sm:text-sm text-[#5C6E5E] mt-0.5">
+                Marketing teams, creative agencies and production houses rely on Shoot Lobby for their photography needs.
+              </p>
+            </div>
+            <button
+              type="button"
+              onClick={onOpenPhotographerSignUp ? onOpenPhotographerSignUp : () => setIsJoinNetworkOpen(true)}
+              className="text-[#073B2F] hover:text-[#0c4e3f] font-bold text-sm inline-flex items-center gap-1 shrink-0 group self-start sm:self-auto hover:underline cursor-pointer"
+            >
+              <span>Join our network as Photographer</span>
+              <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />
+            </button>
+          </div>
+
+          {/* Precision monochrome brand logos */}
+          <BrandLogos className="mt-4" />
+        </div>
+      </section>
+
+      {/* Photographer Schedule & Availability Modal */}
+      <PhotographerScheduleModal
+        isOpen={isScheduleModalOpen}
+        onClose={() => setIsScheduleModalOpen(false)}
+        photographer={activePhotographerForSchedule}
+        targetDate={selectedDate}
+        availability={availability}
+        shoots={shoots}
+        onSelectDateAndBook={handleScheduleDateSelected}
+      />
+
+      {/* Booking Modal */}
+      <ClientBookingModal
+        isOpen={isBookingModalOpen}
+        onClose={() => setIsBookingModalOpen(false)}
+        photographer={activePhotographerForBooking}
+        targetDate={selectedDate}
+        shootType={
+          selectedShootType === 'Other Shoot' && customShootQuery
+            ? `Other Shoot: ${customShootQuery}`
+            : selectedShootType
+        }
+        availability={availability}
+        shoots={shoots}
+        onConfirmBooking={onBookShoot}
+      />
+
+      {/* Portfolio Showcase Modal */}
+      <PortfolioShowcaseModal
+        isOpen={Boolean(portfolioShowcasePhotographer)}
+        onClose={() => {
+          setPortfolioShowcasePhotographer(null);
+          setSelectedShowcaseCategory(undefined);
+        }}
+        photographer={portfolioShowcasePhotographer}
+        initialCategory={selectedShowcaseCategory}
+        onBookPhotographer={(photog) => {
+          setPortfolioShowcasePhotographer(null);
+          setSelectedShowcaseCategory(undefined);
+          handleBookClick(photog);
+        }}
+      />
+
+      {/* Join Network Modal */}
+      <JoinNetworkModal
+        isOpen={isJoinNetworkOpen}
+        onClose={() => setIsJoinNetworkOpen(false)}
+      />
     </div>
   );
 };

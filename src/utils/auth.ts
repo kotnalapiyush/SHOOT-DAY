@@ -76,6 +76,16 @@ export function verifyPhotographerLogin(
     return { success: false, error: 'No photographer account found with this email, phone, or name.' };
   }
 
+  // If photographer is on hold, block login
+  if (matched.status === 'on_hold') {
+    return {
+      success: false,
+      error: `Your photographer account has been placed ON HOLD by the studio administrator${
+        matched.holdReason ? ` (${matched.holdReason})` : ''
+      }. You cannot log in or manage your schedule until reactivated.`,
+    };
+  }
+
   // Check password: custom password, or default fallback pattern (e.g. firstname123, or 123456)
   const expectedPassword = matched.loginPassword || `${matched.name.split(' ')[0].toLowerCase()}123`;
   const isPassValid = cleanPass === expectedPassword || cleanPass === '123456' || cleanPass === `${matched.name.split(' ')[0].toLowerCase()}123`;

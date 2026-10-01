@@ -8,6 +8,14 @@ import {
   Lock,
   LogOut,
   Shield,
+  Pause,
+  Play,
+  Trash2,
+  Pencil,
+  AlertTriangle,
+  KeyRound,
+  Camera,
+  Users,
 } from 'lucide-react';
 import { Header } from './components/Header';
 import { PhotographerCalendar } from './components/PhotographerCalendar';
@@ -15,8 +23,18 @@ import { ShootsList } from './components/ShootsList';
 import { ClientBookingView } from './components/ClientBookingView';
 import { NotificationDrawer } from './components/NotificationDrawer';
 import { PhotographerProfileModal } from './components/PhotographerProfileModal';
+import { PhotographerSelfEditModal } from './components/PhotographerSelfEditModal';
+import { AdminAccountsModal } from './components/AdminAccountsModal';
 import { LoginModal } from './components/LoginModal';
+import { PhotographerSignUpModal } from './components/PhotographerSignUpModal';
+import { AdminPhotographersModal } from './components/AdminPhotographersModal';
+import { PhotographerDetailModal } from './components/PhotographerDetailModal';
+import {
+  syncPhotographerToFirestore,
+  deletePhotographerFromFirestore,
+} from './firebase/firestoreService';
 import { SocialBaeLogo } from './components/SocialBaeLogo';
+import { ShootLobbyLogo } from './components/ShootLobbyLogo';
 import {
   PhotographerProfile,
   ShootBooking,
@@ -37,6 +55,8 @@ import {
   loadActivePhotographerId,
   saveActivePhotographerId,
   subscribeToUpdates,
+  formatDateKey,
+  APP_CURRENT_YEAR,
 } from './utils/storage';
 import { playNotificationChime } from './utils/sound';
 
@@ -51,7 +71,13 @@ export default function App() {
     return session ? 'photographer' : 'client';
   });
 
-  const [photographerTab, setPhotographerTab] = useState<'all' | 'calendar' | 'shoots'>('all');
+  // Ensure dark class is completely removed
+  useEffect(() => {
+    document.documentElement.classList.remove('dark');
+    localStorage.removeItem('shootday_theme');
+  }, []);
+
+  const [photographerTab, setPhotographerTab] = useState<'calendar' | 'shoots'>('calendar');
 
   // Core Data States
   const [photographers, setPhotographers] = useState<PhotographerProfile[]>(() =>
@@ -76,6 +102,12 @@ export default function App() {
   const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
   const [isProfileModalOpen, setIsProfileModalOpen] = useState(false);
   const [photographerToEdit, setPhotographerToEdit] = useState<PhotographerProfile | null>(null);
+  const [photographerToDelete, setPhotographerToDelete] = useState<PhotographerProfile | null>(null);
+  const [isSelfEditModalOpen, setIsSelfEditModalOpen] = useState(false);
+  const [isAdminAccountsModalOpen, setIsAdminAccountsModalOpen] = useState(false);
+  const [isPhotographerSignUpOpen, setIsPhotographerSignUpOpen] = useState(false);
+  const [isAdminPhotographersModalOpen, setIsAdminPhotographersModalOpen] = useState(false);
+  const [detailModalPhotographer, setDetailModalPhotographer] = useState<PhotographerProfile | null>(null);
 
   // Sound preference & Banner alert
   const [soundEnabled, setSoundEnabled] = useState(true);
@@ -297,6 +329,175 @@ export default function App() {
     savePhotographers(updatedList);
   };
 
+  // Photographer Self-Registration Handler
+  const handlePhotographerSignUp = (newProfile: PhotographerProfile) => {
+    const updatedList = [...photographers, newProfile];
+    setPhotographers(updatedList);
+    savePhotographers(updatedList);
+    syncPhotographerToFirestore(newProfile);
+
+    // Create Notification for admin
+    const regNotif: NotificationItem = {
+      id: `notif-reg-${Date.now()}`,
+      photographerId: newProfile.id,
+      title: '👤 New Photographer Registered',
+      message: `${newProfile.name} (${newProfile.city}) submitted their profile details. Click to review, inspect credentials, and activate profile.`,
+      date: formatDateKey(new Date()),
+      read: false,
+      createdAt: new Date().toISOString(),
+      type: 'photographer_registration',
+    };
+    const updatedNotifs = [regNotif, ...notifications];
+    setNotifications(updatedNotifs);
+    saveNotifications(updatedNotifs);
+
+    setRecentAlert({
+      id: regNotif.id,
+      title: '👤 New Photographer Registered!',
+      message: `${newProfile.name} (${newProfile.city}) submitted their profile.`,
+      photographerId: newProfile.id,
+      date: 'Review Required',
+    });
+    if (soundEnabled) playNotificationChime();
+  };
+
+  // Toggle Hold / Resume Photographer status
+  const handleTogglePhotographerHold = (photogId: string) => {
+    const target = photographers.find((p) => p.id === photogId);
+    if (!target) return;
+    const nextStatus: 'active' | 'on_hold' = target.status === 'on_hold' ? 'active' : 'on_hold';
+    const updatedList = photographers.map((p) => {
+      if (p.id === photogId) {
+        const updatedProfile = { ...p, status: nextStatus };
+        syncPhotographerToFirestore(updatedProfile);
+        return updatedProfile;
+      }
+      return p;
+    });
+    setPhotographers(updatedList);
+    savePhotographers(updatedList);
+
+    if (detailModalPhotographer?.id === photogId) {
+      setDetailModalPhotographer((prev) =>
+        prev ? { ...prev, status: nextStatus } : null
+      );
+    }
+
+    setRecentAlert({
+      id: `hold-${Date.now()}`,
+      title: nextStatus === 'on_hold' ? 'Photographer Put On Hold' : 'Photographer Resumed & Active',
+      message:
+        nextStatus === 'on_hold'
+          ? `${target.name}'s profile is paused. Client bookings are disabled.`
+          : `${target.name}'s profile is now active and ready for client bookings.`,
+      photographerId: photogId,
+      date: nextStatus === 'on_hold' ? 'Status: On Hold' : 'Status: Active',
+    });
+    setTimeout(() => setRecentAlert(null), 5000);
+  };
+
+  // Delete Photographer Profile permanently
+  const handleDeletePhotographer = (photogId: string) => {
+    const target = photographers.find((p) => p.id === photogId);
+    const remaining = photographers.filter((p) => p.id !== photogId);
+    if (remaining.length === 0) {
+      alert('At least one photographer profile must remain in the studio.');
+      return;
+    }
+
+    setPhotographers(remaining);
+    savePhotographers(remaining);
+    deletePhotographerFromFirestore(photogId);
+
+    // Switch active photographer if the deleted one was selected
+    if (activePhotographerId === photogId) {
+      setActivePhotographerId(remaining[0].id);
+      saveActivePhotographerId(remaining[0].id);
+    }
+
+    if (detailModalPhotographer?.id === photogId) {
+      setDetailModalPhotographer(null);
+    }
+
+    setPhotographerToDelete(null);
+    setIsProfileModalOpen(false);
+
+    setRecentAlert({
+      id: `del-${Date.now()}`,
+      title: 'Profile Deleted',
+      message: `${target?.name || 'Photographer'} has been permanently removed from the network.`,
+      photographerId: '',
+      date: 'Profile Removed',
+    });
+    setTimeout(() => setRecentAlert(null), 5000);
+  };
+
+  // Photographer Self-Edit Save Handler
+  const handlePhotographerSelfSave = (
+    updatedProfile: PhotographerProfile,
+    passwordChanged: boolean,
+    newPassword?: string
+  ) => {
+    const updatedList = photographers.map((p) =>
+      p.id === updatedProfile.id ? updatedProfile : p
+    );
+    setPhotographers(updatedList);
+    savePhotographers(updatedList);
+
+    // If password was changed, immediately create an admin notification and toast alert
+    if (passwordChanged && newPassword) {
+      const passNotif: NotificationItem = {
+        id: `pass-${Date.now()}`,
+        photographerId: updatedProfile.id,
+        title: `🔑 Password Updated: ${updatedProfile.name}`,
+        message: `${updatedProfile.name} changed their login password to "${newPassword}". Admin master access is synced.`,
+        date: formatDateKey(new Date()),
+        read: false,
+        createdAt: new Date().toISOString(),
+      };
+      const updatedNotifs = [passNotif, ...notifications];
+      setNotifications(updatedNotifs);
+      saveNotifications(updatedNotifs);
+
+      setRecentAlert({
+        id: passNotif.id,
+        title: `🔑 Password Changed: ${updatedProfile.name}`,
+        message: `New password: "${newPassword}". Synced with Admin accounts manager.`,
+        photographerId: updatedProfile.id,
+        date: formatDateKey(new Date()),
+      });
+      setTimeout(() => setRecentAlert(null), 9000);
+    } else {
+      setRecentAlert({
+        id: `prof-upd-${Date.now()}`,
+        title: 'Profile Updated',
+        message: 'Your profile picture, portfolio link, and details have been updated.',
+        photographerId: updatedProfile.id,
+        date: formatDateKey(new Date()),
+      });
+      setTimeout(() => setRecentAlert(null), 5000);
+    }
+  };
+
+  // Admin Account Password Reset / Change Handler
+  const handleAdminUpdatePassword = (photographerId: string, newPassword: string) => {
+    const target = photographers.find((p) => p.id === photographerId);
+    const updatedList = photographers.map((p) =>
+      p.id === photographerId ? { ...p, loginPassword: newPassword } : p
+    );
+    setPhotographers(updatedList);
+    savePhotographers(updatedList);
+
+    setRecentAlert({
+      id: `admin-pass-${Date.now()}`,
+      title: 'Password Updated by Admin',
+      message: `Updated login password for ${target?.name || 'photographer'} to "${newPassword}".`,
+      photographerId,
+      date: formatDateKey(new Date()),
+    });
+    setTimeout(() => setRecentAlert(null), 6000);
+  };
+
   // Notification actions
   const handleMarkAsRead = (id: string) => {
     const updated = notifications.map((n) => (n.id === id ? { ...n, read: true } : n));
@@ -318,30 +519,32 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#060e22] text-stone-100 flex flex-col selection:bg-[#d4f770] selection:text-[#0a152e] font-sans antialiased">
+    <div
+      className="min-h-screen flex flex-col font-sans antialiased bg-[#F6F3EC] text-[#073B2F] selection:bg-[#FF6A45] selection:text-white"
+    >
       {/* Toast Alert for Instant Booking */}
       {recentAlert && (
         <div
           id="real-time-booking-banner"
-          className="fixed top-20 right-4 z-50 max-w-md bg-[#0b1733] border border-[#d4f770]/60 rounded-3xl p-4 shadow-2xl text-stone-100 flex items-start gap-3"
+          className="fixed top-20 sm:top-24 right-4 z-50 max-w-md bg-white border border-[#DCE7D4] rounded-3xl p-4 shadow-xl text-[#073B2F] flex items-start gap-3 animate-in slide-in-from-top-4"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#d4f770]/20 text-[#d4f770] border border-[#d4f770]/40 flex items-center justify-center shrink-0">
-            <Bell className="w-5 h-5" />
+          <div className="w-10 h-10 rounded-2xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
+            <Bell className="w-5 h-5 text-[#073B2F]" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#d4f770]">
+              <span className="text-xs font-bold text-[#FF6A45]">
                 {recentAlert.title}
               </span>
               <button
                 type="button"
                 onClick={() => setRecentAlert(null)}
-                className="text-stone-400 hover:text-white text-xs px-1"
+                className="text-[#5C6E5E] hover:text-[#073B2F] text-xs px-1"
               >
                 ✕
               </button>
             </div>
-            <p className="text-xs text-stone-200 mt-0.5">{recentAlert.message}</p>
+            <p className="text-xs text-[#5C6E5E] mt-0.5">{recentAlert.message}</p>
             <div className="mt-2.5 flex items-center gap-2">
               <button
                 type="button"
@@ -349,7 +552,7 @@ export default function App() {
                   handleSelectShootFromNotif(recentAlert.photographerId, recentAlert.date);
                   setRecentAlert(null);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-[#d4f770] hover:bg-[#c6f052] text-[#0a152e] text-xs font-extrabold inline-flex items-center gap-1 transition"
+                className="px-3 py-1.5 rounded-xl bg-[#073B2F] hover:bg-[#052920] text-white text-xs font-bold inline-flex items-center gap-1 transition"
               >
                 <span>View on Calendar</span>
                 <ArrowRight className="w-3 h-3" />
@@ -371,45 +574,31 @@ export default function App() {
         onSelectPhotographer={handleSelectPhotographer}
         notifications={notifications}
         onOpenNotifications={() => setIsNotificationDrawerOpen(true)}
-        onOpenCreateProfile={() => {
-          setPhotographerToEdit(null);
-          setIsProfileModalOpen(true);
-        }}
+        onOpenPhotographerSignUp={() => setIsPhotographerSignUpOpen(true)}
+        onOpenPhotographersManager={() => setIsAdminPhotographersModalOpen(true)}
+        onOpenSelfEditProfile={() => setIsSelfEditModalOpen(true)}
+        onOpenAdminAccounts={() => setIsAdminAccountsModalOpen(true)}
       />
 
       {/* Main Content Area */}
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
+      <main className="flex-1 w-full">
         {viewMode === 'photographer' ? (
-          <div className="space-y-6">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
             {/* Photographer View Controls */}
-            <div className="flex flex-wrap items-center justify-between border-b border-[#182f5e] pb-3.5 gap-3">
+            <div className="flex flex-wrap items-center justify-between border-b border-[#DCE7D4] pb-3.5 gap-3">
               <div className="flex flex-wrap items-center gap-2">
-                <button
-                  id="tab-photographer-all"
-                  type="button"
-                  onClick={() => setPhotographerTab('all')}
-                  className={`px-3.5 py-1.5 rounded-2xl text-xs font-bold transition flex items-center gap-2 ${
-                    photographerTab === 'all'
-                      ? 'bg-[#0b1733] text-white border border-[#1d3870] shadow-sm ring-1 ring-[#d4f770]/40'
-                      : 'text-stone-400 hover:text-stone-200'
-                  }`}
-                  title="Calendar on top, shoot details below"
-                >
-                  <CalendarIcon className="w-3.5 h-3.5 text-[#d4f770]" />
-                  <span>Calendar on Top + Details Below</span>
-                </button>
-
                 <button
                   id="tab-photographer-calendar"
                   type="button"
                   onClick={() => setPhotographerTab('calendar')}
                   className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 ${
                     photographerTab === 'calendar'
-                      ? 'bg-[#0b1733] text-white border border-[#1d3870] shadow-sm ring-1 ring-[#d4f770]/40'
-                      : 'text-stone-400 hover:text-stone-200'
+                      ? 'bg-[#073B2F] text-white border border-[#073B2F] shadow-xs font-bold'
+                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
                   }`}
                 >
-                  <span>Calendar Only</span>
+                  <CalendarIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <span>Calendar</span>
                 </button>
 
                 <button
@@ -418,80 +607,65 @@ export default function App() {
                   onClick={() => setPhotographerTab('shoots')}
                   className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 ${
                     photographerTab === 'shoots'
-                      ? 'bg-[#0b1733] text-white border border-[#1d3870] shadow-sm ring-1 ring-[#d4f770]/40'
-                      : 'text-stone-400 hover:text-stone-200'
+                      ? 'bg-[#073B2F] text-white border border-[#073B2F] shadow-xs font-bold'
+                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
                   }`}
                 >
-                  <ListOrdered className="w-3.5 h-3.5 text-[#d4f770]" />
-                  <span>Details Only ({shoots.length})</span>
+                  <ListOrdered className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <span>Shoot Details ({shoots.length})</span>
                 </button>
               </div>
 
-              <div className="flex items-center gap-3">
-                {photographerTab === 'all' && (
-                  <a
-                    href="#shoot-details-section"
-                    className="text-xs text-stone-400 hover:text-[#d4f770] transition flex items-center gap-1 font-mono"
-                  >
-                    <span>↓ Jump to Details ({shoots.length})</span>
-                  </a>
-                )}
-
-                {authSession?.role === 'admin' && (
+              {authSession?.role === 'admin' ? (
+                <div className="flex items-center gap-2">
                   <button
                     type="button"
-                    onClick={() => {
-                      setPhotographerToEdit(activePhotographer);
-                      setIsProfileModalOpen(true);
-                    }}
-                    className="text-xs text-[#d4f770] hover:text-[#c4f042] font-bold hidden sm:block underline transition"
+                    id="btn-admin-manage-photographers-subbar"
+                    onClick={() => setIsAdminPhotographersModalOpen(true)}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#073B2F] text-white hover:bg-[#0c4e3f] shadow-2xs border border-[#073B2F] transition active:scale-[0.98] cursor-pointer"
+                    title="Review registered photographers and manage status"
                   >
-                    Edit {activePhotographer.name}'s Profile
+                    <Users className="w-3.5 h-3.5 text-[#F0FFDA]" />
+                    <span>Manage Photographers ({photographers.length})</span>
                   </button>
-                )}
-              </div>
+                </div>
+              ) : null}
             </div>
 
-            {/* 1. CALENDAR ON TOP (Rendered first) */}
-            {(photographerTab === 'all' || photographerTab === 'calendar') && (
+            {/* Calendar View */}
+            {photographerTab === 'calendar' && (
               <PhotographerCalendar
                 photographers={photographers}
                 activePhotographer={activePhotographer}
                 onSelectPhotographer={handleSelectPhotographer}
                 availability={availability}
                 onToggleDateStatus={handleToggleDateStatus}
-                onOpenCreateProfile={() => {
-                  setPhotographerToEdit(null);
-                  setIsProfileModalOpen(true);
+                onOpenPhotographersManager={() => setIsAdminPhotographersModalOpen(true)}
+                onViewPhotographerDetails={(p) => setDetailModalPhotographer(p)}
+                onTogglePhotographerStatus={handleTogglePhotographerHold}
+                onDeletePhotographer={(id) => {
+                  const p = photographers.find((x) => x.id === id);
+                  if (p) setPhotographerToDelete(p);
                 }}
+                onOpenSelfEditProfile={() => setIsSelfEditModalOpen(true)}
+                onOpenAdminAccounts={() => setIsAdminAccountsModalOpen(true)}
                 shoots={shoots}
                 onSwitchToShoots={() => setPhotographerTab('shoots')}
                 isAdmin={authSession?.role === 'admin'}
+                onLogout={handleLogout}
               />
             )}
 
-            {/* 2. DETAILS OF THINGS BELOW (Rendered down after the calendar) */}
-            {(photographerTab === 'all' || photographerTab === 'shoots') && (
-              <div id="shoot-details-section" className={photographerTab === 'all' ? 'pt-6 border-t border-[#182f5e] space-y-4' : 'space-y-4'}>
-                {photographerTab === 'all' && (
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-base sm:text-lg font-bold text-white flex items-center gap-2">
-                        <ListOrdered className="w-4 h-4 text-[#d4f770]" />
-                        <span>Booked Shoot Details & Client Feed ({shoots.length})</span>
-                      </h3>
-                      <p className="text-xs text-stone-400 mt-0.5">
-                        Client briefs, timings, mood boards, contact numbers, and venues for {activePhotographer.name}.
-                      </p>
-                    </div>
-                  </div>
-                )}
+            {/* Shoot Details View */}
+            {photographerTab === 'shoots' && (
+              <div id="shoot-details-section" className="space-y-4">
                 <ShootsList
                   shoots={shoots}
                   photographers={photographers}
                   activePhotographerId={activePhotographer.id}
                   onSelectShootDate={(photogId, date) => {
                     setActivePhotographerId(photogId);
+                    setPhotographerTab('calendar');
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                   }}
                   onUpdateShootStatus={handleUpdateShootStatus}
@@ -507,46 +681,29 @@ export default function App() {
             availability={availability}
             shoots={shoots}
             onBookShoot={handleClientBookShoot}
+            onOpenPhotographerSignUp={() => setIsPhotographerSignUpOpen(true)}
           />
         )}
       </main>
 
-      {/* Footer showcasing Shoot Social BAE Branding */}
-      <footer className="mt-auto border-t border-stone-800/80 bg-[#05070a] py-8 text-stone-400 text-xs">
+      {/* Footer showcasing Shoot Lobby Branding */}
+      <footer
+        className="mt-auto border-t border-[#DCE7D4] bg-white py-8 text-xs text-[#5C6E5E]"
+      >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <SocialBaeLogo size="sm" variant="light" showBadge={false} />
-            <span className="text-stone-500">|</span>
-            <span className="text-stone-300 font-medium">
-              Shoot Social BAE • Live Calendar & Shoot Network
-            </span>
+            <ShootLobbyLogo size="md" theme="green" variant="wordmark" />
           </div>
 
           <div className="flex items-center gap-4 text-[11px]">
-            {authSession ? (
-              <div className="flex items-center gap-3">
-                <span className="text-stone-300">
-                  Logged in as <strong className="text-white">{authSession.name}</strong> ({authSession.role === 'admin' ? 'Admin' : 'Photographer'})
-                </span>
-                <span>•</span>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="text-rose-300 hover:text-rose-200 transition flex items-center gap-1 font-semibold"
-                >
-                  <LogOut className="w-3 h-3" />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            ) : (
+            <span className="text-[#5C6E5E]">© {APP_CURRENT_YEAR} Shoot Lobby. All rights reserved.</span>
+            {!authSession && (
               <button
-                id="btn-footer-portal-login"
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
-                className="text-stone-400 hover:text-[#d4f770] transition flex items-center gap-1.5 font-semibold"
+                className="text-[#FF6A45] hover:underline font-bold"
               >
-                <Lock className="w-3 h-3" />
-                <span>Photographer & Admin Portal Login</span>
+                Photographer Portal
               </button>
             )}
           </div>
@@ -562,6 +719,14 @@ export default function App() {
         onMarkAsRead={handleMarkAsRead}
         onMarkAllAsRead={handleMarkAllAsRead}
         onSelectShoot={handleSelectShootFromNotif}
+        onViewPhotographerDetailsById={(photogId) => {
+          const p = photographers.find((x) => x.id === photogId);
+          if (p) {
+            setDetailModalPhotographer(p);
+          } else {
+            setIsAdminPhotographersModalOpen(true);
+          }
+        }}
         soundEnabled={soundEnabled}
         setSoundEnabled={setSoundEnabled}
       />
@@ -574,6 +739,118 @@ export default function App() {
         }}
         photographerToEdit={photographerToEdit}
         onSaveProfile={handleSavePhotographerProfile}
+        onDeleteProfile={handleDeletePhotographer}
+      />
+
+      {/* Photographer Self-Registration Modal */}
+      <PhotographerSignUpModal
+        isOpen={isPhotographerSignUpOpen}
+        onClose={() => setIsPhotographerSignUpOpen(false)}
+        onSignUpSuccess={handlePhotographerSignUp}
+        onOpenLogin={() => setIsLoginModalOpen(true)}
+      />
+
+      {/* Admin Master Photographers Management Modal */}
+      <AdminPhotographersModal
+        isOpen={isAdminPhotographersModalOpen}
+        onClose={() => setIsAdminPhotographersModalOpen(false)}
+        photographers={photographers}
+        onToggleStatus={handleTogglePhotographerHold}
+        onDeleteProfile={(id) => {
+          const p = photographers.find((x) => x.id === id);
+          if (p) setPhotographerToDelete(p);
+        }}
+        onViewDetails={(p) => setDetailModalPhotographer(p)}
+        onSelectInCalendar={(id) => {
+          handleSelectPhotographer(id);
+          setViewMode('photographer');
+          setPhotographerTab('calendar');
+        }}
+      />
+
+      {/* Photographer Full Details Inspector Modal */}
+      <PhotographerDetailModal
+        isOpen={Boolean(detailModalPhotographer)}
+        onClose={() => setDetailModalPhotographer(null)}
+        photographer={detailModalPhotographer}
+        onToggleStatus={handleTogglePhotographerHold}
+        onDeleteProfile={(id) => {
+          const p = photographers.find((x) => x.id === id);
+          if (p) setPhotographerToDelete(p);
+        }}
+        onSelectInCalendar={(id) => {
+          handleSelectPhotographer(id);
+          setViewMode('photographer');
+          setPhotographerTab('calendar');
+        }}
+      />
+
+      {/* Delete Photographer Confirmation Modal */}
+      {photographerToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
+          <div
+            id="modal-confirm-delete-photographer"
+            className="w-full max-w-md bg-white rounded-3xl p-6 border border-[#DCE7D4] shadow-2xl space-y-4"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
+                <AlertTriangle className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-[#073B2F]">
+                  Delete Photographer Profile?
+                </h3>
+                <p className="text-xs text-[#5C6E5E] mt-1">
+                  Are you sure you want to remove <strong className="text-[#073B2F]">{photographerToDelete.name}</strong> ({photographerToDelete.city}) from Shoot Lobby?
+                </p>
+              </div>
+            </div>
+
+            <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-[11px] text-rose-800">
+              This action cannot be undone. Their calendar, availability slots, and partner login credentials will be removed. All previous shoot history is retained.
+            </div>
+
+            <div className="flex items-center justify-end gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setPhotographerToDelete(null)}
+                className="px-4 py-2 rounded-xl text-xs font-semibold text-[#5C6E5E] hover:bg-stone-100 transition"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                id="btn-confirm-delete-photographer-action"
+                onClick={() => handleDeletePhotographer(photographerToDelete.id)}
+                className="px-4 py-2 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white flex items-center gap-1.5 transition shadow-sm"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Delete Profile</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Photographer Self-Edit Profile & Portfolio Modal */}
+      <PhotographerSelfEditModal
+        isOpen={isSelfEditModalOpen}
+        onClose={() => setIsSelfEditModalOpen(false)}
+        photographer={activePhotographer}
+        onSaveProfile={handlePhotographerSelfSave}
+      />
+
+      {/* Admin Accounts & Passwords Management Modal */}
+      <AdminAccountsModal
+        isOpen={isAdminAccountsModalOpen}
+        onClose={() => setIsAdminAccountsModalOpen(false)}
+        photographers={photographers}
+        onUpdatePassword={handleAdminUpdatePassword}
+        onEditFullProfile={(photog) => {
+          setIsAdminAccountsModalOpen(false);
+          setDetailModalPhotographer(photog);
+        }}
+        onLogout={handleLogout}
       />
 
       <LoginModal
@@ -581,6 +858,7 @@ export default function App() {
         onClose={() => setIsLoginModalOpen(false)}
         onLoginSuccess={handleLoginSuccess}
         photographers={photographers}
+        onOpenPhotographerSignUp={() => setIsPhotographerSignUpOpen(true)}
       />
     </div>
   );

@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <!-- Back Frame -->
+  <rect x="34" y="10" width="56" height="56" rx="12" stroke="#111111" stroke-width="5.5" stroke-opacity="0.32" />
+  <!-- Middle Frame -->
+  <rect x="22" y="22" width="56" height="56" rx="12" stroke="#111111" stroke-width="5.5" stroke-opacity="0.60" />
+  <!-- Front Frame -->
+  <rect x="10" y="34" width="56" height="56" rx="12" stroke="#111111" stroke-width="6" />
+  <!-- Booked Day Dot -->
+  <circle cx="28" cy="62" r="5" fill="#111111" />
+</svg>
