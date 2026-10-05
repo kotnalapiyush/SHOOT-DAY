@@ -1,5 +1,6 @@
 import {
   doc,
+  getDoc,
   setDoc,
   deleteDoc,
   getDocs,
@@ -150,6 +151,23 @@ export async function fetchPhotographersFromFirestore(): Promise<PhotographerPro
     }
   } catch (error) {
     handleFirestoreError(error, OperationType.LIST, path);
+  }
+  return null;
+}
+
+/**
+ * Fetch a single photographer document by ID from Firestore
+ */
+export async function fetchPhotographerByIdFromFirestore(id: string): Promise<PhotographerProfile | null> {
+  const path = `photographers/${id}`;
+  try {
+    const docRef = doc(db, 'photographers', id);
+    const snap = await getDoc(docRef);
+    if (snap.exists()) {
+      return snap.data() as PhotographerProfile;
+    }
+  } catch (error) {
+    handleFirestoreError(error, OperationType.GET, path);
   }
   return null;
 }

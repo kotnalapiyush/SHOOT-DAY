@@ -80,6 +80,30 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
         </div>
 
         <div className="p-5 sm:p-6 space-y-5 max-h-[75vh] overflow-y-auto">
+          {/* Pending Approval Alert Banner */}
+          {!isActive && (
+            <div className="p-4 rounded-2xl bg-amber-50 border border-amber-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-xs animate-in fade-in">
+              <div className="flex items-start gap-2.5 text-amber-950">
+                <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+                <div>
+                  <h4 className="font-bold text-sm text-amber-900">Account Pending Studio Admin Approval</h4>
+                  <p className="text-xs text-amber-800 mt-0.5 leading-relaxed">
+                    This photographer registered recently and is currently ON HOLD. Activate their account so their calendar opens for client bookings.
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                id="btn-detail-modal-approve-now"
+                onClick={() => onToggleStatus(photographer.id)}
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0"
+              >
+                <CheckCircle2 className="w-4 h-4" />
+                <span>Approve & Activate Now</span>
+              </button>
+            </div>
+          )}
+
           {/* Profile Header Card */}
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4]">
             <div className="flex items-center gap-3.5">

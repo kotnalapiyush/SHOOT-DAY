@@ -18,8 +18,10 @@ import {
   AlertCircle,
   Plus,
   ArrowLeft,
+  Clock,
 } from 'lucide-react';
 import { PhotographerProfile, ShootType } from '../types';
+import { compressImageFile } from '../utils/imageCompressor';
 
 interface PhotographerSignUpModalProps {
   isOpen: boolean;
@@ -130,7 +132,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
 
   if (!isOpen) return null;
 
-  const handleAvatarFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleAvatarFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
@@ -139,13 +141,13 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = (event) => {
-      const result = event.target?.result as string;
-      setAvatarUrl(result);
+    try {
+      const compressed = await compressImageFile(file, 600, 600, 0.85);
+      setAvatarUrl(compressed);
       setFormError(null);
-    };
-    reader.readAsDataURL(file);
+    } catch {
+      setFormError('Failed to process image file. Please try another image.');
+    }
   };
 
   const toggleSpecialty = (item: string) => {
@@ -252,7 +254,8 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
         'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
       categoryGalleries: defaultGalleries,
       portfolioSamples: defaultGalleries['Commercial Shoot'],
-      status: 'active', // Active immediately so photographer can log in and manage schedule across all tabs and devices
+      status: 'on_hold', // Newly registered photographers start on hold awaiting Studio Admin review / activation
+      holdReason: 'Pending Studio Admin Approval & Verification',
       registeredAt: new Date().toISOString(),
       portfolioUrl: portfolioUrl.trim(),
     };
@@ -302,13 +305,13 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
             </div>
             <div className="space-y-1.5">
               <h3 className="text-xl sm:text-2xl font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
-                Registration Completed!
+                Registration Submitted!
               </h3>
               <p className="text-sm font-semibold text-[#073B2F]">
                 Welcome, {submittedPhotographer.name}
               </p>
               <p className="text-xs text-[#5C6E5E] max-w-md mx-auto leading-relaxed">
-                Your photographer profile and sign-up details have been registered. The studio admin has been notified to review your details and activate your profile for client bookings.
+                Your account details have been recorded. Studio Admin will review your profile and activate your account for client bookings.
               </p>
             </div>
 
@@ -325,10 +328,16 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                   <p className="text-xs text-[#5C6E5E]">{submittedPhotographer.title} • {submittedPhotographer.city}</p>
                 </div>
               </div>
-              <div className="pt-2 border-t border-[#DCE7D4] text-xs text-[#5C6E5E] space-y-1">
+              <div className="pt-2 border-t border-[#DCE7D4] text-xs text-[#5C6E5E] space-y-1.5">
                 <div><span className="font-semibold text-[#073B2F]">Login Email:</span> {submittedPhotographer.loginEmail}</div>
                 <div><span className="font-semibold text-[#073B2F]">Phone:</span> {submittedPhotographer.phone}</div>
-                <div><span className="font-semibold text-[#073B2F]">Status:</span> <span className="text-emerald-700 font-bold">Active & Verified Account</span></div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-[#073B2F]">Status:</span>
+                  <span className="text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md font-bold text-[11px] inline-flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-amber-700" />
+                    Pending Studio Admin Approval
+                  </span>
+                </div>
               </div>
             </div>
 
@@ -343,24 +352,10 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                 <span>Register Another</span>
               </button>
 
-              {onOpenLogin && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    const loginEmail = submittedPhotographer.loginEmail || submittedPhotographer.email;
-                    const loginPass = submittedPhotographer.loginPassword;
-                    handleClose();
-                    onOpenLogin(loginEmail, loginPass);
-                  }}
-                  className="w-full sm:w-auto px-5 py-2.5 bg-[#FF6A45] hover:bg-[#e55835] text-white font-bold rounded-xl text-xs transition shadow-xs cursor-pointer active:scale-95"
-                >
-                  Sign In to Partner Portal →
-                </button>
-              )}
               <button
                 type="button"
                 onClick={handleClose}
-                className="w-full sm:w-auto px-5 py-2.5 bg-white hover:bg-stone-50 border border-[#DCE7D4] text-[#073B2F] font-bold rounded-xl text-xs transition cursor-pointer active:scale-95"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white font-bold rounded-xl text-xs transition shadow-xs cursor-pointer active:scale-95"
               >
                 Done
               </button>

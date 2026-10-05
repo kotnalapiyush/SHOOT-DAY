@@ -40,6 +40,7 @@ import {
   syncAvailabilityToFirestore,
   subscribeToNotifications,
   syncNotificationToFirestore,
+  fetchPhotographerByIdFromFirestore,
 } from './firebase/firestoreService';
 import { SocialBaeLogo } from './components/SocialBaeLogo';
 import { ShootLobbyLogo } from './components/ShootLobbyLogo';
@@ -417,28 +418,12 @@ export default function App() {
     savePhotographers(updatedList);
     syncPhotographerToFirestore(newProfile);
 
-    // Immediately log in the photographer so their dashboard and calendar open right away
-    const session: AuthSession = {
-      role: 'photographer',
-      id: newProfile.id,
-      photographerId: newProfile.id,
-      name: newProfile.name,
-      email: newProfile.email || newProfile.loginEmail || '',
-      avatarUrl: newProfile.avatarUrl,
-    };
-    saveAuthSession(session);
-    setAuthSession(session);
-    setActivePhotographerId(newProfile.id);
-    saveActivePhotographerId(newProfile.id);
-    setViewMode('photographer');
-    setPhotographerTab('calendar');
-
     // Create Notification for admin
     const regNotif: NotificationItem = {
       id: `notif-reg-${Date.now()}`,
       photographerId: newProfile.id,
-      title: '👤 New Photographer Registered',
-      message: `${newProfile.name} (${newProfile.city}) registered their profile. Account is active and ready for bookings.`,
+      title: '👤 New Photographer Registered (Pending Approval)',
+      message: `${newProfile.name} (${newProfile.city}) registered their profile. Account is ON HOLD awaiting admin approval & activation.`,
       date: formatDateKey(new Date()),
       read: false,
       createdAt: new Date().toISOString(),
@@ -451,43 +436,48 @@ export default function App() {
 
     setRecentAlert({
       id: regNotif.id,
-      title: '🎉 Account Created & Logged In!',
-      message: `Welcome ${newProfile.name}! Your photographer partner portal is ready.`,
+      title: '📋 Registration Submitted!',
+      message: `${newProfile.name}'s profile is registered and pending Studio Admin approval.`,
       photographerId: newProfile.id,
-      date: 'Account Active',
+      date: 'Pending Approval',
     });
     if (soundEnabled) playNotificationChime();
   };
 
   // Toggle Hold / Resume Photographer status
-  const handleTogglePhotographerHold = (photogId: string) => {
-    const target = photographers.find((p) => p.id === photogId);
+  const handleTogglePhotographerHold = async (photogId: string, forcedStatus?: 'active' | 'on_hold') => {
+    let target = photographers.find((p) => p.id === photogId);
+    if (!target) {
+      target = (await fetchPhotographerByIdFromFirestore(photogId)) || undefined;
+    }
     if (!target) return;
-    const nextStatus: 'active' | 'on_hold' = target.status === 'on_hold' ? 'active' : 'on_hold';
-    const updatedList = photographers.map((p) => {
-      if (p.id === photogId) {
-        const updatedProfile = { ...p, status: nextStatus };
-        syncPhotographerToFirestore(updatedProfile);
-        return updatedProfile;
-      }
-      return p;
-    });
+    const nextStatus: 'active' | 'on_hold' =
+      forcedStatus || (target.status === 'on_hold' ? 'active' : 'on_hold');
+
+    const updatedProfile: PhotographerProfile = {
+      ...target,
+      status: nextStatus,
+      holdReason: nextStatus === 'active' ? '' : (target.holdReason || 'Put on hold by studio admin'),
+    };
+    const updatedList = [
+      ...photographers.filter((p) => p.id !== photogId),
+      updatedProfile,
+    ];
     setPhotographers(updatedList);
     savePhotographers(updatedList);
+    await syncPhotographerToFirestore(updatedProfile);
 
     if (detailModalPhotographer?.id === photogId) {
-      setDetailModalPhotographer((prev) =>
-        prev ? { ...prev, status: nextStatus } : null
-      );
+      setDetailModalPhotographer(updatedProfile);
     }
 
     setRecentAlert({
       id: `hold-${Date.now()}`,
-      title: nextStatus === 'on_hold' ? 'Photographer Put On Hold' : 'Photographer Resumed & Active',
+      title: nextStatus === 'on_hold' ? 'Photographer Placed On Hold' : 'Photographer Approved & Active!',
       message:
         nextStatus === 'on_hold'
           ? `${target.name}'s profile is paused. Client bookings are disabled.`
-          : `${target.name}'s profile is now active and ready for client bookings.`,
+          : `${target.name} has been approved and activated! Ready for client bookings.`,
       photographerId: photogId,
       date: nextStatus === 'on_hold' ? 'Status: On Hold' : 'Status: Active',
     });
@@ -820,15 +810,30 @@ export default function App() {
         onClose={() => setIsNotificationDrawerOpen(false)}
         notifications={notifications}
         shoots={shoots}
+        photographers={photographers}
+        onApprovePhotographer={(photogId) => {
+          handleTogglePhotographerHold(photogId, 'active');
+        }}
         onMarkAsRead={handleMarkAsRead}
         onMarkAllAsRead={handleMarkAllAsRead}
         onSelectShoot={handleSelectShootFromNotif}
-        onViewPhotographerDetailsById={(photogId) => {
-          const p = photographers.find((x) => x.id === photogId);
+        onViewPhotographerDetailsById={async (photogId) => {
+          let p = photographers.find((x) => x.id === photogId);
+          if (!p) {
+            const notif = notifications.find((n) => n.photographerId === photogId);
+            if (notif) {
+              p = photographers.find((x) => (x.name && notif.message?.toLowerCase().includes(x.name.toLowerCase())));
+            }
+          }
           if (p) {
             setDetailModalPhotographer(p);
           } else {
-            setIsAdminPhotographersModalOpen(true);
+            const fetched = await fetchPhotographerByIdFromFirestore(photogId);
+            if (fetched) {
+              setDetailModalPhotographer(fetched);
+            } else {
+              setIsAdminPhotographersModalOpen(true);
+            }
           }
         }}
         soundEnabled={soundEnabled}
