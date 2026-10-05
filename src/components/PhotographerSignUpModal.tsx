@@ -24,8 +24,9 @@ import { PhotographerProfile, ShootType } from '../types';
 interface PhotographerSignUpModalProps {
   isOpen: boolean;
   onClose: () => void;
+  photographers?: PhotographerProfile[];
   onSignUpSuccess: (photographer: PhotographerProfile) => void;
-  onOpenLogin?: () => void;
+  onOpenLogin?: (initialEmail?: string, initialPassword?: string) => void;
 }
 
 const POPULAR_CITIES = [
@@ -67,6 +68,7 @@ const AVATAR_COLOR_GRADIENTS = [
 export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = ({
   isOpen,
   onClose,
+  photographers = [],
   onSignUpSuccess,
   onOpenLogin,
 }) => {
@@ -179,6 +181,19 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
       return;
     }
 
+    // Check if account already exists
+    const existingPhotog = photographers.find((p) => {
+      const emailMatch = (p.email || p.loginEmail || '').trim().toLowerCase() === cleanEmail;
+      return emailMatch;
+    });
+
+    if (existingPhotog) {
+      setFormError(
+        `An account with email "${cleanEmail}" already exists for ${existingPhotog.name}. Click below to sign into your existing account.`
+      );
+      return;
+    }
+
     if (!password || password.length < 5) {
       setFormError('Password must be at least 5 characters for partner portal access.');
       return;
@@ -237,8 +252,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
         'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
       categoryGalleries: defaultGalleries,
       portfolioSamples: defaultGalleries['Commercial Shoot'],
-      status: 'on_hold', // Newly registered photographers start on hold awaiting studio review / activation
-      holdReason: 'Newly Registered - Awaiting Admin Review & Activation',
+      status: 'active', // Active immediately so photographer can log in and manage schedule across all tabs and devices
       registeredAt: new Date().toISOString(),
       portfolioUrl: portfolioUrl.trim(),
     };
@@ -314,7 +328,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
               <div className="pt-2 border-t border-[#DCE7D4] text-xs text-[#5C6E5E] space-y-1">
                 <div><span className="font-semibold text-[#073B2F]">Login Email:</span> {submittedPhotographer.loginEmail}</div>
                 <div><span className="font-semibold text-[#073B2F]">Phone:</span> {submittedPhotographer.phone}</div>
-                <div><span className="font-semibold text-[#073B2F]">Status:</span> <span className="text-amber-800 font-bold">Registered (Awaiting Admin Activation)</span></div>
+                <div><span className="font-semibold text-[#073B2F]">Status:</span> <span className="text-emerald-700 font-bold">Active & Verified Account</span></div>
               </div>
             </div>
 
@@ -333,8 +347,10 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                 <button
                   type="button"
                   onClick={() => {
+                    const loginEmail = submittedPhotographer.loginEmail || submittedPhotographer.email;
+                    const loginPass = submittedPhotographer.loginPassword;
                     handleClose();
-                    onOpenLogin();
+                    onOpenLogin(loginEmail, loginPass);
                   }}
                   className="w-full sm:w-auto px-5 py-2.5 bg-[#FF6A45] hover:bg-[#e55835] text-white font-bold rounded-xl text-xs transition shadow-xs cursor-pointer active:scale-95"
                 >
@@ -354,9 +370,24 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
           /* Sign Up Form */
           <form onSubmit={handleSubmit} className="p-5 sm:p-6 space-y-4 max-h-[78vh] overflow-y-auto">
             {formError && (
-              <div className="p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs flex items-center gap-2">
-                <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
-                <span>{formError}</span>
+              <div className="p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs space-y-2">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
+                  <span>{formError}</span>
+                </div>
+                {formError.includes('already exists') && onOpenLogin && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const cleanEmail = email.trim().toLowerCase();
+                      handleClose();
+                      onOpenLogin(cleanEmail);
+                    }}
+                    className="w-full py-2 px-3 bg-[#073B2F] hover:bg-[#0c4e3f] text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+                  >
+                    <span>Sign In to This Account Now →</span>
+                  </button>
+                )}
               </div>
             )}
 

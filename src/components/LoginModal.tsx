@@ -21,6 +21,8 @@ interface LoginModalProps {
   photographers: PhotographerProfile[];
   onLoginSuccess: (session: AuthSession) => void;
   onOpenPhotographerSignUp?: () => void;
+  initialIdentifier?: string;
+  initialPassword?: string;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
@@ -29,12 +31,33 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   photographers,
   onLoginSuccess,
   onOpenPhotographerSignUp,
+  initialIdentifier,
+  initialPassword,
 }) => {
   const [roleTab, setRoleTab] = useState<'photographer' | 'admin'>('photographer');
 
   // Photographer form state
-  const [photographerIdInput, setPhotographerIdInput] = useState(photographers[0]?.email || 'rohan.sharma@lensdelhi.in');
-  const [photographerPassword, setPhotographerPassword] = useState('rohan123');
+  const [photographerIdInput, setPhotographerIdInput] = useState(
+    initialIdentifier || photographers[0]?.email || 'rohan.sharma@lensdelhi.in'
+  );
+  const [photographerPassword, setPhotographerPassword] = useState(
+    initialPassword || 'rohan123'
+  );
+
+  // Sync initial identifier if provided when modal opens
+  React.useEffect(() => {
+    if (isOpen) {
+      if (initialIdentifier) {
+        setPhotographerIdInput(initialIdentifier);
+        setRoleTab('photographer');
+      }
+      if (initialPassword) {
+        setPhotographerPassword(initialPassword);
+      }
+      setError(null);
+      setSuccessMsg(null);
+    }
+  }, [isOpen, initialIdentifier, initialPassword]);
 
   // Admin form state
   const [adminEmail, setAdminEmail] = useState(DEFAULT_ADMIN_CREDENTIALS.email);

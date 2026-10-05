@@ -32,6 +32,14 @@ import { PhotographerDetailModal } from './components/PhotographerDetailModal';
 import {
   syncPhotographerToFirestore,
   deletePhotographerFromFirestore,
+  subscribeToPhotographers,
+  subscribeToShoots,
+  syncShootToFirestore,
+  deleteShootFromFirestore,
+  subscribeToAvailability,
+  syncAvailabilityToFirestore,
+  subscribeToNotifications,
+  syncNotificationToFirestore,
 } from './firebase/firestoreService';
 import { SocialBaeLogo } from './components/SocialBaeLogo';
 import { ShootLobbyLogo } from './components/ShootLobbyLogo';
@@ -64,6 +72,7 @@ export default function App() {
   // Authentication session state (Admin, Photographer, or null for Public Client)
   const [authSession, setAuthSession] = useState<AuthSession | null>(() => getStoredAuthSession());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [loginModalCreds, setLoginModalCreds] = useState<{ email?: string; password?: string }>({});
 
   // View Mode: Public visitors strictly see 'client'. Logged in photographer/admin sees 'photographer'.
   const [viewMode, setViewMode] = useState<'photographer' | 'client'>(() => {
@@ -131,24 +140,81 @@ export default function App() {
     setNotifications(loadNotifications());
   }, []);
 
+  // Real-time Firestore synchronization across all devices and browser tabs
   useEffect(() => {
+    const unsubPhotographers = subscribeToPhotographers((remotePhotographers) => {
+      if (remotePhotographers && remotePhotographers.length > 0) {
+        setPhotographers(remotePhotographers);
+        savePhotographers(remotePhotographers);
+      }
+    }, loadPhotographers());
+
+    const unsubShoots = subscribeToShoots((remoteShoots) => {
+      if (remoteShoots && remoteShoots.length > 0) {
+        setShoots(remoteShoots);
+        saveShoots(remoteShoots);
+      }
+    }, loadShoots());
+
+    const unsubAvailability = subscribeToAvailability((remoteAvail) => {
+      if (remoteAvail && Object.keys(remoteAvail).length > 0) {
+        setAvailability(remoteAvail);
+        saveAvailability(remoteAvail);
+      }
+    }, loadAvailability());
+
+    const unsubNotifications = subscribeToNotifications((remoteNotifs) => {
+      if (remoteNotifs && remoteNotifs.length > 0) {
+        setNotifications(remoteNotifs);
+        saveNotifications(remoteNotifs);
+      }
+    }, loadNotifications());
+
+    return () => {
+      unsubPhotographers();
+      unsubShoots();
+      unsubAvailability();
+      unsubNotifications();
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleAuthSync = () => {
+      const current = getStoredAuthSession();
+      setAuthSession(current);
+      if (current?.role === 'photographer' && current.photographerId) {
+        setActivePhotographerId(current.photographerId);
+        setViewMode('photographer');
+      } else if (!current) {
+        setViewMode('client');
+      }
+    };
+
     const unsubscribe = subscribeToUpdates((type) => {
       refreshAllData();
+      if (type === 'AUTH_SESSION_CHANGED') {
+        handleAuthSync();
+      }
       if (type === 'NEW_CLIENT_BOOKING' && soundEnabled) {
         playNotificationChime();
       }
     });
 
     const handleStorage = (e: StorageEvent) => {
-      if (e.key?.startsWith('shoot_socialbae_')) {
+      if (e.key === 'shoot_socialbae_auth_session_v1') {
+        handleAuthSync();
+      } else if (e.key?.startsWith('shoot_socialbae_')) {
         refreshAllData();
       }
     };
+
     window.addEventListener('storage', handleStorage);
+    window.addEventListener('shoot_auth_changed', handleAuthSync);
 
     return () => {
       unsubscribe();
       window.removeEventListener('storage', handleStorage);
+      window.removeEventListener('shoot_auth_changed', handleAuthSync);
     };
   }, [refreshAllData, soundEnabled]);
 
@@ -202,6 +268,7 @@ export default function App() {
     };
     setAvailability(updatedAvail);
     saveAvailability(updatedAvail);
+    syncAvailabilityToFirestore(photogId, updatedAvail[photogId]);
 
     // 2. Manage shoot record
     if (newStatus === 'booked') {
@@ -227,9 +294,15 @@ export default function App() {
         const updatedShoots = [shootData, ...shoots];
         setShoots(updatedShoots);
         saveShoots(updatedShoots);
+        syncShootToFirestore(shootData);
       }
     } else if (newStatus === 'available') {
-      // Remove or mark cancelled
+      const targetShoot = shoots.find(
+        (s) => s.photographerId === photogId && s.date === date
+      );
+      if (targetShoot) {
+        deleteShootFromFirestore(targetShoot.id);
+      }
       const updatedShoots = shoots.filter(
         (s) => !(s.photographerId === photogId && s.date === date)
       );
@@ -243,6 +316,10 @@ export default function App() {
     const updatedShoots = shoots.map((s) => (s.id === shootId ? { ...s, status } : s));
     setShoots(updatedShoots);
     saveShoots(updatedShoots);
+    const target = updatedShoots.find((s) => s.id === shootId);
+    if (target) {
+      syncShootToFirestore(target);
+    }
   };
 
   // Booking from Client view
@@ -259,6 +336,7 @@ export default function App() {
     const updatedShoots = [newBooking, ...shoots];
     setShoots(updatedShoots);
     saveShoots(updatedShoots);
+    syncShootToFirestore(newBooking);
 
     // 2. Mark date as 'booked'
     const updatedAvail = { ...availability };
@@ -271,6 +349,7 @@ export default function App() {
     };
     setAvailability(updatedAvail);
     saveAvailability(updatedAvail);
+    syncAvailabilityToFirestore(newBooking.photographerId, updatedAvail[newBooking.photographerId]);
 
     // 3. Create notification
     const bookedPhotog = photographers.find((p) => p.id === newBooking.photographerId);
@@ -291,6 +370,7 @@ export default function App() {
     const updatedNotifs = [newNotification, ...notifications];
     setNotifications(updatedNotifs);
     saveNotifications(updatedNotifs);
+    syncNotificationToFirestore(newNotification);
 
     // Play chime sound
     if (soundEnabled) {
@@ -319,7 +399,7 @@ export default function App() {
   ) => {
     let updatedList: PhotographerProfile[];
     if (isNew) {
-      updatedList = [...photographers, profileData];
+      updatedList = [...photographers.filter((p) => p.id !== profileData.id), profileData];
       setActivePhotographerId(profileData.id);
       saveActivePhotographerId(profileData.id);
     } else {
@@ -327,21 +407,38 @@ export default function App() {
     }
     setPhotographers(updatedList);
     savePhotographers(updatedList);
+    syncPhotographerToFirestore(profileData);
   };
 
   // Photographer Self-Registration Handler
   const handlePhotographerSignUp = (newProfile: PhotographerProfile) => {
-    const updatedList = [...photographers, newProfile];
+    const updatedList = [...photographers.filter((p) => p.id !== newProfile.id), newProfile];
     setPhotographers(updatedList);
     savePhotographers(updatedList);
     syncPhotographerToFirestore(newProfile);
+
+    // Immediately log in the photographer so their dashboard and calendar open right away
+    const session: AuthSession = {
+      role: 'photographer',
+      id: newProfile.id,
+      photographerId: newProfile.id,
+      name: newProfile.name,
+      email: newProfile.email || newProfile.loginEmail || '',
+      avatarUrl: newProfile.avatarUrl,
+    };
+    saveAuthSession(session);
+    setAuthSession(session);
+    setActivePhotographerId(newProfile.id);
+    saveActivePhotographerId(newProfile.id);
+    setViewMode('photographer');
+    setPhotographerTab('calendar');
 
     // Create Notification for admin
     const regNotif: NotificationItem = {
       id: `notif-reg-${Date.now()}`,
       photographerId: newProfile.id,
       title: '👤 New Photographer Registered',
-      message: `${newProfile.name} (${newProfile.city}) submitted their profile details. Click to review, inspect credentials, and activate profile.`,
+      message: `${newProfile.name} (${newProfile.city}) registered their profile. Account is active and ready for bookings.`,
       date: formatDateKey(new Date()),
       read: false,
       createdAt: new Date().toISOString(),
@@ -350,13 +447,14 @@ export default function App() {
     const updatedNotifs = [regNotif, ...notifications];
     setNotifications(updatedNotifs);
     saveNotifications(updatedNotifs);
+    syncNotificationToFirestore(regNotif);
 
     setRecentAlert({
       id: regNotif.id,
-      title: '👤 New Photographer Registered!',
-      message: `${newProfile.name} (${newProfile.city}) submitted their profile.`,
+      title: '🎉 Account Created & Logged In!',
+      message: `Welcome ${newProfile.name}! Your photographer partner portal is ready.`,
       photographerId: newProfile.id,
-      date: 'Review Required',
+      date: 'Account Active',
     });
     if (soundEnabled) playNotificationChime();
   };
@@ -443,6 +541,7 @@ export default function App() {
     );
     setPhotographers(updatedList);
     savePhotographers(updatedList);
+    syncPhotographerToFirestore(updatedProfile);
 
     // If password was changed, immediately create an admin notification and toast alert
     if (passwordChanged && newPassword) {
@@ -458,6 +557,7 @@ export default function App() {
       const updatedNotifs = [passNotif, ...notifications];
       setNotifications(updatedNotifs);
       saveNotifications(updatedNotifs);
+      syncNotificationToFirestore(passNotif);
 
       setRecentAlert({
         id: passNotif.id,
@@ -487,6 +587,10 @@ export default function App() {
     );
     setPhotographers(updatedList);
     savePhotographers(updatedList);
+    const updatedPhotog = updatedList.find((p) => p.id === photographerId);
+    if (updatedPhotog) {
+      syncPhotographerToFirestore(updatedPhotog);
+    }
 
     setRecentAlert({
       id: `admin-pass-${Date.now()}`,
@@ -746,8 +850,12 @@ export default function App() {
       <PhotographerSignUpModal
         isOpen={isPhotographerSignUpOpen}
         onClose={() => setIsPhotographerSignUpOpen(false)}
+        photographers={photographers}
         onSignUpSuccess={handlePhotographerSignUp}
-        onOpenLogin={() => setIsLoginModalOpen(true)}
+        onOpenLogin={(email, password) => {
+          setLoginModalCreds({ email, password });
+          setIsLoginModalOpen(true);
+        }}
       />
 
       {/* Admin Master Photographers Management Modal */}
@@ -855,10 +963,15 @@ export default function App() {
 
       <LoginModal
         isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
+        onClose={() => {
+          setIsLoginModalOpen(false);
+          setLoginModalCreds({});
+        }}
         onLoginSuccess={handleLoginSuccess}
         photographers={photographers}
         onOpenPhotographerSignUp={() => setIsPhotographerSignUpOpen(true)}
+        initialIdentifier={loginModalCreds.email}
+        initialPassword={loginModalCreds.password}
       />
     </div>
   );

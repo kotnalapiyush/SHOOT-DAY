@@ -137,16 +137,26 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
     // Specialty or title compatibility
     const q = selectedShootType.toLowerCase();
     if (q === 'other shoot' || q.includes('other')) return true;
-    const matchesSpecialty = p.specialties.some((s) => s.toLowerCase().includes(q) || q.includes(s.toLowerCase()));
-    const matchesTitle = p.title.toLowerCase().includes(q);
-    const matchesBio = p.bio.toLowerCase().includes(q);
+    const pSpecialties = Array.isArray(p.specialties) ? p.specialties : [];
+    const matchesSpecialty = pSpecialties.some(
+      (s) => typeof s === 'string' && (s.toLowerCase().includes(q) || q.includes(s.toLowerCase()))
+    );
+    const matchesTitle = p.title ? p.title.toLowerCase().includes(q) : false;
+    const matchesBio = p.bio ? p.bio.toLowerCase().includes(q) : false;
 
     return matchesSpecialty || matchesTitle || matchesBio;
   });
 
-  // Ensure Ananya Sen, Vikramaditya Verma, and Kabir Mehta are top prioritized if they match
+  // Prioritize newly registered partners so users immediately see their profile, then standard priority
   const priorityIds = ['photo-2', 'photo-3', 'photo-5'];
   const displayPhotographers = [...availablePhotographers].sort((a, b) => {
+    const aIsNew = Boolean(a.registeredAt);
+    const bIsNew = Boolean(b.registeredAt);
+    if (aIsNew && !bIsNew) return -1;
+    if (!aIsNew && bIsNew) return 1;
+    if (aIsNew && bIsNew) {
+      return new Date(b.registeredAt || 0).getTime() - new Date(a.registeredAt || 0).getTime();
+    }
     const aIdx = priorityIds.indexOf(a.id);
     const bIdx = priorityIds.indexOf(b.id);
     if (aIdx !== -1 && bIdx !== -1) return aIdx - bIdx;
@@ -639,9 +649,16 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 flex-wrap">
-                          <h3 className="text-base font-bold text-[#073B2F] truncate">
-                            {p.name}
-                          </h3>
+                          <div className="flex items-center gap-1.5 min-w-0">
+                            <h3 className="text-base font-bold text-[#073B2F] truncate">
+                              {p.name}
+                            </h3>
+                            {p.registeredAt && (
+                              <span className="bg-[#FF6A45]/15 text-[#FF6A45] border border-[#FF6A45]/30 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shrink-0 uppercase tracking-wider">
+                                New Partner
+                              </span>
+                            )}
+                          </div>
                           <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
                             <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
                             <span>Available</span>
@@ -666,14 +683,15 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
 
                     {/* Tappable Specialization Categories */}
                     {(() => {
-                      const activeCardCategory = cardActiveCategory[p.id] || p.specialties[0] || 'Commercial Shoot';
+                      const pSpecs = Array.isArray(p.specialties) && p.specialties.length > 0 ? p.specialties : ['Commercial Shoot'];
+                      const activeCardCategory = cardActiveCategory[p.id] || pSpecs[0] || 'Commercial Shoot';
                       const category6Photos = getCategoryPhotos(p, activeCardCategory, 6);
 
                       return (
                         <>
                           <div className="mt-4">
                             <div className="flex flex-wrap gap-1.5">
-                              {p.specialties.map((spec) => {
+                              {pSpecs.map((spec) => {
                                 const isSelected = spec === activeCardCategory;
                                 return (
                                   <button

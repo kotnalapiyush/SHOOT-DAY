@@ -1,4 +1,5 @@
 import { AuthSession, PhotographerProfile } from '../types';
+import { broadcastUpdate } from './storage';
 
 const AUTH_KEY = 'shoot_socialbae_auth_session_v1';
 
@@ -26,7 +27,9 @@ export function saveAuthSession(session: AuthSession | null) {
     } else {
       localStorage.removeItem(AUTH_KEY);
     }
-    // Notify app tabs
+    // Broadcast to other tabs & windows
+    broadcastUpdate('AUTH_SESSION_CHANGED', session);
+    // Notify same window
     window.dispatchEvent(new CustomEvent('shoot_auth_changed', { detail: session }));
   } catch (err) {
     console.error('Failed to save auth session', err);

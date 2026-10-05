@@ -20,7 +20,8 @@
         "loginPassword": { "type": "string", "maxLength": 128 },
         "status": { "type": "string", "enum": ["active", "on_hold"] },
         "holdReason": { "type": "string", "maxLength": 500 },
-        "registeredAt": { "type": "string", "maxLength": 64 }
+        "registeredAt": { "type": "string", "maxLength": 64 },
+        "portfolioUrl": { "type": "string", "maxLength": 500 }
       },
       "required": ["id", "name", "city", "phone", "email"]
     },
