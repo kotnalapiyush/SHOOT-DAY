@@ -194,21 +194,9 @@ export function subscribeToPhotographers(
       });
 
       if (remoteList.length > 0) {
-        // Merge with initial seed photographers so default studio photographers are preserved
-        const existingIds = new Set(remoteList.map((p) => p.id));
-        const merged = [...remoteList];
-
-        fallbackInitialList.forEach((initial) => {
-          if (!existingIds.has(initial.id)) {
-            merged.push(initial);
-            // Sync default seed photographer to Firestore in background so Firestore becomes authoritative
-            syncPhotographerToFirestore(initial).catch(() => {});
-          }
-        });
-
-        onUpdate(merged);
+        onUpdate(remoteList);
       } else {
-        // Initial boot on empty db: publish fallback and seed to Firestore
+        // Initial boot on empty db: publish fallback and seed to Firestore once
         onUpdate(fallbackInitialList);
         fallbackInitialList.forEach((p) => {
           syncPhotographerToFirestore(p).catch(() => {});

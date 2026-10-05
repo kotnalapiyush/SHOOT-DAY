@@ -485,7 +485,7 @@ export default function App() {
   };
 
   // Delete Photographer Profile permanently
-  const handleDeletePhotographer = (photogId: string) => {
+  const handleDeletePhotographer = async (photogId: string) => {
     const target = photographers.find((p) => p.id === photogId);
     const remaining = photographers.filter((p) => p.id !== photogId);
     if (remaining.length === 0) {
@@ -495,25 +495,32 @@ export default function App() {
 
     setPhotographers(remaining);
     savePhotographers(remaining);
-    deletePhotographerFromFirestore(photogId);
-
-    // Switch active photographer if the deleted one was selected
-    if (activePhotographerId === photogId) {
-      setActivePhotographerId(remaining[0].id);
-      saveActivePhotographerId(remaining[0].id);
-    }
+    setPhotographerToDelete(null);
 
     if (detailModalPhotographer?.id === photogId) {
       setDetailModalPhotographer(null);
     }
 
-    setPhotographerToDelete(null);
+    // Switch active photographer if the deleted one was selected
+    if (activePhotographerId === photogId && remaining.length > 0) {
+      setActivePhotographerId(remaining[0].id);
+      saveActivePhotographerId(remaining[0].id);
+    }
+
+    // Clean up notifications for this photographer
+    const cleanedNotifs = notifications.filter((n) => n.photographerId !== photogId);
+    setNotifications(cleanedNotifs);
+    saveNotifications(cleanedNotifs);
+
     setIsProfileModalOpen(false);
+
+    // Delete directly from Firestore
+    await deletePhotographerFromFirestore(photogId);
 
     setRecentAlert({
       id: `del-${Date.now()}`,
       title: 'Profile Deleted',
-      message: `${target?.name || 'Photographer'} has been permanently removed from the network.`,
+      message: `${target?.name || 'Photographer'} has been permanently removed from the studio network.`,
       photographerId: '',
       date: 'Profile Removed',
     });
@@ -887,10 +894,7 @@ export default function App() {
         onClose={() => setDetailModalPhotographer(null)}
         photographer={detailModalPhotographer}
         onToggleStatus={handleTogglePhotographerHold}
-        onDeleteProfile={(id) => {
-          const p = photographers.find((x) => x.id === id);
-          if (p) setPhotographerToDelete(p);
-        }}
+        onDeleteProfile={(id) => handleDeletePhotographer(id)}
         onSelectInCalendar={(id) => {
           handleSelectPhotographer(id);
           setViewMode('photographer');
@@ -900,7 +904,7 @@ export default function App() {
 
       {/* Delete Photographer Confirmation Modal */}
       {photographerToDelete && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in">
+        <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
           <div
             id="modal-confirm-delete-photographer"
             className="w-full max-w-md bg-white rounded-3xl p-6 border border-[#DCE7D4] shadow-2xl space-y-4"
