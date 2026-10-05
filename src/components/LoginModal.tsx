@@ -37,8 +37,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [roleTab, setRoleTab] = useState<'photographer' | 'admin'>('photographer');
 
   // Photographer form state
+  const defaultFirstEmail =
+    photographers?.find((p) => p?.email || p?.loginEmail)?.email ||
+    photographers?.find((p) => p?.email || p?.loginEmail)?.loginEmail ||
+    'rohan.sharma@lensdelhi.in';
+
   const [photographerIdInput, setPhotographerIdInput] = useState(
-    initialIdentifier || photographers[0]?.email || 'rohan.sharma@lensdelhi.in'
+    initialIdentifier || defaultFirstEmail
   );
   const [photographerPassword, setPhotographerPassword] = useState(
     initialPassword || 'rohan123'
@@ -50,6 +55,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       if (initialIdentifier) {
         setPhotographerIdInput(initialIdentifier);
         setRoleTab('photographer');
+      } else if (!photographerIdInput) {
+        const found = photographers?.find((p) => p?.email || p?.loginEmail);
+        if (found) {
+          setPhotographerIdInput(found.email || found.loginEmail || 'rohan.sharma@lensdelhi.in');
+        }
       }
       if (initialPassword) {
         setPhotographerPassword(initialPassword);
@@ -57,7 +67,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       setError(null);
       setSuccessMsg(null);
     }
-  }, [isOpen, initialIdentifier, initialPassword]);
+  }, [isOpen, initialIdentifier, initialPassword, photographers]);
 
   // Admin form state
   const [adminEmail, setAdminEmail] = useState(DEFAULT_ADMIN_CREDENTIALS.email);
@@ -72,7 +82,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const handlePhotographerLogin = (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    const result = verifyPhotographerLogin(photographerIdInput, photographerPassword, photographers);
+    const result = verifyPhotographerLogin(
+      photographerIdInput || '',
+      photographerPassword || '',
+      photographers || []
+    );
     if (result.success && result.session) {
       setSuccessMsg(`Welcome, ${result.session.name}!`);
       setTimeout(() => {
@@ -100,8 +114,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   };
 
   const handleSelectQuickPhotographer = (p: PhotographerProfile) => {
-    setPhotographerIdInput(p.email || p.loginEmail || p.name);
-    setPhotographerPassword(p.loginPassword || `${p.name.split(' ')[0].toLowerCase()}123`);
+    if (!p) return;
+    const defaultEmail = p.email || p.loginEmail || p.name || '';
+    const cleanFirst = (p.name || 'photog').trim().split(' ')[0].toLowerCase();
+    setPhotographerIdInput(defaultEmail);
+    setPhotographerPassword(p.loginPassword || `${cleanFirst}123`);
     setError(null);
   };
 
@@ -233,20 +250,25 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   1-Click Select Shoot Partner:
                 </p>
                 <div className="flex flex-wrap gap-1.5 max-h-24 overflow-y-auto pr-1">
-                  {photographers.map((p) => {
-                    const isSelected = photographerIdInput.toLowerCase() === p.email.toLowerCase();
+                  {(photographers || []).filter(Boolean).map((p) => {
+                    const pEmail = (p.email || p.loginEmail || '').trim().toLowerCase();
+                    const pName = (p.name || '').trim().toLowerCase();
+                    const currentInput = (photographerIdInput || '').trim().toLowerCase();
+                    const isSelected = Boolean(
+                      currentInput && (currentInput === pEmail || (pName && currentInput === pName))
+                    );
                     return (
                       <button
-                        key={p.id}
+                        key={p.id || p.email || Math.random().toString()}
                         type="button"
                         onClick={() => handleSelectQuickPhotographer(p)}
-                        className={`text-[11px] px-2.5 py-1 rounded-lg border transition ${
+                        className={`text-[11px] px-2.5 py-1 rounded-lg border transition cursor-pointer ${
                           isSelected
                             ? 'bg-[#F0FFDA] border-[#073B2F] text-[#073B2F] font-bold'
                             : 'bg-[#F6F3EC] border-[#DCE7D4] text-[#5C6E5E] hover:border-[#073B2F]'
                         }`}
                       >
-                        {p.name} ({p.city})
+                        {p.name || 'Photographer'} ({p.city || 'India'})
                       </button>
                     );
                   })}

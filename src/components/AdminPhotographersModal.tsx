@@ -55,11 +55,11 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
     if (!searchQuery.trim()) return true;
     const q = searchQuery.toLowerCase();
     return (
-      p.name.toLowerCase().includes(q) ||
-      p.city.toLowerCase().includes(q) ||
-      p.title.toLowerCase().includes(q) ||
-      p.specialties.some((s) => s.toLowerCase().includes(q)) ||
-      p.email.toLowerCase().includes(q)
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.city || '').toLowerCase().includes(q) ||
+      (p.title || '').toLowerCase().includes(q) ||
+      (p.specialties || []).some((s) => (s || '').toLowerCase().includes(q)) ||
+      (p.email || p.loginEmail || '').toLowerCase().includes(q)
     );
   });
 

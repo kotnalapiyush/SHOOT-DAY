@@ -135,9 +135,9 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
     const dateKey = formatDateKey(new Date(currentYear, currentMonth, day));
     const dayAvailability = availability[dateKey]?.[photographer.id];
     const hasShoot = photographerShoots.some(
-      (s) => s.date === dateKey && s.status !== 'Cancelled'
+      (s) => s.date === dateKey && s.status !== 'cancelled'
     );
-    return hasShoot || dayAvailability === 'Booked';
+    return hasShoot || dayAvailability === 'booked';
   };
 
   // Month summary counts
@@ -161,7 +161,7 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
 
   // Shoots scheduled specifically for this month
   const currentMonthShoots = photographerShoots.filter((s) => {
-    if (s.status === 'Cancelled') return false;
+    if (s.status === 'cancelled') return false;
     const parts = s.date.split('-');
     return (
       parseInt(parts[0], 10) === currentYear &&

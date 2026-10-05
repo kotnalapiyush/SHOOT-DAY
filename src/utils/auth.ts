@@ -64,14 +64,23 @@ export function verifyPhotographerLogin(
   pass: string,
   photographers: PhotographerProfile[]
 ): { success: boolean; session?: AuthSession; error?: string } {
-  const cleanId = identifier.trim().toLowerCase();
-  const cleanPass = pass.trim();
+  const cleanId = (identifier || '').trim().toLowerCase();
+  const cleanPass = (pass || '').trim();
+
+  const list = Array.isArray(photographers) ? photographers : [];
 
   // Match photographer by email, loginEmail, phone or name slug
-  const matched = photographers.find((p) => {
-    const emailMatch = p.email?.toLowerCase() === cleanId || p.loginEmail?.toLowerCase() === cleanId;
-    const phoneMatch = p.phone?.replace(/[\s+-]/g, '') === cleanId.replace(/[\s+-]/g, '');
-    const nameMatch = p.name?.toLowerCase() === cleanId || p.id?.toLowerCase() === cleanId;
+  const matched = list.find((p) => {
+    const pEmail = (p.email || '').trim().toLowerCase();
+    const pLoginEmail = (p.loginEmail || '').trim().toLowerCase();
+    const pPhone = (p.phone || '').replace(/[\s+-]/g, '');
+    const pName = (p.name || '').trim().toLowerCase();
+    const pId = (p.id || '').trim().toLowerCase();
+    const targetCleanPhone = cleanId.replace(/[\s+-]/g, '');
+
+    const emailMatch = (pEmail && pEmail === cleanId) || (pLoginEmail && pLoginEmail === cleanId);
+    const phoneMatch = Boolean(pPhone && targetCleanPhone && pPhone === targetCleanPhone);
+    const nameMatch = (pName && pName === cleanId) || (pId && pId === cleanId);
     return emailMatch || phoneMatch || nameMatch;
   });
 
@@ -90,13 +99,17 @@ export function verifyPhotographerLogin(
   }
 
   // Check password: custom password, or default fallback pattern (e.g. firstname123, or 123456)
-  const expectedPassword = matched.loginPassword || `${matched.name.split(' ')[0].toLowerCase()}123`;
-  const isPassValid = cleanPass === expectedPassword || cleanPass === '123456' || cleanPass === `${matched.name.split(' ')[0].toLowerCase()}123`;
+  const firstName = (matched.name || 'photog').trim().split(' ')[0].toLowerCase();
+  const expectedPassword = matched.loginPassword || `${firstName}123`;
+  const isPassValid =
+    cleanPass === expectedPassword ||
+    cleanPass === '123456' ||
+    cleanPass === `${firstName}123`;
 
   if (!isPassValid) {
     return {
       success: false,
-      error: `Incorrect password for ${matched.name}. (Default: ${matched.name.split(' ')[0].toLowerCase()}123)`,
+      error: `Incorrect password for ${matched.name || 'this account'}.`,
     };
   }
 
@@ -104,7 +117,7 @@ export function verifyPhotographerLogin(
     role: 'photographer',
     id: matched.id,
     photographerId: matched.id,
-    name: matched.name,
+    name: matched.name || 'Photographer',
     email: matched.email || matched.loginEmail || '',
     avatarUrl: matched.avatarUrl,
   };

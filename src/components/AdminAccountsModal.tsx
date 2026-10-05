@@ -53,11 +53,11 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
 
   if (!isOpen) return null;
 
-  const filteredPhotographers = photographers.filter((p) => {
-    const q = searchQuery.toLowerCase();
+  const filteredPhotographers = (photographers || []).filter(Boolean).filter((p) => {
+    const q = (searchQuery || '').toLowerCase();
     return (
-      p.name.toLowerCase().includes(q) ||
-      p.city.toLowerCase().includes(q) ||
+      (p.name || '').toLowerCase().includes(q) ||
+      (p.city || '').toLowerCase().includes(q) ||
       (p.email || '').toLowerCase().includes(q) ||
       (p.loginEmail || '').toLowerCase().includes(q)
     );
@@ -68,16 +68,18 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
   };
 
   const handleCopyCredentials = (p: PhotographerProfile) => {
-    const pass = p.loginPassword || `${p.name.split(' ')[0].toLowerCase()}123`;
-    const text = `📸 Shoot Lobby — Partner Access\nName: ${p.name}\nEmail: ${p.loginEmail || p.email}\nPassword: ${pass}\nWebsite: ${window.location.origin}`;
+    const firstName = ((p.name || 'partner').trim().split(' ')[0] || 'partner').toLowerCase();
+    const pass = p.loginPassword || `${firstName}123`;
+    const text = `📸 Shoot Lobby — Partner Access\nName: ${p.name || 'Partner'}\nEmail: ${p.loginEmail || p.email}\nPassword: ${pass}\nWebsite: ${window.location.origin}`;
     navigator.clipboard.writeText(text);
     setCopiedId(p.id);
     setTimeout(() => setCopiedId(null), 2000);
   };
 
   const startEditPassword = (p: PhotographerProfile) => {
+    const firstName = ((p.name || 'partner').trim().split(' ')[0] || 'partner').toLowerCase();
     setEditingPasswordId(p.id);
-    setEditPasswordInput(p.loginPassword || `${p.name.split(' ')[0].toLowerCase()}123`);
+    setEditPasswordInput(p.loginPassword || `${firstName}123`);
   };
 
   const saveEditedPassword = (id: string) => {
