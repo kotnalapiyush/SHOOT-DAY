@@ -12,9 +12,10 @@ import {
   Sparkles,
   Smartphone,
   Tv,
+  ExternalLink,
 } from 'lucide-react';
 import { CategoryVideoItem, PhotographerProfile } from '../types';
-import { extractYouTubeId } from '../utils/categoryVideos';
+import { extractYouTubeId, parseAnyVideoUrl } from '../utils/categoryVideos';
 
 interface VideoReelPlayerModalProps {
   isOpen: boolean;
@@ -70,7 +71,8 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
   if (!currentVideo) return null;
 
   const isReel = currentVideo.format === 'reel';
-  const youtubeId = currentVideo.youtubeId || extractYouTubeId(currentVideo.url);
+  const parsed = parseAnyVideoUrl(currentVideo.url, currentVideo.format);
+  const isEmbed = parsed.sourceType !== 'direct';
 
   const handleNext = () => {
     setCurrentIndex((prev) => (prev + 1) % videos.length);
@@ -117,8 +119,8 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
       }}
     >
       {/* Top Floating Controls */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-20 pointer-events-none">
-        <div className="flex items-center gap-2 bg-black/60 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white text-xs pointer-events-auto">
+      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 pointer-events-none">
+        <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white text-xs pointer-events-auto shadow-lg">
           {isReel ? (
             <span className="flex items-center gap-1.5 font-bold text-[#FF6A45]">
               <Smartphone className="w-3.5 h-3.5" />
@@ -127,20 +129,38 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
           ) : (
             <span className="flex items-center gap-1.5 font-bold text-amber-400">
               <Tv className="w-3.5 h-3.5" />
-              <span>YouTube Long-form (16:9)</span>
+              <span>16:9 Landscape</span>
             </span>
           )}
+          <span className="text-white/40">•</span>
+          <span className="px-2 py-0.5 rounded bg-white/20 text-[10px] font-bold text-white uppercase tracking-wider">
+            {parsed.platformLabel}
+          </span>
           <span className="text-white/40">•</span>
           <span className="text-white/80 font-medium">
             {currentIndex + 1} of {videos.length}
           </span>
           <span className="text-white/40">•</span>
-          <span className="text-white/90 font-bold truncate max-w-[120px] sm:max-w-[200px]">
+          <span className="text-white/90 font-bold truncate max-w-[100px] sm:max-w-[180px]">
             {currentVideo.category}
           </span>
         </div>
 
         <div className="flex items-center gap-2 pointer-events-auto">
+          {/* Direct link to open video externally if needed */}
+          {currentVideo.url && (
+            <a
+              href={currentVideo.url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-3 py-1.5 rounded-full bg-black/70 hover:bg-black text-white text-xs font-semibold flex items-center gap-1.5 transition border border-white/20 shadow-lg cursor-pointer"
+              title="Open video in new tab"
+            >
+              <ExternalLink className="w-3.5 h-3.5 text-amber-300" />
+              <span className="hidden sm:inline">Open Link</span>
+            </a>
+          )}
+
           <button
             type="button"
             onClick={onClose}
@@ -179,26 +199,61 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
               </div>
             </div>
 
-            {/* Video Viewport / Embed */}
+            {/* Video Viewport / Embed for Reel */}
             <div
-              className="relative w-full h-full flex items-center justify-center bg-black cursor-pointer overflow-hidden"
-              onClick={togglePlay}
+              className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden"
+              onClick={!isEmbed ? togglePlay : undefined}
             >
-              {youtubeId ? (
+              {parsed.sourceType === 'youtube' ? (
                 <iframe
-                  src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&playsinline=1&controls=1&rel=0&modestbranding=1`}
+                  src={parsed.embedUrl}
                   title={currentVideo.title || 'Reel Video'}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover border-0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : parsed.sourceType === 'drive' ? (
+                <iframe
+                  src={parsed.embedUrl}
+                  title={currentVideo.title || 'Google Drive Video'}
+                  className="w-full h-full object-cover border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              ) : parsed.sourceType === 'instagram' ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-black">
+                  <iframe
+                    src={parsed.embedUrl}
+                    title={currentVideo.title || 'Instagram Reel'}
+                    className="w-full h-full border-0 bg-black"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowFullScreen
+                  />
+                  <a
+                    href={currentVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute top-3 right-3 px-2.5 py-1 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-[11px] font-bold flex items-center gap-1 shadow-lg z-30 transition"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>Watch on Instagram</span>
+                  </a>
+                </div>
+              ) : parsed.sourceType === 'vimeo' || parsed.sourceType === 'streamable' || parsed.sourceType === 'generic' ? (
+                <iframe
+                  src={parsed.embedUrl}
+                  title={currentVideo.title || 'Video Reel'}
+                  className="w-full h-full object-cover border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   allowFullScreen
                 />
               ) : (
                 <>
                   <video
                     ref={videoRef}
-                    src={currentVideo.url}
+                    src={parsed.embedUrl}
                     poster={currentVideo.thumbnailUrl}
-                    className="w-full h-full object-cover"
+                    className="w-full h-full object-cover cursor-pointer"
                     playsInline
                     autoPlay
                     loop
@@ -221,7 +276,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             </div>
 
             {/* Reel Bottom Details & Overlays */}
-            <div className="absolute bottom-0 left-0 right-0 z-20 p-4 sm:p-5 bg-gradient-to-t from-black via-black/75 to-transparent text-white space-y-3 pointer-events-auto">
+            <div className="absolute bottom-0 left-0 right-0 z-20 p-4 sm:p-5 bg-gradient-to-t from-black via-black/80 to-transparent text-white space-y-3 pointer-events-auto">
               {photographer && (
                 <div className="flex items-center gap-2.5">
                   {photographer.avatarUrl ? (
@@ -249,9 +304,14 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
 
               {/* Title & Category */}
               <div>
-                <span className="inline-block px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold tracking-wide uppercase mb-1">
-                  {currentVideo.category}
-                </span>
+                <div className="flex items-center gap-1.5 mb-1">
+                  <span className="inline-block px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold tracking-wide uppercase">
+                    {currentVideo.category}
+                  </span>
+                  <span className="inline-block px-1.5 py-0.5 rounded bg-white/20 text-white text-[10px] font-semibold">
+                    {parsed.platformLabel}
+                  </span>
+                </div>
                 <h4 className="text-sm sm:text-base font-bold text-white leading-snug drop-shadow-md">
                   {currentVideo.title || `${currentVideo.category} Reel`}
                 </h4>
@@ -259,7 +319,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
 
               {/* Reel Controls Toolbar */}
               <div className="flex items-center justify-between pt-1">
-                {!youtubeId && (
+                {!isEmbed && (
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
@@ -303,21 +363,56 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             </div>
           </div>
         ) : (
-          /* 16:9 YouTube / Landscape Format Player */
+          /* 16:9 Landscape Format Player */
           <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/20 flex flex-col">
             <div className="relative aspect-16/9 w-full bg-black flex items-center justify-center">
-              {youtubeId ? (
+              {parsed.sourceType === 'youtube' ? (
                 <iframe
-                  src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1&rel=0&modestbranding=1`}
+                  src={parsed.embedUrl}
                   title={currentVideo.title || 'YouTube Video'}
-                  className="w-full h-full object-cover"
+                  className="w-full h-full object-cover border-0"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
+                />
+              ) : parsed.sourceType === 'drive' ? (
+                <iframe
+                  src={parsed.embedUrl}
+                  title={currentVideo.title || 'Google Drive Video'}
+                  className="w-full h-full object-cover border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+                  allowFullScreen
+                />
+              ) : parsed.sourceType === 'instagram' ? (
+                <div className="relative w-full h-full flex items-center justify-center bg-black">
+                  <iframe
+                    src={parsed.embedUrl}
+                    title={currentVideo.title || 'Instagram Video'}
+                    className="w-full h-full border-0 bg-black"
+                    allow="autoplay; encrypted-media; fullscreen"
+                    allowFullScreen
+                  />
+                  <a
+                    href={currentVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute top-4 right-4 px-3 py-1.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white text-xs font-bold flex items-center gap-1.5 shadow-lg z-30 transition"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5" />
+                    <span>Watch on Instagram</span>
+                  </a>
+                </div>
+              ) : parsed.sourceType === 'vimeo' || parsed.sourceType === 'streamable' || parsed.sourceType === 'generic' ? (
+                <iframe
+                  src={parsed.embedUrl}
+                  title={currentVideo.title || 'Video Player'}
+                  className="w-full h-full object-cover border-0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
                   allowFullScreen
                 />
               ) : (
                 <video
                   ref={videoRef}
-                  src={currentVideo.url}
+                  src={parsed.embedUrl}
                   poster={currentVideo.thumbnailUrl}
                   controls
                   autoPlay
@@ -332,7 +427,10 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold tracking-wide uppercase">
-                    16:9 Long-Form
+                    16:9 Landscape
+                  </span>
+                  <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/90 text-[10px] font-bold">
+                    {parsed.platformLabel}
                   </span>
                   <span className="text-xs text-white/60">
                     Category: {currentVideo.category}
@@ -350,19 +448,33 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                 )}
               </div>
 
-              {photographer && onBookPhotographer && (
-                <button
-                  type="button"
-                  onClick={() => {
-                    onClose();
-                    onBookPhotographer(photographer);
-                  }}
-                  className="px-5 py-2.5 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-white/20 shadow-md active:scale-95 cursor-pointer shrink-0"
-                >
-                  <Calendar className="w-4 h-4 text-[#FF6A45]" />
-                  <span>Book {photographer.name}</span>
-                </button>
-              )}
+              <div className="flex items-center gap-2 shrink-0">
+                {currentVideo.url && (
+                  <a
+                    href={currentVideo.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center gap-1.5 border border-white/20 cursor-pointer"
+                  >
+                    <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Watch Full Source</span>
+                  </a>
+                )}
+
+                {photographer && onBookPhotographer && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onClose();
+                      onBookPhotographer(photographer);
+                    }}
+                    className="px-5 py-2 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-white/20 shadow-md active:scale-95 cursor-pointer shrink-0"
+                  >
+                    <Calendar className="w-4 h-4 text-[#FF6A45]" />
+                    <span>Book {photographer.name}</span>
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}

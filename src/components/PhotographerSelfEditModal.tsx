@@ -42,6 +42,8 @@ import {
   extractYouTubeId,
   getYouTubeThumbnail,
   generateVideoThumbnail,
+  parseAnyVideoUrl,
+  detectVideoPlatformName,
 } from '../utils/categoryVideos';
 import { compressImageFile } from '../utils/imageCompressor';
 import { ImageCoverAdjusterModal } from './ImageCoverAdjusterModal';
@@ -93,8 +95,9 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
   // Category Videos State: map of categoryName -> CategoryVideoItem[] (5-6 videos per category)
   const [categoryVideos, setCategoryVideos] = useState<Record<string, CategoryVideoItem[]>>({});
+  const [isAddVideoModalOpen, setIsAddVideoModalOpen] = useState(false);
   const [videoUploadFormat, setVideoUploadFormat] = useState<VideoFormat>('reel'); // Step 1: Choose format first ('reel' or 'youtube')
-  const [videoInputMode, setVideoInputMode] = useState<'upload' | 'url'>('upload');
+  const [videoInputMode, setVideoInputMode] = useState<'upload' | 'url'>('url'); // Default to URL mode so pasting links is instantly accessible
   const [videoUrlInput, setVideoUrlInput] = useState<string>('');
   const [videoTitleInput, setVideoTitleInput] = useState<string>('');
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
@@ -616,11 +619,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
   const currentCategoryVideos = categoryVideos[activeCategoryTab] ||
     getCategoryVideos(photographer, activeCategoryTab, 6);
 
-  // Add video via URL (YouTube or direct MP4/Reel URL)
+  // Add video via URL (Google Drive, Instagram, YouTube, Vimeo, Dropbox, or any link)
   const handleAddVideoByUrl = () => {
     const trimmedUrl = videoUrlInput.trim();
     if (!trimmedUrl) {
-      alert('Please enter a video or YouTube URL.');
+      alert('Please enter a video link (Google Drive, Instagram Reel, YouTube, etc.).');
       return;
     }
 
@@ -630,10 +633,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       return;
     }
 
-    const ytId = extractYouTubeId(trimmedUrl);
-    const resolvedFormat: VideoFormat = ytId && !trimmedUrl.includes('shorts') && videoUploadFormat !== 'reel'
-      ? 'youtube'
-      : videoUploadFormat;
+    const parsed = parseAnyVideoUrl(trimmedUrl, videoUploadFormat);
+    const resolvedFormat: VideoFormat = parsed.format || videoUploadFormat;
 
     const newVideoItem: CategoryVideoItem = {
       id: `custom-v-${Date.now()}-${Math.random().toString(36).slice(2, 6)}`,
@@ -641,8 +642,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       format: resolvedFormat,
       url: trimmedUrl,
       title: videoTitleInput.trim() || `${activeCategoryTab} ${resolvedFormat === 'reel' ? 'Reel' : 'Showcase Video'}`,
-      thumbnailUrl: ytId ? getYouTubeThumbnail(ytId) : undefined,
-      youtubeId: ytId || undefined,
+      thumbnailUrl: parsed.thumbnailUrl || (resolvedFormat === 'reel'
+        ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+        : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80'),
+      youtubeId: parsed.youtubeId,
       createdAt: new Date().toISOString(),
     };
 
@@ -653,7 +656,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
     setVideoUrlInput('');
     setVideoTitleInput('');
-    setUploadStatusMsg(`🎬 Added new ${resolvedFormat === 'reel' ? 'Reel (9:16)' : 'YouTube Video (16:9)'} to "${activeCategoryTab}"!`);
+    setIsAddVideoModalOpen(false);
+    setUploadStatusMsg(`🎬 Added new ${parsed.platformLabel} (${resolvedFormat === 'reel' ? '9:16 Reel' : '16:9 Landscape'}) to "${activeCategoryTab}"!`);
   };
 
   // Add video via file upload (MP4, WebM, MOV)
@@ -691,6 +695,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       }));
 
       setVideoTitleInput('');
+      setIsAddVideoModalOpen(false);
       setUploadStatusMsg(`✅ Successfully uploaded ${videoUploadFormat === 'reel' ? 'Reel (9:16)' : 'YouTube Format (16:9)'} to "${activeCategoryTab}"!`);
     } catch (err) {
       console.error('Video upload error:', err);
@@ -1325,12 +1330,31 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           {activeCategoryTab} Portfolio
                         </span>
                         <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
-                          {currentCategoryPhotos.length} Photos Showcase
+                          {currentCategoryPhotos.length} / 15 Photos
                         </span>
                       </div>
                       <p className="text-[11px] text-[#5C6E5E] mt-0.5">
-                        Photos 1–6 appear in the card preview strip. All 15 photos appear when clients click "{activeCategoryTab} see more".
+                        Photos 1–6 appear in the card preview strip. Touch or hover any photo to delete, replace, or reorder.
                       </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 self-start sm:self-auto">
+                      <label className="px-3 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 shrink-0">
+                        <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
+                        <span>+ Upload Photos</span>
+                        <input
+                          type="file"
+                          multiple
+                          accept="image/*"
+                          onChange={(e) => {
+                            if (e.target.files && e.target.files.length > 0) {
+                              handleMultiUploadFiles(e.target.files, true);
+                              e.target.value = '';
+                            }
+                          }}
+                          className="sr-only"
+                        />
+                      </label>
                     </div>
                   </div>
 
@@ -1350,73 +1374,6 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       </button>
                     </div>
                   )}
-
-                  {/* Upload Work Images Dropzone & Action Bar */}
-                  <div
-                    onDragOver={(e) => {
-                      e.preventDefault();
-                      setIsDraggingOver(true);
-                    }}
-                    onDragLeave={() => setIsDraggingOver(false)}
-                    onDrop={(e) => {
-                      e.preventDefault();
-                      setIsDraggingOver(false);
-                      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
-                        handleMultiUploadFiles(e.dataTransfer.files);
-                      }
-                    }}
-                    className={`border-2 border-dashed rounded-2xl p-4 sm:p-5 text-center transition-all ${
-                      isDraggingOver
-                        ? 'border-[#073B2F] bg-[#F0FFDA]/60 scale-[1.01]'
-                        : 'border-[#DCE7D4] bg-[#F6F3EC]/50 hover:bg-[#F6F3EC] hover:border-[#073B2F]/40'
-                    }`}
-                  >
-                    <input
-                      type="file"
-                      ref={multiUploadFileInputRef}
-                      multiple
-                      accept="image/*"
-                      onChange={(e) => {
-                        if (e.target.files && e.target.files.length > 0) {
-                          handleMultiUploadFiles(e.target.files);
-                        }
-                      }}
-                      className="hidden"
-                    />
-
-                    <div className="flex flex-col items-center justify-center gap-2">
-                      <div className="w-10 h-10 rounded-full bg-[#073B2F]/10 flex items-center justify-center text-[#073B2F]">
-                        <Upload className="w-5 h-5" />
-                      </div>
-
-                      <div>
-                        <h5 className="text-xs sm:text-sm font-bold text-[#073B2F]">
-                          Upload Images for {activeCategoryTab}
-                        </h5>
-                        <p className="text-[11px] text-[#5C6E5E] max-w-md mx-auto mt-0.5">
-                          Drag and drop photos here, or browse from your phone/computer. Supports selecting multiple photos at once.
-                        </p>
-                      </div>
-
-                      <div className="flex flex-wrap items-center justify-center gap-2 pt-1">
-                        <button
-                          type="button"
-                          onClick={() => multiUploadFileInputRef.current?.click()}
-                          disabled={isUploadingMultiple}
-                          className="px-4 py-2 bg-[#073B2F] text-white text-xs font-bold rounded-xl hover:bg-[#0c4e3f] transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 disabled:opacity-50"
-                        >
-                          {isUploadingMultiple ? (
-                            <span>Optimizing & Loading Photos...</span>
-                          ) : (
-                            <>
-                              <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
-                              <span>Upload Work Photos</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  </div>
 
                   {/* 15 Photos Grid */}
                   <div className="space-y-2.5">
@@ -1652,35 +1609,32 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                       {/* Add Photo Slot Button if gallery has fewer than 15 photos */}
                       {currentCategoryPhotos.length < 15 && (
-                        <button
-                          type="button"
-                          onClick={() => directAddPhotoFileInputRef.current?.click()}
-                          className="aspect-4/3 rounded-xl border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-white hover:bg-[#F0FFDA]/30 transition flex flex-col items-center justify-center gap-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer p-3 group"
+                        <label
+                          className="aspect-4/3 rounded-xl border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-white hover:bg-[#F0FFDA]/30 transition flex flex-col items-center justify-center gap-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer p-3 group relative select-none"
                         >
                           <div className="w-9 h-9 rounded-full bg-[#F6F3EC] group-hover:bg-[#073B2F] flex items-center justify-center transition shadow-2xs">
                             <Plus className="w-5 h-5 text-[#FF6A45] group-hover:text-[#F0FFDA]" />
                           </div>
                           <span className="font-bold text-xs text-[#073B2F]">+ Add Photo</span>
-                          <span className="text-[10px] text-[#5C6E5E]">Slot {currentCategoryPhotos.length + 1} of 15 (Direct)</span>
-                        </button>
+                          <span className="text-[10px] text-[#5C6E5E]">Slot {currentCategoryPhotos.length + 1} of 15</span>
+                          <input
+                            type="file"
+                            multiple
+                            accept="image/*"
+                            onChange={(e) => {
+                              if (e.target.files && e.target.files.length > 0) {
+                                handleMultiUploadFiles(e.target.files, true);
+                                e.target.value = '';
+                              }
+                            }}
+                            className="sr-only"
+                          />
+                        </label>
                       )}
                     </div>
                   </div>
 
-                  {/* Hidden file inputs for direct device selection */}
-                  <input
-                    type="file"
-                    ref={directAddPhotoFileInputRef}
-                    multiple
-                    accept="image/*"
-                    onChange={(e) => {
-                      if (e.target.files && e.target.files.length > 0) {
-                        handleMultiUploadFiles(e.target.files, true);
-                      }
-                    }}
-                    className="hidden"
-                  />
-
+                  {/* Hidden file input for slot replacement */}
                   <input
                     type="file"
                     ref={replaceFileInputRef}
@@ -1742,250 +1696,99 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
               </div>
 
-              {/* Video Upload & Add Form */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-white border-2 border-[#DCE7D4] space-y-4">
-                <div className="flex items-center justify-between border-b border-[#DCE7D4] pb-3">
-                  <div>
-                    <h3 className="text-xs sm:text-sm font-bold text-[#073B2F]">
-                      Add Video / Reel to "{activeCategoryTab}"
-                    </h3>
-                    <p className="text-[11px] text-[#5C6E5E]">
-                      Upload at least 5 to 6 videos per category to showcase your videography & cinematography work.
-                    </p>
-                  </div>
-                  <span className="text-xs font-bold text-[#073B2F] bg-[#F6F3EC] px-2.5 py-1 rounded-lg border border-[#DCE7D4]">
-                    {currentCategoryVideos.length} of 6 slots filled
-                  </span>
-                </div>
-
-                {/* STEP 1: CHOOSE FORMAT FIRST */}
-                <div className="space-y-2">
-                  <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                    <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">1</span>
-                    <span>Choose Video Format First (Required)</span>
-                  </label>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    {/* Option 1: Reel Format (9:16) */}
-                    <button
-                      type="button"
-                      onClick={() => setVideoUploadFormat('reel')}
-                      className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
-                        videoUploadFormat === 'reel'
-                          ? 'border-[#FF6A45] bg-[#FFF5F2] shadow-xs ring-2 ring-[#FF6A45]/20'
-                          : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        videoUploadFormat === 'reel' ? 'bg-[#FF6A45] text-white' : 'bg-stone-100 text-[#073B2F]'
-                      }`}>
-                        <Smartphone className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-[#073B2F]">1. Reel Format (9:16 Vertical)</span>
-                          {videoUploadFormat === 'reel' && (
-                            <span className="text-[10px] font-bold bg-[#FF6A45] text-white px-1.5 py-0.2 rounded-full">
-                              Selected
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-[#5C6E5E] mt-0.5 leading-relaxed">
-                          Vertical full-screen video, Instagram reel style, BTS footage, and short-form mobile cuts.
-                        </p>
-                      </div>
-                    </button>
-
-                    {/* Option 2: YouTube Format (16:9) */}
-                    <button
-                      type="button"
-                      onClick={() => setVideoUploadFormat('youtube')}
-                      className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
-                        videoUploadFormat === 'youtube'
-                          ? 'border-amber-500 bg-amber-50/50 shadow-xs ring-2 ring-amber-500/20'
-                          : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
-                      }`}
-                    >
-                      <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                        videoUploadFormat === 'youtube' ? 'bg-amber-600 text-white' : 'bg-stone-100 text-[#073B2F]'
-                      }`}>
-                        <Tv className="w-5 h-5" />
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-1.5">
-                          <span className="text-xs font-bold text-[#073B2F]">2. YouTube Format (16:9 Landscape)</span>
-                          {videoUploadFormat === 'youtube' && (
-                            <span className="text-[10px] font-bold bg-amber-600 text-white px-1.5 py-0.2 rounded-full">
-                              Selected
-                            </span>
-                          )}
-                        </div>
-                        <p className="text-[11px] text-[#5C6E5E] mt-0.5 leading-relaxed">
-                          Cinematic widescreen brand films, YouTube links/embeds, commercial ads, and long-form video shoots.
-                        </p>
-                      </div>
-                    </button>
-                  </div>
-                </div>
-
-                {/* STEP 2: UPLOAD VIDEO FILE OR PASTE URL */}
-                <div className="space-y-3 pt-2 border-t border-[#DCE7D4]/60">
-                  <div className="flex items-center justify-between">
-                    <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                      <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">2</span>
-                      <span>Upload Video or Paste Link</span>
-                    </label>
-
-                    {/* Input Mode Toggle */}
-                    <div className="flex items-center bg-[#F6F3EC] p-1 rounded-xl border border-[#DCE7D4] text-xs">
-                      <button
-                        type="button"
-                        onClick={() => setVideoInputMode('upload')}
-                        className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
-                          videoInputMode === 'upload'
-                            ? 'bg-[#073B2F] text-white shadow-2xs'
-                            : 'text-[#5C6E5E] hover:text-[#073B2F]'
-                        }`}
-                      >
-                        Upload Video File
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => setVideoInputMode('url')}
-                        className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
-                          videoInputMode === 'url'
-                            ? 'bg-[#073B2F] text-white shadow-2xs'
-                            : 'text-[#5C6E5E] hover:text-[#073B2F]'
-                        }`}
-                      >
-                        YouTube / Reel Link
-                      </button>
-                    </div>
-                  </div>
-
-                  {/* Title / Caption */}
-                  <div>
-                    <label className="text-[11px] font-bold text-[#5C6E5E] block mb-1">
-                      Video Title or Description (Optional)
-                    </label>
-                    <input
-                      type="text"
-                      value={videoTitleInput}
-                      onChange={(e) => setVideoTitleInput(e.target.value)}
-                      placeholder={`e.g. ${activeCategoryTab} Campaign ${videoUploadFormat === 'reel' ? 'Reel' : 'Film'}`}
-                      className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
-                    />
-                  </div>
-
-                  {videoInputMode === 'upload' ? (
-                    <div>
-                      <input
-                        type="file"
-                        ref={videoFileInputRef}
-                        accept="video/mp4,video/webm,video/quicktime,video/mov"
-                        onChange={handleVideoFileUpload}
-                        className="hidden"
-                      />
-                      <div
-                        onClick={() => videoFileInputRef.current?.click()}
-                        className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-[#FAF8F5] hover:bg-[#F0FFDA]/30 rounded-2xl p-6 text-center cursor-pointer transition group"
-                      >
-                        <div className="w-12 h-12 rounded-full bg-white group-hover:bg-[#073B2F] mx-auto flex items-center justify-center transition shadow-2xs border border-[#DCE7D4] mb-2">
-                          <Upload className="w-5 h-5 text-[#FF6A45] group-hover:text-white transition" />
-                        </div>
-                        <p className="text-xs font-bold text-[#073B2F]">
-                          Click to select a {videoUploadFormat === 'reel' ? 'vertical 9:16 Reel' : '16:9 YouTube video'} file
-                        </p>
-                        <p className="text-[11px] text-[#5C6E5E] mt-1">
-                          Supports MP4, WebM, MOV. Automatic video frame poster thumbnail is captured on upload.
-                        </p>
-                        {isProcessingVideo && (
-                          <div className="mt-3 text-xs font-bold text-emerald-700 animate-pulse">
-                            Processing video and extracting poster frame...
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  ) : (
-                    <div className="space-y-2">
-                      <div className="flex gap-2">
-                        <input
-                          type="url"
-                          value={videoUrlInput}
-                          onChange={(e) => setVideoUrlInput(e.target.value)}
-                          placeholder="Paste YouTube watch URL, Shorts link, or direct MP4 link..."
-                          className="flex-1 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
-                        />
-                        <button
-                          type="button"
-                          onClick={handleAddVideoByUrl}
-                          className="px-4 py-2 rounded-xl text-xs font-bold bg-[#073B2F] text-white hover:bg-[#0c4e3f] transition cursor-pointer shrink-0"
-                        >
-                          + Add Video
-                        </button>
-                      </div>
-                      <p className="text-[10px] text-[#5C6E5E]">
-                        Works with YouTube video links (`youtube.com/watch?v=...`), YouTube Shorts (`youtube.com/shorts/...`), youtu.be links, or direct MP4/video files.
-                      </p>
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Current Videos List / Showcase for Active Category */}
-              <div className="space-y-3">
-                <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
+              {/* Category Header & Controls */}
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7D4]">
+                <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-[#073B2F]">
-                      Current Videos for "{activeCategoryTab}"
+                    <span className="text-sm font-bold text-[#073B2F]">
+                      {activeCategoryTab} Videos & Reels
                     </span>
-                    <span className="text-[11px] font-bold text-[#5C6E5E] bg-[#F6F3EC] px-2 py-0.5 rounded-full border border-[#DCE7D4]">
-                      {currentCategoryVideos.length} / 6
+                    <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
+                      {currentCategoryVideos.length} / 6 Videos
                     </span>
                   </div>
+                  <p className="text-[11px] text-[#5C6E5E] mt-0.5">
+                    Showcase up to 6 reels & videos per shoot category. Supports Google Drive, Instagram Reels, YouTube, Vimeo, or direct video.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 self-start sm:self-auto">
+                  {currentCategoryVideos.length < 6 && (
+                    <button
+                      type="button"
+                      onClick={() => setIsAddVideoModalOpen(true)}
+                      className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
+                    >
+                      <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                      <span>+ Add Video / Reel</span>
+                    </button>
+                  )}
                   <button
                     type="button"
                     onClick={handleResetCategoryVideos}
-                    className="text-xs font-bold text-[#5C6E5E] hover:text-[#073B2F] flex items-center gap-1 hover:underline cursor-pointer"
+                    className="px-2.5 py-1.5 text-xs font-semibold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] rounded-lg transition flex items-center gap-1 cursor-pointer"
+                    title="Reset to default videos for this category"
                   >
-                    <RotateCcw className="w-3.5 h-3.5" />
-                    <span>Reset to Studio Defaults</span>
+                    <RotateCcw className="w-3 h-3" />
+                    <span>Reset</span>
                   </button>
                 </div>
+              </div>
 
-                {/* Videos Grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
-                  {currentCategoryVideos.map((video, vIdx) => {
-                    const isReel = video.format === 'reel';
-                    return (
+              {/* Feedback Message */}
+              {uploadStatusMsg && (
+                <div className="p-3 bg-[#F0FFDA] border border-[#DCE7D4] rounded-xl flex items-center justify-between text-xs text-[#073B2F] animate-in fade-in">
+                  <div className="flex items-center gap-2">
+                    <CheckCircle2 className="w-4 h-4 text-[#073B2F] shrink-0" />
+                    <span className="font-semibold">{uploadStatusMsg}</span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setUploadStatusMsg(null)}
+                    className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                  >
+                    <X className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              )}
+
+              {/* Videos Grid */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                {currentCategoryVideos.map((video, vIdx) => {
+                  const isReel = video.format === 'reel';
+                  const platformName = detectVideoPlatformName(video.url);
+                  return (
+                    <div
+                      key={video.id || vIdx}
+                      className="group relative rounded-2xl overflow-hidden bg-white border border-[#DCE7D4] hover:border-[#073B2F] transition-all shadow-xs flex flex-col justify-between"
+                    >
+                      {/* Video Thumbnail Viewport */}
                       <div
-                        key={video.id || vIdx}
-                        className="group relative rounded-2xl overflow-hidden bg-white border border-[#DCE7D4] hover:border-[#073B2F] transition-all shadow-xs flex flex-col justify-between"
+                        className={`relative overflow-hidden bg-stone-900 cursor-pointer ${
+                          isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-16/9'
+                        }`}
+                        onClick={() => {
+                          setPreviewVideoModal({
+                            videos: currentCategoryVideos,
+                            index: vIdx,
+                          });
+                        }}
                       >
-                        {/* Video Thumbnail Viewport */}
-                        <div
-                          className={`relative overflow-hidden bg-stone-900 cursor-pointer ${
-                            isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-16/9'
-                          }`}
-                          onClick={() => {
-                            setPreviewVideoModal({
-                              videos: currentCategoryVideos,
-                              index: vIdx,
-                            });
-                          }}
-                        >
-                          <img
-                            src={
-                              video.thumbnailUrl ||
-                              'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80'
-                            }
-                            alt={video.title || 'Video'}
-                            referrerPolicy="no-referrer"
-                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
-                          />
+                        <img
+                          src={
+                            video.thumbnailUrl ||
+                            (isReel
+                              ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+                              : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80')
+                          }
+                          alt={video.title || 'Video'}
+                          referrerPolicy="no-referrer"
+                          className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
+                        />
 
-                          {/* Top Badges */}
-                          <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-10">
+                        {/* Top Badges */}
+                        <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-10">
+                          <div className="flex items-center gap-1">
                             {isReel ? (
                               <span className="px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
                                 <Smartphone className="w-3 h-3" />
@@ -1994,77 +1797,79 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             ) : (
                               <span className="px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
                                 <Tv className="w-3 h-3" />
-                                <span>YouTube 16:9</span>
+                                <span>16:9 Landscape</span>
                               </span>
                             )}
-
-                            {/* Direct Delete Button */}
-                            <button
-                              type="button"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteCategoryVideo(video.id);
-                              }}
-                              className="w-7 h-7 rounded-full bg-red-600/90 hover:bg-red-700 text-white flex items-center justify-center transition shadow-md cursor-pointer hover:scale-110 active:scale-95"
-                              title="Delete this video"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
+                            <span className="px-1.5 py-0.5 rounded-md bg-black/60 text-white text-[9px] font-semibold backdrop-blur-xs">
+                              {platformName}
+                            </span>
                           </div>
 
-                          {/* Center Play Button Overlay */}
-                          <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors">
-                            <div className="w-11 h-11 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
-                              <Play className="w-5 h-5 fill-white translate-x-0.5" />
-                            </div>
-                          </div>
+                          {/* Direct Delete Button */}
+                          <button
+                            type="button"
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              handleDeleteCategoryVideo(video.id);
+                            }}
+                            className="w-7 h-7 rounded-full bg-red-600/90 hover:bg-red-700 text-white flex items-center justify-center transition shadow-md cursor-pointer hover:scale-110 active:scale-95"
+                            title="Delete this video"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                          </button>
                         </div>
 
-                        {/* Video Card Footer */}
-                        <div className="p-3 bg-white space-y-1">
-                          <p className="text-xs font-bold text-[#073B2F] truncate">
-                            {video.title || `${activeCategoryTab} Video`}
-                          </p>
-                          <div className="flex items-center justify-between text-[11px] text-[#5C6E5E]">
-                            <span>Slot {vIdx + 1} of 6</span>
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setPreviewVideoModal({
-                                  videos: currentCategoryVideos,
-                                  index: vIdx,
-                                });
-                              }}
-                              className="text-[#FF6A45] font-bold hover:underline cursor-pointer flex items-center gap-0.5"
-                            >
-                              <span>Play Preview</span>
-                            </button>
+                        {/* Center Play Button Overlay */}
+                        <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                          <div className="w-11 h-11 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
+                            <Play className="w-5 h-5 fill-white translate-x-0.5" />
                           </div>
                         </div>
                       </div>
-                    );
-                  })}
 
-                  {/* Empty Slot Placeholder */}
-                  {currentCategoryVideos.length < 6 && (
-                    <div
-                      onClick={() => {
-                        window.scrollTo({ top: 100, behavior: 'smooth' });
-                      }}
-                      className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-[#FAF8F5] rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition min-h-[220px] group"
-                    >
-                      <div className="w-10 h-10 rounded-full bg-stone-100 group-hover:bg-[#073B2F] flex items-center justify-center transition mb-2">
-                        <Plus className="w-5 h-5 text-[#FF6A45] group-hover:text-white" />
+                      {/* Video Card Footer */}
+                      <div className="p-3 bg-white space-y-1">
+                        <p className="text-xs font-bold text-[#073B2F] truncate">
+                          {video.title || `${activeCategoryTab} Video`}
+                        </p>
+                        <div className="flex items-center justify-between text-[11px] text-[#5C6E5E]">
+                          <span>Slot {vIdx + 1} of 6</span>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setPreviewVideoModal({
+                                videos: currentCategoryVideos,
+                                index: vIdx,
+                              });
+                            }}
+                            className="text-[#FF6A45] font-bold hover:underline cursor-pointer flex items-center gap-0.5"
+                          >
+                            <span>Play Preview</span>
+                          </button>
+                        </div>
                       </div>
-                      <p className="text-xs font-bold text-[#073B2F]">
-                        + Add Video Slot {currentCategoryVideos.length + 1}
-                      </p>
-                      <p className="text-[11px] text-[#5C6E5E] mt-1">
-                        Choose Reel (9:16) or YouTube (16:9) format above
-                      </p>
                     </div>
-                  )}
-                </div>
+                  );
+                })}
+
+                {/* Empty Slot Placeholder - Directly Clickable! */}
+                {currentCategoryVideos.length < 6 && (
+                  <button
+                    type="button"
+                    onClick={() => setIsAddVideoModalOpen(true)}
+                    className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-white hover:bg-[#F0FFDA]/30 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition min-h-[220px] group shadow-2xs"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-[#F6F3EC] group-hover:bg-[#073B2F] flex items-center justify-center transition mb-2 shadow-2xs">
+                      <Plus className="w-6 h-6 text-[#FF6A45] group-hover:text-white" />
+                    </div>
+                    <p className="text-xs sm:text-sm font-bold text-[#073B2F]">
+                      + Add Video Slot {currentCategoryVideos.length + 1}
+                    </p>
+                    <p className="text-[11px] text-[#5C6E5E] mt-1 max-w-[200px]">
+                      Reel (9:16) or YouTube (16:9). Supports Google Drive, Instagram, or any link!
+                    </p>
+                  </button>
+                )}
               </div>
             </div>
           )}
@@ -2139,6 +1944,256 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           </div>
         </form>
       </div>
+
+      {/* Add Video Dialog / Modal */}
+      {isAddVideoModalOpen && (
+        <div
+          className="fixed inset-0 z-50 bg-black/75 backdrop-blur-xs flex items-center justify-center p-3 sm:p-5 animate-in fade-in"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) setIsAddVideoModalOpen(false);
+          }}
+        >
+          <div className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 space-y-5 border border-[#DCE7D4] shadow-2xl animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+            {/* Modal Header */}
+            <div className="flex items-center justify-between border-b border-[#DCE7D4] pb-3">
+              <div>
+                <h3 className="text-sm sm:text-base font-bold text-[#073B2F] flex items-center gap-2">
+                  <Film className="w-5 h-5 text-[#FF6A45]" />
+                  <span>Add Video to "{activeCategoryTab}"</span>
+                </h3>
+                <p className="text-[11px] text-[#5C6E5E] mt-0.5">
+                  Slot {currentCategoryVideos.length + 1} of 6 • Choose format first, then paste link or upload file
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={() => setIsAddVideoModalOpen(false)}
+                className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-stone-200 text-[#073B2F] flex items-center justify-center cursor-pointer transition"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* STEP 1: CHOOSE FORMAT FIRST */}
+            <div className="space-y-2">
+              <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                <span>Choose Video Format First (Required)</span>
+              </label>
+
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* Option 1: Reel Format (9:16) */}
+                <button
+                  type="button"
+                  onClick={() => setVideoUploadFormat('reel')}
+                  className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    videoUploadFormat === 'reel'
+                      ? 'border-[#FF6A45] bg-[#FFF5F2] shadow-xs ring-2 ring-[#FF6A45]/20'
+                      : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    videoUploadFormat === 'reel' ? 'bg-[#FF6A45] text-white' : 'bg-stone-100 text-[#073B2F]'
+                  }`}>
+                    <Smartphone className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-[#073B2F]">1. Reel Format (9:16)</span>
+                      {videoUploadFormat === 'reel' && (
+                        <span className="text-[10px] font-bold bg-[#FF6A45] text-white px-1.5 py-0.2 rounded-full">
+                          Selected
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-[#5C6E5E] mt-0.5 leading-relaxed">
+                      Vertical full-screen video, Instagram reel style, BTS footage, mobile portrait.
+                    </p>
+                  </div>
+                </button>
+
+                {/* Option 2: YouTube Format (16:9) */}
+                <button
+                  type="button"
+                  onClick={() => setVideoUploadFormat('youtube')}
+                  className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
+                    videoUploadFormat === 'youtube'
+                      ? 'border-amber-500 bg-amber-50/50 shadow-xs ring-2 ring-amber-500/20'
+                      : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
+                    videoUploadFormat === 'youtube' ? 'bg-amber-600 text-white' : 'bg-stone-100 text-[#073B2F]'
+                  }`}>
+                    <Tv className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-xs font-bold text-[#073B2F]">2. YouTube Format (16:9)</span>
+                      {videoUploadFormat === 'youtube' && (
+                        <span className="text-[10px] font-bold bg-amber-600 text-white px-1.5 py-0.2 rounded-full">
+                          Selected
+                        </span>
+                      )}
+                    </div>
+                    <p className="text-[11px] text-[#5C6E5E] mt-0.5 leading-relaxed">
+                      Cinematic widescreen brand films, commercial ads, long-form video shoots.
+                    </p>
+                  </div>
+                </button>
+              </div>
+            </div>
+
+            {/* STEP 2: SOURCE MODE (URL vs UPLOAD) */}
+            <div className="space-y-3 pt-2 border-t border-[#DCE7D4]">
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">2</span>
+                  <span>Video Source</span>
+                </label>
+
+                {/* Toggle */}
+                <div className="flex items-center bg-[#F6F3EC] p-1 rounded-xl border border-[#DCE7D4] text-xs">
+                  <button
+                    type="button"
+                    onClick={() => setVideoInputMode('url')}
+                    className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
+                      videoInputMode === 'url'
+                        ? 'bg-[#073B2F] text-white shadow-2xs'
+                        : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                    }`}
+                  >
+                    Paste Video Link
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setVideoInputMode('upload')}
+                    className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
+                      videoInputMode === 'upload'
+                        ? 'bg-[#073B2F] text-white shadow-2xs'
+                        : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                    }`}
+                  >
+                    Upload Video File
+                  </button>
+                </div>
+              </div>
+
+              {/* URL Input with real-time detection */}
+              {videoInputMode === 'url' ? (
+                <div className="space-y-2">
+                  <div className="space-y-1">
+                    <label className="text-[11px] font-bold text-[#073B2F] block">
+                      Video URL / Link
+                    </label>
+                    <input
+                      type="url"
+                      value={videoUrlInput}
+                      onChange={(e) => setVideoUrlInput(e.target.value)}
+                      placeholder="Paste Google Drive link, Instagram reel link, YouTube link, or any video link..."
+                      className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                      autoFocus
+                    />
+                  </div>
+
+                  {videoUrlInput.trim() && (
+                    <div className="p-2 rounded-lg bg-[#F0FFDA] border border-[#DCE7D4] flex items-center gap-2 text-xs text-[#073B2F]">
+                      <Sparkles className="w-3.5 h-3.5 text-[#FF6A45]" />
+                      <span className="font-semibold">
+                        Detected platform: <strong>{detectVideoPlatformName(videoUrlInput)}</strong>
+                      </span>
+                    </div>
+                  )}
+
+                  <div className="flex flex-wrap gap-1.5 pt-1 text-[10px] text-[#5C6E5E]">
+                    <span className="font-bold text-[#073B2F]">Supported:</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Google Drive</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Instagram Reels</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">YouTube / Shorts</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Vimeo</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Dropbox</span>
+                    <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Any Video Link</span>
+                  </div>
+                </div>
+              ) : (
+                <div>
+                  <input
+                    type="file"
+                    ref={videoFileInputRef}
+                    accept="video/mp4,video/webm,video/quicktime,video/mov"
+                    onChange={handleVideoFileUpload}
+                    className="hidden"
+                  />
+                  <div
+                    onClick={() => videoFileInputRef.current?.click()}
+                    className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-[#FAF8F5] hover:bg-[#F0FFDA]/30 rounded-2xl p-6 text-center cursor-pointer transition group"
+                  >
+                    <div className="w-12 h-12 rounded-full bg-white group-hover:bg-[#073B2F] mx-auto flex items-center justify-center transition shadow-2xs border border-[#DCE7D4] mb-2">
+                      <Upload className="w-5 h-5 text-[#FF6A45] group-hover:text-white transition" />
+                    </div>
+                    <p className="text-xs font-bold text-[#073B2F]">
+                      Click to choose video file ({videoUploadFormat === 'reel' ? '9:16 Reel' : '16:9 Video'})
+                    </p>
+                    <p className="text-[11px] text-[#5C6E5E] mt-1">
+                      Supports MP4, WebM, MOV. Poster frame is automatically generated.
+                    </p>
+                    {isProcessingVideo && (
+                      <div className="mt-3 text-xs font-bold text-emerald-700 animate-pulse">
+                        Processing video and extracting poster frame...
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+
+              {/* Title / Caption */}
+              <div>
+                <label className="text-[11px] font-bold text-[#5C6E5E] block mb-1">
+                  Video Title or Caption (Optional)
+                </label>
+                <input
+                  type="text"
+                  value={videoTitleInput}
+                  onChange={(e) => setVideoTitleInput(e.target.value)}
+                  placeholder={`e.g. ${activeCategoryTab} Campaign ${videoUploadFormat === 'reel' ? 'Reel' : 'Film'}`}
+                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                />
+              </div>
+            </div>
+
+            {/* Modal Actions */}
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#DCE7D4]">
+              <button
+                type="button"
+                onClick={() => setIsAddVideoModalOpen(false)}
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] hover:bg-stone-50 transition cursor-pointer"
+              >
+                Cancel
+              </button>
+              {videoInputMode === 'url' ? (
+                <button
+                  type="button"
+                  onClick={handleAddVideoByUrl}
+                  disabled={!videoUrlInput.trim()}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                >
+                  <Plus className="w-4 h-4 text-[#FF6A45]" />
+                  <span>+ Add Video to Slot {currentCategoryVideos.length + 1}</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => videoFileInputRef.current?.click()}
+                  className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                >
+                  <Upload className="w-4 h-4 text-[#FF6A45]" />
+                  <span>Choose Video File</span>
+                </button>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Image Cover Adjuster Modal for Cropping and Setting Focal Subject */}
       {adjustingPhoto && (

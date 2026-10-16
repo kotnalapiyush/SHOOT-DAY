@@ -37,6 +37,244 @@ export function getYouTubeThumbnail(videoId: string): string {
 }
 
 /**
+ * Extract Google Drive file ID from standard sharing and view links
+ */
+export function extractDriveId(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+
+  // drive.google.com/file/d/FILE_ID/...
+  const fileMatch = trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+  if (fileMatch) return fileMatch[1];
+
+  // drive.google.com/open?id=FILE_ID or uc?id=FILE_ID
+  const queryMatch = trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/i);
+  if (queryMatch && (trimmed.includes('drive.google.com') || trimmed.includes('docs.google.com'))) return queryMatch[1];
+
+  // docs.google.com/file/d/FILE_ID
+  const docsMatch = trimmed.match(/docs\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+  if (docsMatch) return docsMatch[1];
+
+  return null;
+}
+
+/**
+ * Extract Instagram Reel or Post ID
+ */
+export function extractInstagramId(url: string): { id: string; isReel: boolean } | null {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+
+  const reelMatch = trimmed.match(/instagram\.com\/(?:reel|reels)\/([a-zA-Z0-9_-]+)/i);
+  if (reelMatch) return { id: reelMatch[1], isReel: true };
+
+  const postMatch = trimmed.match(/instagram\.com\/(?:p|tv)\/([a-zA-Z0-9_-]+)/i);
+  if (postMatch) return { id: postMatch[1], isReel: false };
+
+  return null;
+}
+
+/**
+ * Extract Vimeo video ID
+ */
+export function extractVimeoId(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  const match = trimmed.match(/vimeo\.com\/(?:channels\/(?:\w+\/)?|groups\/([^\/]*)\/videos\/|album\/(\d+)\/video\/|video\/|)(\d+)/i);
+  if (match && match[3]) return match[3];
+  return null;
+}
+
+/**
+ * Extract Streamable video ID
+ */
+export function extractStreamableId(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  const match = trimmed.match(/streamable\.com\/([a-zA-Z0-9]+)/i);
+  if (match) return match[1];
+  return null;
+}
+
+/**
+ * Extract Loom share ID
+ */
+export function extractLoomId(url: string): string | null {
+  if (!url || typeof url !== 'string') return null;
+  const trimmed = url.trim();
+  const match = trimmed.match(/loom\.com\/share\/([a-zA-Z0-9_-]+)/i);
+  if (match) return match[1];
+  return null;
+}
+
+export type VideoSourceType = 'youtube' | 'drive' | 'instagram' | 'vimeo' | 'streamable' | 'direct' | 'generic';
+
+export interface ParsedVideoResult {
+  url: string;
+  embedUrl: string;
+  sourceType: VideoSourceType;
+  platformLabel: string;
+  thumbnailUrl?: string;
+  youtubeId?: string;
+  driveId?: string;
+  instagramId?: string;
+  format: VideoFormat;
+}
+
+/**
+ * Detect platform name from URL
+ */
+export function detectVideoPlatformName(rawUrl: string): string {
+  const url = (rawUrl || '').toLowerCase();
+  if (url.includes('youtube.com') || url.includes('youtu.be')) return 'YouTube';
+  if (url.includes('drive.google.com') || url.includes('docs.google.com')) return 'Google Drive';
+  if (url.includes('instagram.com') || url.includes('instagr.am')) return 'Instagram';
+  if (url.includes('vimeo.com')) return 'Vimeo';
+  if (url.includes('dropbox.com')) return 'Dropbox Video';
+  if (url.includes('streamable.com')) return 'Streamable';
+  if (url.includes('loom.com')) return 'Loom';
+  if (url.startsWith('blob:') || url.startsWith('data:video/') || /\.(mp4|webm|mov|m4v)($|\?)/i.test(url)) return 'Direct Video';
+  return 'Web Video Link';
+}
+
+/**
+ * Parse ANY video URL into appropriate player embed, detected platform, and format
+ * Supports YouTube, Google Drive, Instagram Reel/Post, Dropbox, Vimeo, Streamable, and any web video link!
+ */
+export function parseAnyVideoUrl(rawUrl: string, selectedFormat: VideoFormat = 'reel'): ParsedVideoResult {
+  const url = (rawUrl || '').trim();
+
+  // 1. YouTube
+  const ytId = extractYouTubeId(url);
+  if (ytId) {
+    const isShorts = url.toLowerCase().includes('/shorts/');
+    return {
+      url,
+      embedUrl: `https://www.youtube.com/embed/${ytId}?autoplay=1&rel=0&modestbranding=1`,
+      sourceType: 'youtube',
+      platformLabel: isShorts ? 'YouTube Shorts' : 'YouTube',
+      youtubeId: ytId,
+      thumbnailUrl: getYouTubeThumbnail(ytId),
+      format: isShorts ? 'reel' : selectedFormat,
+    };
+  }
+
+  // 2. Google Drive
+  const driveId = extractDriveId(url);
+  if (driveId) {
+    return {
+      url,
+      embedUrl: `https://drive.google.com/file/d/${driveId}/preview`,
+      sourceType: 'drive',
+      platformLabel: 'Google Drive',
+      driveId,
+      thumbnailUrl: `https://drive.google.com/thumbnail?id=${driveId}&sz=w800`,
+      format: selectedFormat,
+    };
+  }
+
+  // 3. Instagram
+  const insta = extractInstagramId(url);
+  if (insta) {
+    return {
+      url,
+      embedUrl: `https://www.instagram.com/reel/${insta.id}/embed/`,
+      sourceType: 'instagram',
+      platformLabel: insta.isReel ? 'Instagram Reel' : 'Instagram Video',
+      instagramId: insta.id,
+      thumbnailUrl: `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80`,
+      format: 'reel', // Instagram reels default to vertical 9:16
+    };
+  }
+
+  // 4. Dropbox (Convert to raw streamable direct URL)
+  if (url.includes('dropbox.com')) {
+    const directDropboxUrl = url.replace(/([?&])dl=0/, '$1raw=1');
+    const finalDropboxUrl = directDropboxUrl.includes('raw=1') ? directDropboxUrl : `${directDropboxUrl}${directDropboxUrl.includes('?') ? '&' : '?'}raw=1`;
+    return {
+      url,
+      embedUrl: finalDropboxUrl,
+      sourceType: 'direct',
+      platformLabel: 'Dropbox Video',
+      thumbnailUrl: selectedFormat === 'reel'
+        ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+        : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80',
+      format: selectedFormat,
+    };
+  }
+
+  // 5. Vimeo
+  const vimeoId = extractVimeoId(url);
+  if (vimeoId) {
+    return {
+      url,
+      embedUrl: `https://player.vimeo.com/video/${vimeoId}?autoplay=1`,
+      sourceType: 'vimeo',
+      platformLabel: 'Vimeo',
+      thumbnailUrl: `https://images.unsplash.com/photo-1518173946687-a4c8a383392e?w=800&auto=format&fit=crop&q=80`,
+      format: selectedFormat,
+    };
+  }
+
+  // 6. Streamable
+  const streamableId = extractStreamableId(url);
+  if (streamableId) {
+    return {
+      url,
+      embedUrl: `https://streamable.com/e/${streamableId}?autoplay=1`,
+      sourceType: 'streamable',
+      platformLabel: 'Streamable',
+      thumbnailUrl: `https://images.unsplash.com/photo-1536240478700-b869070f9279?w=800&auto=format&fit=crop&q=80`,
+      format: selectedFormat,
+    };
+  }
+
+  // 7. Loom
+  const loomId = extractLoomId(url);
+  if (loomId) {
+    return {
+      url,
+      embedUrl: `https://www.loom.com/embed/${loomId}`,
+      sourceType: 'generic',
+      platformLabel: 'Loom Video',
+      thumbnailUrl: `https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=800&auto=format&fit=crop&q=80`,
+      format: selectedFormat,
+    };
+  }
+
+  // 8. Direct video file (mp4, webm, mov, etc.) or blob / data
+  const isDirectVideo =
+    url.startsWith('blob:') ||
+    url.startsWith('data:video/') ||
+    /\.(mp4|webm|mov|m4v|ogv)($|\?)/i.test(url);
+
+  if (isDirectVideo) {
+    return {
+      url,
+      embedUrl: url,
+      sourceType: 'direct',
+      platformLabel: 'Direct Video (MP4)',
+      thumbnailUrl: selectedFormat === 'reel'
+        ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+        : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80',
+      format: selectedFormat,
+    };
+  }
+
+  // 9. Any generic video / cloud / web link
+  return {
+    url,
+    embedUrl: url,
+    sourceType: 'generic',
+    platformLabel: 'Web Video Link',
+    thumbnailUrl: selectedFormat === 'reel'
+      ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+      : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80',
+    format: selectedFormat,
+  };
+}
+
+/**
  * Generate a poster thumbnail from an uploaded video file using HTML5 Video + Canvas
  */
 export function generateVideoThumbnail(file: File): Promise<string> {

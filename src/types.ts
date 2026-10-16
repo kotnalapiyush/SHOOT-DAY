@@ -18,13 +18,15 @@ export type VideoFormat = 'reel' | 'youtube';
 
 export interface CategoryVideoItem {
   id: string;
-  url: string; // Video file URL (mp4/webm/blob) or YouTube / external link
+  url: string; // Video file URL (mp4/webm/blob) or YouTube / Drive / Instagram / external link
   format: VideoFormat; // 'reel' (9:16 vertical) or 'youtube' (16:9 widescreen)
   title?: string; // Title / caption e.g. "Brand Launch Reel"
   thumbnailUrl?: string; // Poster thumbnail image
   category: string; // Shoot category e.g. "Commercial Shoot", "Product Shoot", "Interior Shoot"
   createdAt?: string;
   youtubeId?: string; // If YouTube video
+  embedUrl?: string; // Embedded iframe playback URL (Drive / YouTube / Instagram / Vimeo)
+  sourceType?: 'youtube' | 'drive' | 'instagram' | 'vimeo' | 'direct' | 'generic';
   durationSeconds?: number;
 }
 

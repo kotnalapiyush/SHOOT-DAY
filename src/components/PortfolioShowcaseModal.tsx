@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { PhotographerProfile, CategoryVideoItem } from '../types';
 import { getCategoryPhotos, normalizeCategoryKey } from '../utils/categoryGalleries';
-import { getCategoryVideos } from '../utils/categoryVideos';
+import { getCategoryVideos, detectVideoPlatformName } from '../utils/categoryVideos';
 import { VideoReelPlayerModal } from './VideoReelPlayerModal';
 
 interface PortfolioShowcaseModalProps {
@@ -352,8 +352,8 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
                           />
 
-                          {/* Top Format Badge */}
-                          <div className="absolute top-2.5 left-2.5 z-10">
+                          {/* Top Badges */}
+                          <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
                             {isReel ? (
                               <span className="px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Smartphone className="w-3 h-3" />
@@ -362,9 +362,12 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                             ) : (
                               <span className="px-2.5 py-1 rounded-md bg-amber-600 text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Tv className="w-3 h-3" />
-                                <span>YouTube 16:9</span>
+                                <span>16:9 Landscape</span>
                               </span>
                             )}
+                            <span className="px-1.5 py-0.5 rounded-md bg-black/60 text-white text-[9px] font-semibold backdrop-blur-xs">
+                              {detectVideoPlatformName(video.url)}
+                            </span>
                           </div>
 
                           {/* Center Play Icon */}
