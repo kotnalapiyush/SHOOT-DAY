@@ -10,9 +10,15 @@ import {
   ChevronLeft,
   ChevronRight,
   Layers,
+  Play,
+  Film,
+  Smartphone,
+  Tv,
 } from 'lucide-react';
-import { PhotographerProfile } from '../types';
+import { PhotographerProfile, CategoryVideoItem } from '../types';
 import { getCategoryPhotos, normalizeCategoryKey } from '../utils/categoryGalleries';
+import { getCategoryVideos } from '../utils/categoryVideos';
+import { VideoReelPlayerModal } from './VideoReelPlayerModal';
 
 interface PortfolioShowcaseModalProps {
   isOpen: boolean;
@@ -31,6 +37,12 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
 }) => {
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
+  const [activeMediaTab, setActiveMediaTab] = useState<'photos' | 'videos'>('photos');
+  const [videoFilter, setVideoFilter] = useState<'all' | 'reel' | 'youtube'>('all');
+  const [activeVideoModal, setActiveVideoModal] = useState<{
+    videos: CategoryVideoItem[];
+    index: number;
+  } | null>(null);
 
   useEffect(() => {
     if (photographer) {
@@ -54,6 +66,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
   const activeCategory = selectedCategory || categories[0];
   // 15 photos for this category (displayed as 5 rows in 3 columns)
   const categoryPhotos = getCategoryPhotos(photographer, activeCategory, 15);
+  // 5-6 curated or custom videos/reels for this category
+  const categoryVideos = getCategoryVideos(photographer, activeCategory, 6);
+  const filteredVideos = categoryVideos.filter(
+    (v) => videoFilter === 'all' || v.format === videoFilter
+  );
 
   return (
     <div
@@ -160,53 +177,223 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
             </div>
           </div>
 
-          {/* Category Photos Grid */}
-          <div className="space-y-3">
-            <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
-              <div className="flex items-center gap-2">
-                <span className="text-xs font-bold text-[#073B2F]">
-                  {activeCategory}
-                </span>
+          {/* Media Type Switcher: Photos vs Reels & Videos */}
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+            <div className="flex items-center gap-1.5">
+              <button
+                type="button"
+                onClick={() => setActiveMediaTab('photos')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeMediaTab === 'photos'
+                    ? 'bg-[#073B2F] text-white shadow-xs'
+                    : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                }`}
+              >
+                <Camera className="w-3.5 h-3.5" />
+                <span>Photos ({categoryPhotos.length})</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => setActiveMediaTab('videos')}
+                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
+                  activeMediaTab === 'videos'
+                    ? 'bg-[#073B2F] text-white shadow-xs'
+                    : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                }`}
+              >
+                <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
+                <span>Reels & Videos ({categoryVideos.length})</span>
+              </button>
+            </div>
+
+            {activeMediaTab === 'videos' && (
+              <div className="flex items-center gap-1.5 text-xs">
+                <button
+                  type="button"
+                  onClick={() => setVideoFilter('all')}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
+                    videoFilter === 'all'
+                      ? 'bg-[#073B2F] text-white shadow-2xs'
+                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                  }`}
+                >
+                  All ({categoryVideos.length})
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVideoFilter('reel')}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer ${
+                    videoFilter === 'reel'
+                      ? 'bg-[#FF6A45] text-white shadow-2xs'
+                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                  }`}
+                >
+                  <Smartphone className="w-3 h-3" />
+                  <span>Reels 9:16 ({categoryVideos.filter((v) => v.format === 'reel').length})</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setVideoFilter('youtube')}
+                  className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer ${
+                    videoFilter === 'youtube'
+                      ? 'bg-amber-600 text-white shadow-2xs'
+                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                  }`}
+                >
+                  <Tv className="w-3 h-3" />
+                  <span>YouTube 16:9 ({categoryVideos.filter((v) => v.format === 'youtube').length})</span>
+                </button>
               </div>
-              <span className="text-[11px] text-[#5C6E5E]">Click photo to enlarge</span>
-            </div>
-
-            {/* Photos Grid */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5">
-              {categoryPhotos.map((imgUrl, idx) => {
-                const isLast = idx === categoryPhotos.length - 1;
-                const isOddOnMobile = categoryPhotos.length % 2 !== 0 && isLast;
-                const isSingleRemainderOnDesktop = categoryPhotos.length % 3 === 1 && isLast;
-
-                return (
-                  <div
-                    key={`${imgUrl}-${idx}`}
-                    onClick={() => setSelectedPhotoIndex(idx)}
-                    className={`group relative rounded-2xl overflow-hidden bg-stone-100 border border-[#DCE7D4] cursor-pointer hover:border-[#073B2F] transition-all shadow-2xs hover:shadow-md active:scale-[0.98] ${
-                      isOddOnMobile ? 'col-span-2 aspect-16/9' : 'aspect-4/3'
-                    } ${
-                      isSingleRemainderOnDesktop
-                        ? 'sm:col-span-3 sm:aspect-21/9'
-                        : 'sm:col-span-1 sm:aspect-4/3'
-                    }`}
-                  >
-                    <img
-                      src={imgUrl}
-                      alt={`${photographer.name} - ${activeCategory} sample ${idx + 1}`}
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
-                    />
-                    <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                      <span className="p-2 rounded-xl bg-white/95 text-[#073B2F] text-xs font-bold flex items-center gap-1 shadow-md">
-                        <Maximize2 className="w-3.5 h-3.5" />
-                        <span>View</span>
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
+            )}
           </div>
+
+          {/* TAB 1: CATEGORY PHOTOS GRID */}
+          {activeMediaTab === 'photos' && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-[#073B2F]">
+                    {activeCategory} — Photo Collection ({categoryPhotos.length} high-res photos)
+                  </span>
+                </div>
+                <span className="text-[11px] text-[#5C6E5E]">Click photo to enlarge</span>
+              </div>
+
+              {/* Photos Grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5">
+                {categoryPhotos.map((imgUrl, idx) => {
+                  const isLast = idx === categoryPhotos.length - 1;
+                  const isOddOnMobile = categoryPhotos.length % 2 !== 0 && isLast;
+                  const isSingleRemainderOnDesktop = categoryPhotos.length % 3 === 1 && isLast;
+
+                  return (
+                    <div
+                      key={`${imgUrl}-${idx}`}
+                      onClick={() => setSelectedPhotoIndex(idx)}
+                      className={`group relative rounded-2xl overflow-hidden bg-stone-100 border border-[#DCE7D4] cursor-pointer hover:border-[#073B2F] transition-all shadow-2xs hover:shadow-md active:scale-[0.98] ${
+                        isOddOnMobile ? 'col-span-2 aspect-16/9' : 'aspect-4/3'
+                      } ${
+                        isSingleRemainderOnDesktop
+                          ? 'sm:col-span-3 sm:aspect-21/9'
+                          : 'sm:col-span-1 sm:aspect-4/3'
+                      }`}
+                    >
+                      <img
+                        src={imgUrl}
+                        alt={`${photographer.name} - ${activeCategory} sample ${idx + 1}`}
+                        referrerPolicy="no-referrer"
+                        className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
+                        <span className="p-2 rounded-xl bg-white/95 text-[#073B2F] text-xs font-bold flex items-center gap-1 shadow-md">
+                          <Maximize2 className="w-3.5 h-3.5" />
+                          <span>View</span>
+                        </span>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {/* TAB 2: REELS & VIDEOS GRID */}
+          {activeMediaTab === 'videos' && (
+            <div className="space-y-3">
+              <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
+                <div className="flex items-center gap-2">
+                  <span className="text-xs font-bold text-[#073B2F]">
+                    {activeCategory} — Reels & Videography ({filteredVideos.length} videos)
+                  </span>
+                </div>
+                <span className="text-[11px] text-[#5C6E5E]">Click to play full-screen</span>
+              </div>
+
+              {filteredVideos.length === 0 ? (
+                <div className="p-8 text-center bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+                  <Film className="w-8 h-8 text-[#FF6A45] mx-auto mb-2" />
+                  <p className="text-xs font-bold text-[#073B2F]">No videos match this format filter.</p>
+                  <button
+                    type="button"
+                    onClick={() => setVideoFilter('all')}
+                    className="text-xs text-[#FF6A45] font-bold mt-2 hover:underline cursor-pointer"
+                  >
+                    View all {categoryVideos.length} videos
+                  </button>
+                </div>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                  {filteredVideos.map((video, vIdx) => {
+                    const isReel = video.format === 'reel';
+                    return (
+                      <div
+                        key={video.id || vIdx}
+                        onClick={() => {
+                          setActiveVideoModal({
+                            videos: filteredVideos,
+                            index: vIdx,
+                          });
+                        }}
+                        className="group relative rounded-2xl overflow-hidden bg-white border border-[#DCE7D4] hover:border-[#073B2F] transition-all shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
+                      >
+                        {/* Video Thumbnail */}
+                        <div
+                          className={`relative overflow-hidden bg-stone-900 ${
+                            isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-16/9'
+                          }`}
+                        >
+                          <img
+                            src={
+                              video.thumbnailUrl ||
+                              'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80'
+                            }
+                            alt={video.title || 'Video'}
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
+                          />
+
+                          {/* Top Format Badge */}
+                          <div className="absolute top-2.5 left-2.5 z-10">
+                            {isReel ? (
+                              <span className="px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
+                                <Smartphone className="w-3 h-3" />
+                                <span>Reel 9:16</span>
+                              </span>
+                            ) : (
+                              <span className="px-2.5 py-1 rounded-md bg-amber-600 text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
+                                <Tv className="w-3 h-3" />
+                                <span>YouTube 16:9</span>
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Center Play Icon */}
+                          <div className="absolute inset-0 bg-black/20 flex items-center justify-center group-hover:bg-black/35 transition-colors">
+                            <div className="w-12 h-12 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-xl group-hover:scale-115 transition-transform">
+                              <Play className="w-6 h-6 fill-white translate-x-0.5" />
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Video Details */}
+                        <div className="p-3.5 bg-white space-y-1">
+                          <h4 className="text-xs font-bold text-[#073B2F] truncate">
+                            {video.title || `${activeCategory} Video`}
+                          </h4>
+                          <div className="flex items-center justify-between text-[11px] text-[#5C6E5E]">
+                            <span>{activeCategory}</span>
+                            <span className="text-[#FF6A45] font-bold group-hover:underline">
+                              Watch Now →
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Footer Action Strip */}
@@ -329,6 +516,18 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* Video & Reel Player Modal */}
+      {activeVideoModal && (
+        <VideoReelPlayerModal
+          isOpen={Boolean(activeVideoModal)}
+          onClose={() => setActiveVideoModal(null)}
+          videos={activeVideoModal.videos}
+          initialIndex={activeVideoModal.index}
+          photographer={photographer}
+          onBookPhotographer={onBookPhotographer}
+        />
       )}
     </div>
   );

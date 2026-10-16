@@ -10,15 +10,21 @@ import {
   ChevronRight,
   Filter,
   FileText,
+  Play,
+  Film,
+  Smartphone,
+  Tv,
 } from 'lucide-react';
-import { PhotographerProfile, ShootBooking, DayStatus } from '../types';
+import { PhotographerProfile, ShootBooking, DayStatus, CategoryVideoItem } from '../types';
 import { formatDateKey, formatDateDayMonth, APP_CURRENT_YEAR, APP_CURRENT_MONTH } from '../utils/storage';
 import { getCategoryPhotos } from '../utils/categoryGalleries';
+import { getCategoryVideos } from '../utils/categoryVideos';
 import { BrandLogos } from './BrandLogos';
 import { ClientBookingModal } from './ClientBookingModal';
 import { JoinNetworkModal } from './JoinNetworkModal';
 import { PhotographerScheduleModal } from './PhotographerScheduleModal';
 import { PortfolioShowcaseModal } from './PortfolioShowcaseModal';
+import { VideoReelPlayerModal } from './VideoReelPlayerModal';
 import { ShootLobbyLogo } from './ShootLobbyLogo';
 import heroStudioImage from '../assets/images/photographer_studio_hero_1789075441635.jpg';
 
@@ -99,6 +105,12 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
     useState<PhotographerProfile | null>(null);
   const [cardActiveCategory, setCardActiveCategory] = useState<Record<string, string>>({});
   const [selectedShowcaseCategory, setSelectedShowcaseCategory] = useState<string | undefined>(undefined);
+  const [cardMediaType, setCardMediaType] = useState<Record<string, 'photos' | 'videos'>>({});
+  const [activeVideoModal, setActiveVideoModal] = useState<{
+    videos: CategoryVideoItem[];
+    index: number;
+    photographer: PhotographerProfile;
+  } | null>(null);
 
   // Close popovers on click outside
   useEffect(() => {
@@ -681,11 +693,13 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       {p.bio}
                     </p>
 
-                    {/* Tappable Specialization Categories */}
+                    {/* Tappable Specialization Categories & Media Showcase */}
                     {(() => {
                       const pSpecs = Array.isArray(p.specialties) && p.specialties.length > 0 ? p.specialties : ['Commercial Shoot'];
                       const activeCardCategory = cardActiveCategory[p.id] || pSpecs[0] || 'Commercial Shoot';
+                      const activeMedia = cardMediaType[p.id] || 'photos';
                       const category6Photos = getCategoryPhotos(p, activeCardCategory, 6);
+                      const category6Videos = getCategoryVideos(p, activeCardCategory, 6);
 
                       return (
                         <>
@@ -713,9 +727,37 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                             </div>
                           </div>
 
-                          {/* Category Photos Showcase Strip (6 preview photos) */}
+                          {/* Category Media Showcase Strip (Photos vs Reels/Videos) */}
                           <div className="mt-4 pt-3 border-t border-[#DCE7D4]/60">
                             <div className="flex items-center justify-between mb-2">
+                              {/* Media Type Switcher: Photos vs Reels */}
+                              <div className="flex items-center bg-[#F6F3EC] p-0.5 rounded-lg border border-[#DCE7D4] text-[11px]">
+                                <button
+                                  type="button"
+                                  onClick={() => setCardMediaType((prev) => ({ ...prev, [p.id]: 'photos' }))}
+                                  className={`px-2 py-0.5 rounded-md font-bold transition flex items-center gap-1 cursor-pointer ${
+                                    activeMedia === 'photos'
+                                      ? 'bg-[#073B2F] text-white shadow-2xs'
+                                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                                  }`}
+                                >
+                                  <Camera className="w-3 h-3" />
+                                  <span>Photos</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setCardMediaType((prev) => ({ ...prev, [p.id]: 'videos' }))}
+                                  className={`px-2 py-0.5 rounded-md font-bold transition flex items-center gap-1 cursor-pointer ${
+                                    activeMedia === 'videos'
+                                      ? 'bg-[#FF6A45] text-white shadow-2xs'
+                                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                                  }`}
+                                >
+                                  <Film className="w-3 h-3" />
+                                  <span>Reels ({category6Videos.length})</span>
+                                </button>
+                              </div>
+
                               <button
                                 type="button"
                                 onClick={() => {
@@ -724,33 +766,85 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                 }}
                                 className="text-xs font-bold text-[#073B2F] hover:text-[#0c4e3f] flex items-center gap-1.5 hover:underline cursor-pointer group"
                               >
-                                <span>{activeCardCategory} see more</span>
+                                <span>{activeCardCategory} see all</span>
                                 <ArrowRight className="w-3.5 h-3.5 text-[#FF6A45] transition-transform group-hover:translate-x-0.5" />
                               </button>
                             </div>
 
-                            {/* Work Sample Thumbnails */}
-                            <button
-                              type="button"
-                              onClick={() => {
-                                setSelectedShowcaseCategory(activeCardCategory);
-                                setPortfolioShowcasePhotographer(p);
-                              }}
-                              className="w-full group/sample text-left transition cursor-pointer"
-                            >
-                              <div className="grid grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] group-hover/sample:border-[#073B2F] transition">
-                                {category6Photos.map((sampleImg, sIdx) => (
-                                  <div key={sIdx} className="relative aspect-4/3 overflow-hidden rounded-lg bg-stone-200">
-                                    <img
-                                      src={sampleImg}
-                                      alt=""
-                                      referrerPolicy="no-referrer"
-                                      className="w-full h-full object-cover transition-transform duration-300 group-hover/sample:scale-105"
-                                    />
-                                  </div>
-                                ))}
+                            {activeMedia === 'photos' ? (
+                              /* 6 Photos Showcase Strip */
+                              <button
+                                type="button"
+                                onClick={() => {
+                                  setSelectedShowcaseCategory(activeCardCategory);
+                                  setPortfolioShowcasePhotographer(p);
+                                }}
+                                className="w-full group/sample text-left transition cursor-pointer"
+                              >
+                                <div className="grid grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] group-hover/sample:border-[#073B2F] transition">
+                                  {category6Photos.map((sampleImg, sIdx) => (
+                                    <div key={sIdx} className="relative aspect-4/3 overflow-hidden rounded-lg bg-stone-200">
+                                      <img
+                                        src={sampleImg}
+                                        alt=""
+                                        referrerPolicy="no-referrer"
+                                        className="w-full h-full object-cover transition-transform duration-300 group-hover/sample:scale-105"
+                                      />
+                                    </div>
+                                  ))}
+                                </div>
+                              </button>
+                            ) : (
+                              /* Reels & Videos Showcase Strip */
+                              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] transition">
+                                {category6Videos.slice(0, 6).map((video, vIdx) => {
+                                  const isReel = video.format === 'reel';
+                                  return (
+                                    <div
+                                      key={video.id || vIdx}
+                                      onClick={() => {
+                                        setActiveVideoModal({
+                                          videos: category6Videos,
+                                          index: vIdx,
+                                          photographer: p,
+                                        });
+                                      }}
+                                      className={`relative rounded-lg overflow-hidden bg-stone-900 border border-[#DCE7D4] cursor-pointer group hover:border-[#073B2F] transition-all shadow-2xs ${
+                                        isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-4/3 sm:aspect-16/9'
+                                      }`}
+                                    >
+                                      <img
+                                        src={
+                                          video.thumbnailUrl ||
+                                          'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80'
+                                        }
+                                        alt={video.title || 'Video'}
+                                        referrerPolicy="no-referrer"
+                                        className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform"
+                                      />
+                                      {/* Format Badge */}
+                                      <div className="absolute top-1 left-1 z-10">
+                                        {isReel ? (
+                                          <span className="px-1 py-0.2 rounded-sm bg-[#FF6A45] text-white text-[8px] font-bold">
+                                            Reel
+                                          </span>
+                                        ) : (
+                                          <span className="px-1 py-0.2 rounded-sm bg-amber-600 text-white text-[8px] font-bold">
+                                            16:9
+                                          </span>
+                                        )}
+                                      </div>
+                                      {/* Center Play Icon */}
+                                      <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                                        <div className="w-6 h-6 sm:w-7 sm:h-7 rounded-full bg-white/40 backdrop-blur-xs flex items-center justify-center text-white shadow-sm group-hover:scale-115 transition-transform">
+                                          <Play className="w-3 h-3 fill-white translate-x-0.2" />
+                                        </div>
+                                      </div>
+                                    </div>
+                                  );
+                                })}
                               </div>
-                            </button>
+                            )}
                           </div>
                         </>
                       );
@@ -856,6 +950,18 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
         isOpen={isJoinNetworkOpen}
         onClose={() => setIsJoinNetworkOpen(false)}
       />
+
+      {/* Video & Reel Player Modal */}
+      {activeVideoModal && (
+        <VideoReelPlayerModal
+          isOpen={Boolean(activeVideoModal)}
+          onClose={() => setActiveVideoModal(null)}
+          videos={activeVideoModal.videos}
+          initialIndex={activeVideoModal.index}
+          photographer={activeVideoModal.photographer}
+          onBookPhotographer={handleBookClick}
+        />
+      )}
     </div>
   );
 };

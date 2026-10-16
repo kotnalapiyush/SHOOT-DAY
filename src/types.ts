@@ -14,6 +14,20 @@ export type ShootType =
   | 'Other / Custom Requirement'
   | (string & {});
 
+export type VideoFormat = 'reel' | 'youtube';
+
+export interface CategoryVideoItem {
+  id: string;
+  url: string; // Video file URL (mp4/webm/blob) or YouTube / external link
+  format: VideoFormat; // 'reel' (9:16 vertical) or 'youtube' (16:9 widescreen)
+  title?: string; // Title / caption e.g. "Brand Launch Reel"
+  thumbnailUrl?: string; // Poster thumbnail image
+  category: string; // Shoot category e.g. "Commercial Shoot", "Product Shoot", "Interior Shoot"
+  createdAt?: string;
+  youtubeId?: string; // If YouTube video
+  durationSeconds?: number;
+}
+
 export interface PhotographerProfile {
   id: string;
   name: string;
@@ -26,8 +40,10 @@ export interface PhotographerProfile {
   experienceYears: number;
   avatarColor: string;
   avatarUrl?: string;
-  // Category showcase: map from category name -> exactly 6 photo URLs
+  // Category showcase: map from category name -> photo URLs
   categoryGalleries?: Record<string, string[]>;
+  // Category video & reels showcase: map from category name -> CategoryVideoItem[] (5-6 videos per category)
+  categoryVideos?: Record<string, CategoryVideoItem[]>;
   portfolioSamples?: string[]; // Fallback sample shoot photos
   loginEmail?: string;
   loginPassword?: string;

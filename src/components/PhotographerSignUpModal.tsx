@@ -20,8 +20,9 @@ import {
   ArrowLeft,
   Clock,
 } from 'lucide-react';
-import { PhotographerProfile, ShootType } from '../types';
+import { PhotographerProfile, ShootType, CategoryVideoItem } from '../types';
 import { compressImageFile } from '../utils/imageCompressor';
+import { getCategoryVideos } from '../utils/categoryVideos';
 
 interface PhotographerSignUpModalProps {
   isOpen: boolean;
@@ -253,6 +254,13 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
         avatarUrl ||
         'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
       categoryGalleries: defaultGalleries,
+      categoryVideos: (() => {
+        const vids: Record<string, CategoryVideoItem[]> = {};
+        effectiveSpecialties.forEach((spec) => {
+          vids[spec] = getCategoryVideos(null, spec, 6);
+        });
+        return vids;
+      })(),
       portfolioSamples: defaultGalleries['Commercial Shoot'],
       status: 'on_hold', // Newly registered photographers start on hold awaiting Studio Admin review / activation
       holdReason: 'Pending Studio Admin Approval & Verification',

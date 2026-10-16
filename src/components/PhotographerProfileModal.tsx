@@ -212,6 +212,8 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
       specialties: specialties.length > 0 ? (specialties as ShootType[]) : ['Commercial Shoot'],
       avatarColor: photographerToEdit?.avatarColor || avatarColor,
       avatarUrl: avatarUrl.trim() || photographerToEdit?.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80',
+      categoryGalleries: photographerToEdit?.categoryGalleries,
+      categoryVideos: photographerToEdit?.categoryVideos,
       portfolioSamples: portfolioSamples.length > 0 ? portfolioSamples : (photographerToEdit?.portfolioSamples || []),
     };
 
