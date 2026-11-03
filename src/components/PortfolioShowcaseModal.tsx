@@ -19,6 +19,7 @@ import { PhotographerProfile, CategoryVideoItem } from '../types';
 import { getCategoryPhotos, normalizeCategoryKey } from '../utils/categoryGalleries';
 import { getCategoryVideos, detectVideoPlatformName } from '../utils/categoryVideos';
 import { VideoReelPlayerModal } from './VideoReelPlayerModal';
+import { VideoThumbnailPoster } from './VideoThumbnailPoster';
 
 interface PortfolioShowcaseModalProps {
   isOpen: boolean;
@@ -311,13 +312,10 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                             isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-16/9'
                           }`}
                         >
-                          <img
-                            src={
-                              video.thumbnailUrl ||
-                              'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80'
-                            }
+                          <VideoThumbnailPoster
+                            video={video}
+                            isReel={isReel}
                             alt={video.title || 'Video'}
-                            referrerPolicy="no-referrer"
                             className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
                           />
 

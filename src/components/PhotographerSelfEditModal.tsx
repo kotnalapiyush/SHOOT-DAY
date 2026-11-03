@@ -50,6 +50,7 @@ import {
 import { compressImageFile } from '../utils/imageCompressor';
 import { ImageCoverAdjusterModal } from './ImageCoverAdjusterModal';
 import { VideoReelPlayerModal } from './VideoReelPlayerModal';
+import { VideoThumbnailPoster } from './VideoThumbnailPoster';
 
 interface PhotographerSelfEditModalProps {
   isOpen: boolean;
@@ -102,6 +103,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
   const [videoInputMode, setVideoInputMode] = useState<'upload' | 'url'>('url'); // Default to URL mode so pasting links is instantly accessible
   const [videoUrlInput, setVideoUrlInput] = useState<string>('');
   const [videoTitleInput, setVideoTitleInput] = useState<string>('');
+  const [videoCustomCover, setVideoCustomCover] = useState<string>('');
+  const videoCoverFileInputRef = useRef<HTMLInputElement>(null);
+  const videoCoverReplaceInputRef = useRef<HTMLInputElement>(null);
+  const videoCoverReplaceTargetIdRef = useRef<string | null>(null);
   const [isProcessingVideo, setIsProcessingVideo] = useState(false);
   const videoFileInputRef = useRef<HTMLInputElement>(null);
   const [previewVideoModal, setPreviewVideoModal] = useState<{
@@ -632,6 +637,51 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
   const currentCategoryVideos = categoryVideos[activeCategoryTab] ||
     getCategoryVideos(photographer, activeCategoryTab, 6);
 
+  // Direct replace cover photo for an existing video
+  const handleDirectReplaceVideoCover = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    const targetId = videoCoverReplaceTargetIdRef.current;
+    if (!targetId) return;
+
+    try {
+      const compressed = await compressImageFile(file, 1200, 1200, 0.85);
+      const currentVideos = [...(categoryVideos[activeCategoryTab] || currentCategoryVideos)];
+      const updated = currentVideos.map((v) =>
+        v.id === targetId ? { ...v, thumbnailUrl: compressed } : v
+      );
+      setCategoryVideos((prev) => ({
+        ...prev,
+        [activeCategoryTab]: updated,
+      }));
+      setUploadStatusMsg(`✅ Cover thumbnail updated for video!`);
+    } catch (err) {
+      console.error('Failed to update video cover:', err);
+      alert('Failed to process image cover.');
+    } finally {
+      videoCoverReplaceTargetIdRef.current = null;
+      if (videoCoverReplaceInputRef.current) {
+        videoCoverReplaceInputRef.current.value = '';
+      }
+    }
+  };
+
+  const handleVideoCoverUploadInAddModal = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      const compressed = await compressImageFile(file, 1200, 1200, 0.85);
+      setVideoCustomCover(compressed);
+    } catch (err) {
+      console.error('Failed to process cover file:', err);
+      alert('Failed to process cover image.');
+    } finally {
+      if (videoCoverFileInputRef.current) {
+        videoCoverFileInputRef.current.value = '';
+      }
+    }
+  };
+
   // Add video via URL (Google Drive, Instagram, YouTube, Vimeo, Dropbox, or any link)
   const handleAddVideoByUrl = () => {
     const trimmedUrl = videoUrlInput.trim();
@@ -640,7 +690,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       return;
     }
 
-    const parsed = parseAnyVideoUrl(trimmedUrl, videoUploadFormat);
+    const parsed = parseAnyVideoUrl(trimmedUrl, videoUploadFormat, videoCustomCover);
     const resolvedFormat: VideoFormat = parsed.format || videoUploadFormat;
 
     const newVideoItem: CategoryVideoItem = {
@@ -649,8 +699,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       format: resolvedFormat,
       url: trimmedUrl,
       title: videoTitleInput.trim() || `${activeCategoryTab} ${resolvedFormat === 'reel' ? 'Reel' : 'Showcase Video'}`,
-      thumbnailUrl: parsed.thumbnailUrl || (resolvedFormat === 'reel'
-        ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
+      thumbnailUrl: videoCustomCover.trim() || parsed.thumbnailUrl || (resolvedFormat === 'reel'
+        ? ''
         : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80'),
       youtubeId: parsed.youtubeId,
       createdAt: new Date().toISOString(),
@@ -667,6 +717,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
     setVideoUrlInput('');
     setVideoTitleInput('');
+    setVideoCustomCover('');
     setIsAddVideoModalOpen(false);
     setUploadStatusMsg(`🎬 Added new ${parsed.platformLabel} (${resolvedFormat === 'reel' ? 'Reel' : 'YouTube'}) to Slot 1 in "${activeCategoryTab}"!`);
   };
@@ -1916,15 +1967,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           });
                         }}
                       >
-                        <img
-                          src={
-                            video.thumbnailUrl ||
-                            (isReel
-                              ? 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80'
-                              : 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=800&auto=format&fit=crop&q=80')
-                          }
+                        <VideoThumbnailPoster
+                          video={video}
+                          isReel={isReel}
                           alt={video.title || 'Video'}
-                          referrerPolicy="no-referrer"
                           className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105 opacity-85"
                         />
 
@@ -1947,22 +1993,38 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             </span>
                           </div>
 
-                          {/* Direct Delete Button */}
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteCategoryVideo(video.id);
-                            }}
-                            className="w-7 h-7 rounded-full bg-red-600/90 hover:bg-red-700 text-white flex items-center justify-center transition shadow-md cursor-pointer hover:scale-110 active:scale-95"
-                            title="Delete this video"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                          {/* Direct Actions: Change Cover & Delete */}
+                          <div className="flex items-center gap-1.5">
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                videoCoverReplaceTargetIdRef.current = video.id;
+                                videoCoverReplaceInputRef.current?.click();
+                              }}
+                              className="px-2 py-1 rounded-md bg-black/60 hover:bg-[#073B2F] text-white text-[10px] font-bold flex items-center gap-1 transition shadow-md cursor-pointer hover:scale-105 active:scale-95 backdrop-blur-xs"
+                              title="Upload or change cover image for this video"
+                            >
+                              <Camera className="w-3 h-3 text-[#FF6A45]" />
+                              <span>Cover</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteCategoryVideo(video.id);
+                              }}
+                              className="w-7 h-7 rounded-full bg-red-600/90 hover:bg-red-700 text-white flex items-center justify-center transition shadow-md cursor-pointer hover:scale-110 active:scale-95"
+                              title="Delete this video"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
                         </div>
 
                         {/* Center Play Button Overlay */}
-                        <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors">
+                        <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors pointer-events-none">
                           <div className="w-11 h-11 rounded-full bg-white/30 backdrop-blur-md border border-white/60 flex items-center justify-center text-white shadow-lg group-hover:scale-110 transition-transform">
                             <Play className="w-5 h-5 fill-white translate-x-0.5" />
                           </div>
@@ -2013,6 +2075,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   </button>
                 )}
               </div>
+
+              {/* Hidden file input for direct video cover replacement */}
+              <input
+                type="file"
+                ref={videoCoverReplaceInputRef}
+                accept="image/*"
+                onChange={handleDirectReplaceVideoCover}
+                className="hidden"
+              />
             </div>
           )}
 
@@ -2300,6 +2371,53 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   placeholder={`e.g. ${activeCategoryTab} Campaign ${videoUploadFormat === 'reel' ? 'Reel' : 'Film'}`}
                   className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
                 />
+              </div>
+
+              {/* Cover Thumbnail Section */}
+              <div className="space-y-2 pt-2 border-t border-[#DCE7D4]/60">
+                <div className="flex items-center justify-between">
+                  <label className="text-[11px] font-bold text-[#073B2F] flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <span>Cover Thumbnail (Optional)</span>
+                  </label>
+                  {videoCustomCover ? (
+                    <button
+                      type="button"
+                      onClick={() => setVideoCustomCover('')}
+                      className="text-[10px] font-bold text-red-600 hover:underline cursor-pointer"
+                    >
+                      Remove Custom Cover
+                    </button>
+                  ) : (
+                    <span className="text-[10px] text-[#5C6E5E]">Default: Auto from source</span>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input
+                    type="file"
+                    ref={videoCoverFileInputRef}
+                    accept="image/*"
+                    onChange={handleVideoCoverUploadInAddModal}
+                    className="hidden"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => videoCoverFileInputRef.current?.click()}
+                    className="px-3 py-1.5 rounded-xl bg-white border border-[#DCE7D4] hover:border-[#073B2F] text-xs font-semibold text-[#073B2F] flex items-center gap-1.5 cursor-pointer transition shadow-2xs hover:bg-[#F0FFDA]/30"
+                  >
+                    <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <span>Upload Custom Cover Image</span>
+                  </button>
+                  {videoCustomCover && (
+                    <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#DCE7D4] relative shrink-0">
+                      <img src={videoCustomCover} alt="Cover preview" className="w-full h-full object-cover" />
+                    </div>
+                  )}
+                </div>
+                <p className="text-[10px] text-[#5C6E5E]">
+                  If not uploaded, the exact cover poster from the link source (Instagram, YouTube, Google Drive) will be shown.
+                </p>
               </div>
             </div>
 

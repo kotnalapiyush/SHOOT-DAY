@@ -1,4 +1,4 @@
-import { PhotographerProfile, ShootBooking, NotificationItem, DayStatus } from '../types';
+import { PhotographerProfile, ShootBooking, NotificationItem, DayStatus, CategoryVideoItem } from '../types';
 
 const _seedNow = new Date();
 export const APP_CURRENT_YEAR = _seedNow.getFullYear();
@@ -456,6 +456,25 @@ export function subscribeToUpdates(callback: (type: string, payload?: unknown) =
   };
 }
 
+function sanitizeProfileVideos(profile: PhotographerProfile): PhotographerProfile {
+  if (!profile.categoryVideos) return profile;
+  const cleanedVideos: Record<string, CategoryVideoItem[]> = {};
+  for (const [cat, vList] of Object.entries(profile.categoryVideos)) {
+    cleanedVideos[cat] = (vList || []).map((v) => {
+      if (v.thumbnailUrl && v.thumbnailUrl.includes('photo-1611162617213-7d7a39e9b1d7')) {
+        const copy = { ...v };
+        delete copy.thumbnailUrl;
+        return copy;
+      }
+      return v;
+    });
+  }
+  return {
+    ...profile,
+    categoryVideos: cleanedVideos,
+  };
+}
+
 export function loadPhotographers(): PhotographerProfile[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEYS.PHOTOGRAPHERS);
@@ -465,11 +484,12 @@ export function loadPhotographers(): PhotographerProfile[] {
         const cleanFirst = p.name?.split(' ')[0]?.toLowerCase() || 'photog';
         const defaultProfile = INITIAL_PHOTOGRAPHERS.find((ip) => ip.id === p.id);
         const hasValidSamples = p.portfolioSamples && p.portfolioSamples.length > 0 && !p.portfolioSamples[0].includes('googleusercontent.com');
+        const sanitized = sanitizeProfileVideos(p);
         return {
-          ...p,
-          portfolioSamples: hasValidSamples ? p.portfolioSamples : (defaultProfile?.portfolioSamples || []),
-          loginEmail: p.loginEmail || p.email,
-          loginPassword: p.loginPassword || `${cleanFirst}123`,
+          ...sanitized,
+          portfolioSamples: hasValidSamples ? sanitized.portfolioSamples : (defaultProfile?.portfolioSamples || []),
+          loginEmail: sanitized.loginEmail || sanitized.email,
+          loginPassword: sanitized.loginPassword || `${cleanFirst}123`,
         };
       });
       return populated;
@@ -487,7 +507,8 @@ export function loadPhotographers(): PhotographerProfile[] {
 
 export function savePhotographers(photographers: PhotographerProfile[]) {
   try {
-    localStorage.setItem(STORAGE_KEYS.PHOTOGRAPHERS, JSON.stringify(photographers));
+    const sanitizedList = photographers.map(sanitizeProfileVideos);
+    localStorage.setItem(STORAGE_KEYS.PHOTOGRAPHERS, JSON.stringify(sanitizedList));
     broadcastUpdate('PHOTOGRAPHERS_UPDATED');
   } catch (err: unknown) {
     console.error('Failed to save photographers to localStorage', err);

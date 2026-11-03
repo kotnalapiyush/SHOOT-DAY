@@ -137,11 +137,20 @@ export function detectVideoPlatformName(rawUrl: string): string {
   return 'Web Video Link';
 }
 
+export function isFigmaPlaceholder(url?: string | null): boolean {
+  if (!url || typeof url !== 'string') return false;
+  return url.includes('photo-1611162617213-7d7a39e9b1d7');
+}
+
 /**
  * Parse ANY video URL into appropriate player embed, detected platform, and format
  * Supports YouTube, Google Drive, Instagram Reel/Post, Dropbox, Vimeo, Streamable, and any web video link!
  */
-export function parseAnyVideoUrl(rawUrl: string, selectedFormat: VideoFormat = 'reel'): ParsedVideoResult {
+export function parseAnyVideoUrl(
+  rawUrl: string,
+  selectedFormat: VideoFormat = 'reel',
+  customCoverUrl?: string
+): ParsedVideoResult {
   const url = (rawUrl || '').trim();
 
   // 1. YouTube
@@ -182,7 +191,7 @@ export function parseAnyVideoUrl(rawUrl: string, selectedFormat: VideoFormat = '
       sourceType: 'instagram',
       platformLabel: insta.isReel ? 'Instagram Reel' : 'Instagram Video',
       instagramId: insta.id,
-      thumbnailUrl: `https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=800&auto=format&fit=crop&q=80`,
+      thumbnailUrl: customCoverUrl || '',
       format: 'reel',
     };
   }
@@ -741,7 +750,13 @@ export function getCategoryVideos(
   if (custom && Array.isArray(custom) && custom.length > 0) {
     const valid = custom.filter((v) => v && v.url);
     if (valid.length > 0) {
-      return valid.slice(0, maxCount).map((v) => ({ ...v, format: 'reel' }));
+      return valid.slice(0, maxCount).map((v) => {
+        const item = { ...v, format: 'reel' as VideoFormat };
+        if (isFigmaPlaceholder(item.thumbnailUrl)) {
+          delete item.thumbnailUrl;
+        }
+        return item;
+      });
     }
   }
 

@@ -25,6 +25,7 @@ import { JoinNetworkModal } from './JoinNetworkModal';
 import { PhotographerScheduleModal } from './PhotographerScheduleModal';
 import { PortfolioShowcaseModal } from './PortfolioShowcaseModal';
 import { VideoReelPlayerModal } from './VideoReelPlayerModal';
+import { VideoThumbnailPoster } from './VideoThumbnailPoster';
 import { ShootLobbyLogo } from './ShootLobbyLogo';
 import heroStudioImage from '../assets/images/photographer_studio_hero_1789075441635.jpg';
 
@@ -810,13 +811,10 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                       }}
                                       className="relative rounded-lg overflow-hidden bg-stone-900 border border-[#DCE7D4] cursor-pointer group hover:border-[#073B2F] transition-all shadow-2xs aspect-9/14 sm:aspect-9/16"
                                     >
-                                      <img
-                                        src={
-                                          video.thumbnailUrl ||
-                                          'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?w=800&auto=format&fit=crop&q=80'
-                                        }
+                                      <VideoThumbnailPoster
+                                        video={video}
+                                        isReel={true}
                                         alt={video.title || 'Video'}
-                                        referrerPolicy="no-referrer"
                                         className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform"
                                       />
                                       {/* Video Badge */}
