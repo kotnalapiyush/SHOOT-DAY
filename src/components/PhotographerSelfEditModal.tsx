@@ -837,7 +837,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             }`}
           >
             <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
-            <span>Reels & Videos</span>
+            <span>Videos</span>
           </button>
           <button
             type="button"
@@ -1845,14 +1845,14 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 <div>
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold text-[#073B2F]">
-                      {activeCategoryTab} Videos & Reels
+                      {activeCategoryTab} Videos
                     </span>
                     <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
                       {currentCategoryVideos.length} / 6 Videos
                     </span>
                   </div>
                   <p className="text-[11px] text-[#5C6E5E] mt-0.5">
-                    Showcase up to 6 reels & videos per shoot category. Supports Google Drive, Instagram Reels, YouTube, Vimeo, or direct video.
+                    Showcase up to 6 videos per shoot category. Supports Google Drive, Instagram Reels, YouTube, Vimeo, or direct video.
                   </p>
                 </div>
 
@@ -1863,7 +1863,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                     className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
                   >
                     <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
-                    <span>+ Add Video / Reel</span>
+                    <span>+ Add Video</span>
                   </button>
                   <button
                     type="button"

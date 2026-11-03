@@ -200,7 +200,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                 }`}
               >
                 <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
-                <span>Reels & Videos</span>
+                <span>Videos</span>
               </button>
             </div>
 

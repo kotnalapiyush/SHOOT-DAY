@@ -12,6 +12,7 @@ import {
   Sparkles,
   Smartphone,
   Tv,
+  Film,
   ExternalLink,
 } from 'lucide-react';
 import { CategoryVideoItem, PhotographerProfile } from '../types';
@@ -124,17 +125,10 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
       {/* Top Floating Controls */}
       <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 pointer-events-none">
         <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white text-xs pointer-events-auto shadow-lg">
-          {isReel ? (
-            <span className="flex items-center gap-1.5 font-bold text-[#FF6A45]">
-              <Smartphone className="w-3.5 h-3.5" />
-              <span>Reel</span>
-            </span>
-          ) : (
-            <span className="flex items-center gap-1.5 font-bold text-amber-400">
-              <Tv className="w-3.5 h-3.5" />
-              <span>YouTube</span>
-            </span>
-          )}
+          <span className="flex items-center gap-1.5 font-bold text-[#FF6A45]">
+            <Film className="w-3.5 h-3.5" />
+            <span>Video</span>
+          </span>
           <span className="text-white/40">•</span>
           <span className="px-2 py-0.5 rounded bg-white/20 text-[10px] font-bold text-white uppercase tracking-wider">
             {parsed.platformLabel}

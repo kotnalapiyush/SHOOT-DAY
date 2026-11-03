@@ -754,7 +754,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   }`}
                                 >
                                   <Film className="w-3 h-3" />
-                                  <span>Reels ({category6Videos.length})</span>
+                                  <span>Videos</span>
                                 </button>
                               </div>
 
@@ -795,10 +795,9 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                 </div>
                               </button>
                             ) : (
-                              /* Reels & Videos Showcase Strip */
+                              /* Videos Showcase Strip - Uniform tall format, no mixed YouTube landscape format */
                               <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] transition">
                                 {category6Videos.slice(0, 6).map((video, vIdx) => {
-                                  const isReel = video.format === 'reel';
                                   return (
                                     <div
                                       key={video.id || vIdx}
@@ -809,9 +808,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                           photographer: p,
                                         });
                                       }}
-                                      className={`relative rounded-lg overflow-hidden bg-stone-900 border border-[#DCE7D4] cursor-pointer group hover:border-[#073B2F] transition-all shadow-2xs ${
-                                        isReel ? 'aspect-9/14 sm:aspect-9/16' : 'aspect-4/3 sm:aspect-16/9'
-                                      }`}
+                                      className="relative rounded-lg overflow-hidden bg-stone-900 border border-[#DCE7D4] cursor-pointer group hover:border-[#073B2F] transition-all shadow-2xs aspect-9/14 sm:aspect-9/16"
                                     >
                                       <img
                                         src={
@@ -822,17 +819,11 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                         referrerPolicy="no-referrer"
                                         className="w-full h-full object-cover opacity-85 group-hover:scale-105 transition-transform"
                                       />
-                                      {/* Format Badge */}
+                                      {/* Video Badge */}
                                       <div className="absolute top-1 left-1 z-10">
-                                        {isReel ? (
-                                          <span className="px-1 py-0.2 rounded-sm bg-[#FF6A45] text-white text-[8px] font-bold">
-                                            Reel
-                                          </span>
-                                        ) : (
-                                          <span className="px-1 py-0.2 rounded-sm bg-amber-600 text-white text-[8px] font-bold">
-                                            YouTube
-                                          </span>
-                                        )}
+                                        <span className="px-1 py-0.2 rounded-sm bg-[#FF6A45] text-white text-[8px] font-bold">
+                                          Video
+                                        </span>
                                       </div>
                                       {/* Center Play Icon */}
                                       <div className="absolute inset-0 bg-black/25 flex items-center justify-center group-hover:bg-black/40 transition-colors">
