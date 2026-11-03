@@ -30,12 +30,14 @@ import {
   Smartphone,
   Tv,
   ExternalLink,
+  Link as LinkIcon,
 } from 'lucide-react';
 import { PhotographerProfile, ShootType, CategoryVideoItem, VideoFormat } from '../types';
 import {
   getCategoryPhotos,
   CATEGORY_DEFAULT_GALLERIES,
   normalizeCategoryKey,
+  normalizeImageUrl,
 } from '../utils/categoryGalleries';
 import {
   getCategoryVideos,
@@ -169,6 +171,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
   const [isDraggingOver, setIsDraggingOver] = useState(false);
   const [showUrlInputBar, setShowUrlInputBar] = useState(false);
   const [batchUrlInput, setBatchUrlInput] = useState('');
+  const [urlReplaceSlotIndex, setUrlReplaceSlotIndex] = useState<number | null>(null);
+  const [urlReplaceInput, setUrlReplaceInput] = useState('');
 
   // Password State
   const [newPassword, setNewPassword] = useState('');
@@ -478,7 +482,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
     }
   };
 
-  // Handle direct file upload for gallery (appends new photos directly to gallery)
+  // Handle direct file upload for gallery (places new photographer photos at the front)
   const handleMultiUploadFiles = async (files: FileList | File[], appendToGallery = true) => {
     if (!files || files.length === 0) return;
     const fileArray = Array.from(files).filter((f) => f.type.startsWith('image/'));
@@ -487,35 +491,22 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       return;
     }
 
-    const currentList = [...currentCategoryPhotos];
-    const remainingSlots = 15 - currentList.length;
-    if (appendToGallery && remainingSlots <= 0) {
-      alert('This gallery has already reached the maximum of 15 photos. Delete or replace existing photos to add new ones.');
-      return;
-    }
-
     setIsUploadingMultiple(true);
     setUploadStatusMsg(null);
 
     try {
-      const filesToProcess = appendToGallery ? fileArray.slice(0, remainingSlots) : fileArray.slice(0, 15);
+      const filesToProcess = fileArray.slice(0, 15);
       const compressedUrls: string[] = [];
 
       for (const file of filesToProcess) {
-        // High quality photo compression preserving crisp studio detail
-        const compressed = await compressImageFile(file, 2400, 2400, 0.92);
+        // High quality photo compression optimized for fast, crisp web display (< 80KB each)
+        const compressed = await compressImageFile(file, 1200, 1200, 0.78);
         compressedUrls.push(compressed);
       }
 
-      let updatedList: string[];
-      if (appendToGallery) {
-        updatedList = [...currentList, ...compressedUrls].slice(0, 15);
-      } else {
-        updatedList = [...currentList];
-        compressedUrls.forEach((url, i) => {
-          if (i < 15) updatedList[i] = url;
-        });
-      }
+      const currentList = [...currentCategoryPhotos];
+      // Place newly uploaded photos at the beginning (Slot 1..N) so the photographer immediately sees their work!
+      const updatedList = [...compressedUrls, ...currentList].slice(0, 15);
 
       setCategoryGalleries((prev) => ({
         ...prev,
@@ -523,7 +514,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       }));
 
       setUploadStatusMsg(
-        `✅ Directly uploaded ${compressedUrls.length} photo(s) to "${activeCategoryTab}"! Hover any photo to adjust cover framing or delete.`
+        `✅ Uploaded ${compressedUrls.length} photo(s) to "${activeCategoryTab}"! They are placed in your showcase slots. Drag to reorder or touch any photo to change/delete.`
       );
     } catch (err) {
       console.error('Error uploading photos:', err);
@@ -547,14 +538,14 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
     if (targetSlot === null || targetSlot < 0) return;
 
     try {
-      const compressed = await compressImageFile(file, 2400, 2400, 0.92);
+      const compressed = await compressImageFile(file, 1200, 1200, 0.78);
       const currentList = [...currentCategoryPhotos];
       currentList[targetSlot] = compressed;
       setCategoryGalleries((prev) => ({
         ...prev,
         [activeCategoryTab]: currentList,
       }));
-      setUploadStatusMsg(`✅ Photo ${targetSlot + 1} updated directly for "${activeCategoryTab}".`);
+      setUploadStatusMsg(`✅ Photo Slot ${targetSlot + 1} updated directly for "${activeCategoryTab}".`);
     } catch (err) {
       console.error('Failed to replace photo:', err);
       alert('Failed to process image file.');
@@ -566,7 +557,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
     }
   };
 
-  // Handle URL batch apply
+  // Handle URL batch apply (supports Google Drive photo links, Unsplash, direct image URLs)
   const handleApplyBatchUrls = () => {
     const trimmed = batchUrlInput.trim();
     if (!trimmed) return;
@@ -574,28 +565,50 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
     const urls = trimmed
       .split(/[\n,]+/)
       .map((u) => u.trim())
-      .filter((u) => u.startsWith('http://') || u.startsWith('https://') || u.startsWith('data:image/'));
+      .filter((u) => u.startsWith('http://') || u.startsWith('https://') || u.startsWith('data:image/'))
+      .map((u) => normalizeImageUrl(u));
 
     if (urls.length === 0) {
-      alert('Please enter valid image URLs starting with http:// or https://');
+      alert('Please enter valid image URLs (e.g. Google Drive link, Unsplash, or direct image link).');
       return;
     }
 
     const currentList = [...currentCategoryPhotos];
-    urls.slice(0, 15).forEach((url, i) => {
-      currentList[i] = url;
-    });
+    // Prepend new image URLs so photographer sees their uploaded links in slots 1..N
+    const updatedList = [...urls, ...currentList].slice(0, 15);
+
+    setCategoryGalleries((prev) => ({
+      ...prev,
+      [activeCategoryTab]: updatedList,
+    }));
+
+    setBatchUrlInput('');
+    setShowUrlInputBar(false);
+    setUploadStatusMsg(
+      `✅ Added ${urls.length} photo link(s) to "${activeCategoryTab}"! Touch any photo to adjust framing or reorder.`
+    );
+  };
+
+  // Direct replace for a specific photo slot from a link (Google Drive, direct URL, etc.)
+  const handleApplySlotUrl = () => {
+    if (urlReplaceSlotIndex === null) return;
+    const trimmed = urlReplaceInput.trim();
+    if (!trimmed) {
+      alert('Please enter an image link or Google Drive photo URL.');
+      return;
+    }
+    const normalized = normalizeImageUrl(trimmed);
+    const currentList = [...currentCategoryPhotos];
+    currentList[urlReplaceSlotIndex] = normalized;
 
     setCategoryGalleries((prev) => ({
       ...prev,
       [activeCategoryTab]: currentList,
     }));
 
-    setBatchUrlInput('');
-    setShowUrlInputBar(false);
-    setUploadStatusMsg(
-      `✅ Added ${urls.length} image URL(s) to "${activeCategoryTab}"! Click "Adjust Cover" to frame the main focal subject.`
-    );
+    setUploadStatusMsg(`✅ Updated Photo Slot ${urlReplaceSlotIndex + 1} with direct link.`);
+    setUrlReplaceSlotIndex(null);
+    setUrlReplaceInput('');
   };
 
   // Handle local file upload for replacing or adding a specific photo with cover adjustment
@@ -627,12 +640,6 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       return;
     }
 
-    const currentVideos = [...(categoryVideos[activeCategoryTab] || currentCategoryVideos)];
-    if (currentVideos.length >= 6) {
-      alert(`"${activeCategoryTab}" already has 6 videos. Delete an existing video to upload or add a new one.`);
-      return;
-    }
-
     const parsed = parseAnyVideoUrl(trimmedUrl, videoUploadFormat);
     const resolvedFormat: VideoFormat = parsed.format || videoUploadFormat;
 
@@ -649,28 +656,25 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
       createdAt: new Date().toISOString(),
     };
 
+    const currentVideos = [...(categoryVideos[activeCategoryTab] || currentCategoryVideos)];
+    // Place newly added video at Slot 1 so photographer sees it immediately, capped at 6 videos
+    const updatedVideos = [newVideoItem, ...currentVideos].slice(0, 6);
+
     setCategoryVideos((prev) => ({
       ...prev,
-      [activeCategoryTab]: [...currentVideos, newVideoItem],
+      [activeCategoryTab]: updatedVideos,
     }));
 
     setVideoUrlInput('');
     setVideoTitleInput('');
     setIsAddVideoModalOpen(false);
-    setUploadStatusMsg(`🎬 Added new ${parsed.platformLabel} (${resolvedFormat === 'reel' ? '9:16 Reel' : '16:9 Landscape'}) to "${activeCategoryTab}"!`);
+    setUploadStatusMsg(`🎬 Added new ${parsed.platformLabel} (${resolvedFormat === 'reel' ? 'Reel' : 'YouTube'}) to Slot 1 in "${activeCategoryTab}"!`);
   };
 
   // Add video via file upload (MP4, WebM, MOV)
   const handleVideoFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-
-    const currentVideos = [...(categoryVideos[activeCategoryTab] || currentCategoryVideos)];
-    if (currentVideos.length >= 6) {
-      alert(`"${activeCategoryTab}" already has 6 videos. Delete an existing video to add a new one.`);
-      if (videoFileInputRef.current) videoFileInputRef.current.value = '';
-      return;
-    }
 
     setIsProcessingVideo(true);
     setUploadStatusMsg('Processing video and generating poster thumbnail...');
@@ -689,14 +693,17 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
         createdAt: new Date().toISOString(),
       };
 
+      const currentVideos = [...(categoryVideos[activeCategoryTab] || currentCategoryVideos)];
+      const updatedVideos = [newVideoItem, ...currentVideos].slice(0, 6);
+
       setCategoryVideos((prev) => ({
         ...prev,
-        [activeCategoryTab]: [...currentVideos, newVideoItem],
+        [activeCategoryTab]: updatedVideos,
       }));
 
       setVideoTitleInput('');
       setIsAddVideoModalOpen(false);
-      setUploadStatusMsg(`✅ Successfully uploaded ${videoUploadFormat === 'reel' ? 'Reel (9:16)' : 'YouTube Format (16:9)'} to "${activeCategoryTab}"!`);
+      setUploadStatusMsg(`✅ Successfully uploaded ${videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'} to Slot 1 in "${activeCategoryTab}"!`);
     } catch (err) {
       console.error('Video upload error:', err);
       alert('Error reading video file. Please ensure it is a valid MP4 or WebM video.');
@@ -830,7 +837,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             }`}
           >
             <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
-            <span>Reels & Videos (5-6 per Category)</span>
+            <span>Reels & Videos</span>
           </button>
           <button
             type="button"
@@ -1338,8 +1345,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       </p>
                     </div>
 
-                    <div className="flex items-center gap-2 self-start sm:self-auto">
-                      <label className="px-3 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 shrink-0">
+                    <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
+                      <label className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 shrink-0">
                         <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
                         <span>+ Upload Photos</span>
                         <input
@@ -1355,8 +1362,128 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           className="sr-only"
                         />
                       </label>
+                      <button
+                        type="button"
+                        onClick={() => setShowUrlInputBar((prev) => !prev)}
+                        className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 shrink-0 border ${
+                          showUrlInputBar
+                            ? 'bg-[#073B2F] text-white border-[#073B2F]'
+                            : 'bg-white hover:bg-[#F6F3EC] text-[#073B2F] border-[#DCE7D4]'
+                        }`}
+                      >
+                        <LinkIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                        <span>+ Add Photo Link</span>
+                      </button>
                     </div>
                   </div>
+
+                  {/* Batch / Single URL Input Bar */}
+                  {showUrlInputBar && (
+                    <div className="p-4 bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl space-y-3 animate-in fade-in">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
+                          <LinkIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                          <span>Paste Photo Link(s) — Google Drive, Unsplash, or Direct Image URL</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => setShowUrlInputBar(false)}
+                          className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                      <textarea
+                        rows={2}
+                        value={batchUrlInput}
+                        onChange={(e) => setBatchUrlInput(e.target.value)}
+                        placeholder="Paste image links here (e.g. Google Drive image link, Unsplash, or direct image URL). For multiple photos, separate with new line or comma..."
+                        className="w-full bg-white border border-[#DCE7D4] rounded-xl p-3 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F] resize-none"
+                        autoFocus
+                      />
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                        <span className="text-[11px] text-[#5C6E5E]">
+                          💡 Google Drive sharing links are automatically converted to direct full-res images.
+                        </span>
+                        <div className="flex items-center gap-2 self-end sm:self-auto">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setShowUrlInputBar(false);
+                              setBatchUrlInput('');
+                            }}
+                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] font-semibold cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleApplyBatchUrls}
+                            disabled={!batchUrlInput.trim()}
+                            className="px-4 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
+                          >
+                            <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                            <span>Add Photo Link(s)</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Individual Slot Link Replacement Drawer */}
+                  {urlReplaceSlotIndex !== null && (
+                    <div className="p-4 bg-[#F0FFDA] border border-[#073B2F]/30 rounded-2xl space-y-3 animate-in fade-in">
+                      <div className="flex items-center justify-between">
+                        <span className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
+                          <LinkIcon className="w-4 h-4 text-[#FF6A45]" />
+                          <span>Replace Photo Slot {urlReplaceSlotIndex + 1} with Link</span>
+                        </span>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setUrlReplaceSlotIndex(null);
+                            setUrlReplaceInput('');
+                          }}
+                          className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <input
+                        type="url"
+                        value={urlReplaceInput}
+                        onChange={(e) => setUrlReplaceInput(e.target.value)}
+                        placeholder="Paste Google Drive photo link, Unsplash, or direct image link..."
+                        className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                        autoFocus
+                      />
+                      <div className="flex items-center justify-between">
+                        <span className="text-[10px] text-[#5C6E5E]">
+                          Supports Google Drive sharing links, Unsplash, and direct URLs.
+                        </span>
+                        <div className="flex items-center gap-2">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setUrlReplaceSlotIndex(null);
+                              setUrlReplaceInput('');
+                            }}
+                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] font-semibold cursor-pointer"
+                          >
+                            Cancel
+                          </button>
+                          <button
+                            type="button"
+                            onClick={handleApplySlotUrl}
+                            disabled={!urlReplaceInput.trim()}
+                            className="px-4 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95"
+                          >
+                            Update Slot {urlReplaceSlotIndex + 1}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  )}
 
                   {/* Feedback Message */}
                   {uploadStatusMsg && (
@@ -1542,18 +1669,35 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             <div className={`absolute inset-0 bg-black/65 transition-opacity flex flex-col items-center justify-center gap-1.5 p-2 z-15 ${
                               isTouched ? 'opacity-100 pointer-events-auto' : 'opacity-0 sm:group-hover:opacity-100 pointer-events-none sm:pointer-events-auto'
                             }`}>
-                              <button
-                                type="button"
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  replaceTargetSlotRef.current = idx;
-                                  replaceFileInputRef.current?.click();
-                                }}
-                                className="w-full max-w-[130px] px-2.5 py-1.5 rounded-lg bg-white text-[#073B2F] text-[11px] font-bold shadow-xs hover:bg-[#F0FFDA] transition cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
-                              >
-                                <Camera className="w-3.5 h-3.5 text-[#073B2F]" />
-                                <span>Change Photo</span>
-                              </button>
+                              <div className="flex items-center gap-1 w-full max-w-[130px]">
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    replaceTargetSlotRef.current = idx;
+                                    replaceFileInputRef.current?.click();
+                                  }}
+                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#073B2F] text-[10px] font-bold shadow-xs hover:bg-[#F0FFDA] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                                  title="Upload new image file"
+                                >
+                                  <Camera className="w-3 h-3 text-[#073B2F]" />
+                                  <span>Upload</span>
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    setUrlReplaceSlotIndex(idx);
+                                    setUrlReplaceInput(imgUrl.startsWith('data:') ? '' : imgUrl);
+                                    setTouchedPhotoIndex(null);
+                                  }}
+                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#073B2F] text-[10px] font-bold shadow-xs hover:bg-[#F0FFDA] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                                  title="Paste image link or Google Drive URL"
+                                >
+                                  <LinkIcon className="w-3 h-3 text-[#FF6A45]" />
+                                  <span>Paste Link</span>
+                                </button>
+                              </div>
 
                               {/* Slot navigation buttons inside overlay */}
                               <div className="flex items-center gap-1 w-full max-w-[130px]">
@@ -1665,7 +1809,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
 
                 <p className="text-[11px] text-[#5C6E5E]">
-                  Upload high-impact reels and cinematic videos for your specialization shoots (Commercial, Product, Interior, Fashion, etc.). Choose format first: <strong>Reel (9:16)</strong> or <strong>YouTube (16:9)</strong>.
+                  Upload high-impact reels and cinematic videos for your specialization shoots (Commercial, Product, Interior, Fashion, etc.). Choose format first: <strong>Reel</strong> or <strong>YouTube</strong>.
                 </p>
 
                 {/* Category Pills */}
@@ -1713,16 +1857,14 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
 
                 <div className="flex items-center gap-2 self-start sm:self-auto">
-                  {currentCategoryVideos.length < 6 && (
-                    <button
-                      type="button"
-                      onClick={() => setIsAddVideoModalOpen(true)}
-                      className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
-                    >
-                      <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
-                      <span>+ Add Video / Reel</span>
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    onClick={() => setIsAddVideoModalOpen(true)}
+                    className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
+                  >
+                    <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <span>+ Add Video / Reel</span>
+                  </button>
                   <button
                     type="button"
                     onClick={handleResetCategoryVideos}
@@ -1792,12 +1934,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             {isReel ? (
                               <span className="px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
                                 <Smartphone className="w-3 h-3" />
-                                <span>Reel 9:16</span>
+                                <span>Reel</span>
                               </span>
                             ) : (
                               <span className="px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
                                 <Tv className="w-3 h-3" />
-                                <span>16:9 Landscape</span>
+                                <span>YouTube</span>
                               </span>
                             )}
                             <span className="px-1.5 py-0.5 rounded-md bg-black/60 text-white text-[9px] font-semibold backdrop-blur-xs">
@@ -1866,7 +2008,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       + Add Video Slot {currentCategoryVideos.length + 1}
                     </p>
                     <p className="text-[11px] text-[#5C6E5E] mt-1 max-w-[200px]">
-                      Reel (9:16) or YouTube (16:9). Supports Google Drive, Instagram, or any link!
+                      Reel or YouTube. Supports Google Drive, Instagram, or any link!
                     </p>
                   </button>
                 )}
@@ -1982,7 +2124,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               </label>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {/* Option 1: Reel Format (9:16) */}
+                {/* Option 1: Reel */}
                 <button
                   type="button"
                   onClick={() => setVideoUploadFormat('reel')}
@@ -1999,7 +2141,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-[#073B2F]">1. Reel Format (9:16)</span>
+                      <span className="text-xs font-bold text-[#073B2F]">1. Reel</span>
                       {videoUploadFormat === 'reel' && (
                         <span className="text-[10px] font-bold bg-[#FF6A45] text-white px-1.5 py-0.2 rounded-full">
                           Selected
@@ -2012,7 +2154,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   </div>
                 </button>
 
-                {/* Option 2: YouTube Format (16:9) */}
+                {/* Option 2: YouTube */}
                 <button
                   type="button"
                   onClick={() => setVideoUploadFormat('youtube')}
@@ -2029,7 +2171,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-[#073B2F]">2. YouTube Format (16:9)</span>
+                      <span className="text-xs font-bold text-[#073B2F]">2. YouTube</span>
                       {videoUploadFormat === 'youtube' && (
                         <span className="text-[10px] font-bold bg-amber-600 text-white px-1.5 py-0.2 rounded-full">
                           Selected
@@ -2132,7 +2274,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       <Upload className="w-5 h-5 text-[#FF6A45] group-hover:text-white transition" />
                     </div>
                     <p className="text-xs font-bold text-[#073B2F]">
-                      Click to choose video file ({videoUploadFormat === 'reel' ? '9:16 Reel' : '16:9 Video'})
+                      Click to choose video file ({videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'})
                     </p>
                     <p className="text-[11px] text-[#5C6E5E] mt-1">
                       Supports MP4, WebM, MOV. Poster frame is automatically generated.
@@ -2175,19 +2317,19 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   type="button"
                   onClick={handleAddVideoByUrl}
                   disabled={!videoUrlInput.trim()}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
                 >
                   <Plus className="w-4 h-4 text-[#FF6A45]" />
-                  <span>+ Add Video to Slot {currentCategoryVideos.length + 1}</span>
+                  <span>+ Add {videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'} Video</span>
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={() => videoFileInputRef.current?.click()}
-                  className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
                 >
                   <Upload className="w-4 h-4 text-[#FF6A45]" />
-                  <span>Choose Video File</span>
+                  <span>Choose Video File ({videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'})</span>
                 </button>
               )}
             </div>

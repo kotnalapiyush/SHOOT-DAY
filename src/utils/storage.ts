@@ -489,8 +489,29 @@ export function savePhotographers(photographers: PhotographerProfile[]) {
   try {
     localStorage.setItem(STORAGE_KEYS.PHOTOGRAPHERS, JSON.stringify(photographers));
     broadcastUpdate('PHOTOGRAPHERS_UPDATED');
-  } catch (err) {
-    console.error('Failed to save photographers', err);
+  } catch (err: unknown) {
+    console.error('Failed to save photographers to localStorage', err);
+    // If quota exceeded, attempt to clear old cache items and retry
+    try {
+      const isQuotaError = err instanceof DOMException && (
+        err.name === 'QuotaExceededError' ||
+        err.name === 'NS_ERROR_DOM_QUOTA_REACHED' ||
+        err.code === 22
+      );
+      if (isQuotaError) {
+        // Clear any old legacy cache keys that aren't the current version
+        for (let i = localStorage.length - 1; i >= 0; i--) {
+          const key = localStorage.key(i);
+          if (key && !Object.values(STORAGE_KEYS).includes(key)) {
+            localStorage.removeItem(key);
+          }
+        }
+        localStorage.setItem(STORAGE_KEYS.PHOTOGRAPHERS, JSON.stringify(photographers));
+        broadcastUpdate('PHOTOGRAPHERS_UPDATED');
+      }
+    } catch (retryErr) {
+      console.warn('Quota recovery attempt also failed', retryErr);
+    }
   }
 }
 

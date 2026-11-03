@@ -38,7 +38,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   const [selectedPhotoIndex, setSelectedPhotoIndex] = useState<number | null>(null);
   const [activeMediaTab, setActiveMediaTab] = useState<'photos' | 'videos'>('photos');
-  const [videoFilter, setVideoFilter] = useState<'all' | 'reel' | 'youtube'>('all');
+  const [videoFilter, setVideoFilter] = useState<'reel' | 'youtube'>('reel');
   const [activeVideoModal, setActiveVideoModal] = useState<{
     videos: CategoryVideoItem[];
     index: number;
@@ -68,9 +68,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
   const categoryPhotos = getCategoryPhotos(photographer, activeCategory, 15);
   // 5-6 curated or custom videos/reels for this category
   const categoryVideos = getCategoryVideos(photographer, activeCategory, 6);
-  const filteredVideos = categoryVideos.filter(
-    (v) => videoFilter === 'all' || v.format === videoFilter
-  );
+  const filteredVideos = categoryVideos.filter((v) => v.format === videoFilter);
 
   return (
     <div
@@ -202,7 +200,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                 }`}
               >
                 <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
-                <span>Reels & Videos ({categoryVideos.length})</span>
+                <span>Reels & Videos</span>
               </button>
             </div>
 
@@ -210,38 +208,27 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
               <div className="flex items-center gap-1.5 text-xs">
                 <button
                   type="button"
-                  onClick={() => setVideoFilter('all')}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition cursor-pointer ${
-                    videoFilter === 'all'
-                      ? 'bg-[#073B2F] text-white shadow-2xs'
-                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
-                  }`}
-                >
-                  All ({categoryVideos.length})
-                </button>
-                <button
-                  type="button"
                   onClick={() => setVideoFilter('reel')}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
                     videoFilter === 'reel'
-                      ? 'bg-[#FF6A45] text-white shadow-2xs'
-                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                      ? 'bg-[#073B2F] text-white shadow-xs'
+                      : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
                   }`}
                 >
-                  <Smartphone className="w-3 h-3" />
-                  <span>Reels 9:16 ({categoryVideos.filter((v) => v.format === 'reel').length})</span>
+                  <Smartphone className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <span>Reel</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setVideoFilter('youtube')}
-                  className={`px-2.5 py-1 rounded-lg font-bold transition flex items-center gap-1 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
                     videoFilter === 'youtube'
-                      ? 'bg-amber-600 text-white shadow-2xs'
-                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                      ? 'bg-[#073B2F] text-white shadow-xs'
+                      : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
                   }`}
                 >
-                  <Tv className="w-3 h-3" />
-                  <span>YouTube 16:9 ({categoryVideos.filter((v) => v.format === 'youtube').length})</span>
+                  <Tv className="w-3.5 h-3.5 text-amber-500" />
+                  <span>YouTube</span>
                 </button>
               </div>
             )}
@@ -303,7 +290,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
               <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
                 <div className="flex items-center gap-2">
                   <span className="text-xs font-bold text-[#073B2F]">
-                    {activeCategory} — Reels & Videography ({filteredVideos.length} videos)
+                    {activeCategory} — {videoFilter === 'reel' ? 'Reel' : 'YouTube'} Videos ({filteredVideos.length} videos)
                   </span>
                 </div>
                 <span className="text-[11px] text-[#5C6E5E]">Click to play full-screen</span>
@@ -312,13 +299,13 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
               {filteredVideos.length === 0 ? (
                 <div className="p-8 text-center bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
                   <Film className="w-8 h-8 text-[#FF6A45] mx-auto mb-2" />
-                  <p className="text-xs font-bold text-[#073B2F]">No videos match this format filter.</p>
+                  <p className="text-xs font-bold text-[#073B2F]">No {videoFilter === 'reel' ? 'Reel' : 'YouTube'} videos in this category.</p>
                   <button
                     type="button"
-                    onClick={() => setVideoFilter('all')}
+                    onClick={() => setVideoFilter(videoFilter === 'reel' ? 'youtube' : 'reel')}
                     className="text-xs text-[#FF6A45] font-bold mt-2 hover:underline cursor-pointer"
                   >
-                    View all {categoryVideos.length} videos
+                    Switch to {videoFilter === 'reel' ? 'YouTube' : 'Reel'} videos
                   </button>
                 </div>
               ) : (
@@ -357,12 +344,12 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                             {isReel ? (
                               <span className="px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Smartphone className="w-3 h-3" />
-                                <span>Reel 9:16</span>
+                                <span>Reel</span>
                               </span>
                             ) : (
                               <span className="px-2.5 py-1 rounded-md bg-amber-600 text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Tv className="w-3 h-3" />
-                                <span>16:9 Landscape</span>
+                                <span>YouTube</span>
                               </span>
                             )}
                             <span className="px-1.5 py-0.5 rounded-md bg-black/60 text-white text-[9px] font-semibold backdrop-blur-xs">

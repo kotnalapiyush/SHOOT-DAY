@@ -272,6 +272,32 @@ export const CATEGORY_DEFAULT_GALLERIES: Record<string, string[]> = {
 };
 
 /**
+ * Normalizes any image URL, converting Google Drive sharing/view links
+ * to direct image streaming URLs (via thumbnail or lh3) so they display in <img> tags.
+ */
+export function normalizeImageUrl(rawUrl: string): string {
+  if (!rawUrl || typeof rawUrl !== 'string') return '';
+  const trimmed = rawUrl.trim();
+  if (trimmed.startsWith('data:image/') || trimmed.startsWith('blob:')) {
+    return trimmed;
+  }
+  // Google Drive
+  const driveMatch =
+    trimmed.match(/drive\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i) ||
+    trimmed.match(/[?&]id=([a-zA-Z0-9_-]+)/i) ||
+    trimmed.match(/docs\.google\.com\/file\/d\/([a-zA-Z0-9_-]+)/i);
+  if (driveMatch && (trimmed.includes('google.com') || trimmed.includes('drive.google'))) {
+    const driveId = driveMatch[1];
+    return `https://drive.google.com/thumbnail?id=${driveId}&sz=w1600`;
+  }
+  // Dropbox
+  if (trimmed.includes('dropbox.com')) {
+    return trimmed.replace(/([?&])dl=0/, '$1raw=1');
+  }
+  return trimmed;
+}
+
+/**
  * Normalizes category variations (e.g. 'Fashion' -> 'Fashion Shoot', 'Jewelry' -> 'Jewellery Shoot')
  */
 export function normalizeCategoryKey(cat: string): string {

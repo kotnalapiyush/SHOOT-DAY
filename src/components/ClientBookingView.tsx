@@ -830,7 +830,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                           </span>
                                         ) : (
                                           <span className="px-1 py-0.2 rounded-sm bg-amber-600 text-white text-[8px] font-bold">
-                                            16:9
+                                            YouTube
                                           </span>
                                         )}
                                       </div>

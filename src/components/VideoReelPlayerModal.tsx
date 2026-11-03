@@ -36,7 +36,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(initialIndex);
   const [isPlaying, setIsPlaying] = useState<boolean>(true);
-  const [isMuted, setIsMuted] = useState<boolean>(false);
+  const [isMuted, setIsMuted] = useState<boolean>(true);
   const [progress, setProgress] = useState<number>(0);
   const videoRef = useRef<HTMLVideoElement | null>(null);
 
@@ -71,7 +71,10 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
   if (!currentVideo) return null;
 
   const isReel = currentVideo.format === 'reel';
-  const parsed = parseAnyVideoUrl(currentVideo.url, currentVideo.format);
+  const videoSourceUrl = currentVideo.youtubeId
+    ? `https://www.youtube.com/watch?v=${currentVideo.youtubeId}`
+    : currentVideo.url;
+  const parsed = parseAnyVideoUrl(videoSourceUrl, currentVideo.format);
   const isEmbed = parsed.sourceType !== 'direct';
 
   const handleNext = () => {
@@ -124,12 +127,12 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
           {isReel ? (
             <span className="flex items-center gap-1.5 font-bold text-[#FF6A45]">
               <Smartphone className="w-3.5 h-3.5" />
-              <span>Reel (9:16)</span>
+              <span>Reel</span>
             </span>
           ) : (
             <span className="flex items-center gap-1.5 font-bold text-amber-400">
               <Tv className="w-3.5 h-3.5" />
-              <span>16:9 Landscape</span>
+              <span>YouTube</span>
             </span>
           )}
           <span className="text-white/40">•</span>
@@ -427,7 +430,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold tracking-wide uppercase">
-                    16:9 Landscape
+                    YouTube
                   </span>
                   <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/90 text-[10px] font-bold">
                     {parsed.platformLabel}
