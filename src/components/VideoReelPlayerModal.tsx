@@ -122,70 +122,36 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      {/* Top Floating Controls */}
-      <div className="absolute top-4 left-4 right-4 flex items-center justify-between z-30 pointer-events-none">
-        <div className="flex items-center gap-2 bg-black/70 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20 text-white text-xs pointer-events-auto shadow-lg">
-          <span className="flex items-center gap-1.5 font-bold text-[#FF6A45]">
-            <Film className="w-3.5 h-3.5" />
-            <span>Video</span>
-          </span>
-          <span className="text-white/40">•</span>
-          <span className="px-2 py-0.5 rounded bg-white/20 text-[10px] font-bold text-white uppercase tracking-wider">
-            {parsed.platformLabel}
-          </span>
-          <span className="text-white/40">•</span>
-          <span className="text-white/80 font-medium">
-            {currentIndex + 1} of {videos.length}
-          </span>
-          <span className="text-white/40">•</span>
-          <span className="text-white/90 font-bold truncate max-w-[100px] sm:max-w-[180px]">
-            {currentVideo.category}
-          </span>
-        </div>
-
-        <div className="flex items-center gap-2 pointer-events-auto">
-          {/* Direct link to open video externally if needed */}
-          {currentVideo.url && (
-            <a
-              href={currentVideo.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-3 py-1.5 rounded-full bg-black/70 hover:bg-black text-white text-xs font-semibold flex items-center gap-1.5 transition border border-white/20 shadow-lg cursor-pointer"
-              title="Open video in new tab"
-            >
-              <ExternalLink className="w-3.5 h-3.5 text-amber-300" />
-              <span className="hidden sm:inline">Open Link</span>
-            </a>
-          )}
-
-          <button
-            type="button"
-            onClick={onClose}
+      {/* Top Floating Controls - Clean Close & External Link */}
+      <div className="absolute top-4 right-4 flex items-center gap-2 z-40">
+        {/* Direct link to open video externally if needed */}
+        {currentVideo.url && (
+          <a
+            href={currentVideo.url}
+            target="_blank"
+            rel="noopener noreferrer"
             className="w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center transition border border-white/20 shadow-lg cursor-pointer hover:scale-105 active:scale-95"
-            aria-label="Close video player"
+            title="Open video in new tab"
           >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+            <ExternalLink className="w-4 h-4 text-amber-300" />
+          </a>
+        )}
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center transition border border-white/20 shadow-lg cursor-pointer hover:scale-105 active:scale-95"
+          aria-label="Close video player"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* Main Container - Adjusted by format */}
       <div className="relative flex items-center justify-center max-w-full max-h-full">
-        {/* Previous Video Arrow */}
-        {videos.length > 1 && (
-          <button
-            type="button"
-            onClick={handlePrev}
-            className="hidden sm:flex absolute -left-14 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white items-center justify-center transition border border-white/20 backdrop-blur-md cursor-pointer hover:scale-110 active:scale-95 z-20"
-            aria-label="Previous Video"
-          >
-            <ChevronLeft className="w-6 h-6" />
-          </button>
-        )}
-
         {/* 9:16 Vertical Reel Player */}
         {isReel ? (
-          <div className="relative w-full max-w-[380px] h-[78vh] sm:h-[84vh] max-h-[820px] rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/20 flex flex-col justify-between">
+          <div className="relative w-full max-w-[380px] h-[78vh] sm:h-[84vh] max-h-[820px] rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/20 flex flex-col justify-between select-none">
             {/* Reel Progress Bar */}
             <div className="absolute top-0 left-0 right-0 z-20 p-2.5 flex items-center gap-1">
               <div className="w-full bg-white/30 h-1 rounded-full overflow-hidden">
@@ -196,11 +162,63 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
               </div>
             </div>
 
+            {/* Prominent Left & Right Clickable Navigation Buttons */}
+            {videos.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrev();
+                  }}
+                  className="absolute left-2.5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-black/90 active:scale-90 text-white flex items-center justify-center transition border border-white/30 backdrop-blur-md cursor-pointer z-35 shadow-2xl hover:scale-110"
+                  aria-label="Previous Video"
+                  title="Previous Video (Click or tap left)"
+                >
+                  <ChevronLeft className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNext();
+                  }}
+                  className="absolute right-2.5 top-1/2 -translate-y-1/2 w-10 h-10 sm:w-11 sm:h-11 rounded-full bg-black/60 hover:bg-black/90 active:scale-90 text-white flex items-center justify-center transition border border-white/30 backdrop-blur-md cursor-pointer z-35 shadow-2xl hover:scale-110"
+                  aria-label="Next Video"
+                  title="Next Video (Click or tap right)"
+                >
+                  <ChevronRight className="w-5 h-5 sm:w-6 sm:h-6" />
+                </button>
+              </>
+            )}
+
             {/* Video Viewport / Embed for Reel */}
             <div
               className="relative w-full h-full flex items-center justify-center bg-black overflow-hidden"
               onClick={!isEmbed ? togglePlay : undefined}
             >
+              {/* Left & Right Clickable Touch / Click Points across the video */}
+              {videos.length > 1 && !isEmbed && (
+                <>
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePrev();
+                    }}
+                    className="absolute left-0 top-12 bottom-24 w-1/4 z-25 cursor-pointer"
+                    title="Previous video"
+                  />
+                  <div
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleNext();
+                    }}
+                    className="absolute right-0 top-12 bottom-24 w-1/4 z-25 cursor-pointer"
+                    title="Next video"
+                  />
+                </>
+              )}
+
               {parsed.sourceType === 'youtube' ? (
                 <iframe
                   src={parsed.embedUrl}
@@ -299,19 +317,11 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                 </div>
               )}
 
-              {/* Title & Category */}
+              {/* Category */}
               <div>
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="inline-block px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold tracking-wide uppercase">
-                    {currentVideo.category}
-                  </span>
-                  <span className="inline-block px-1.5 py-0.5 rounded bg-white/20 text-white text-[10px] font-semibold">
-                    {parsed.platformLabel}
-                  </span>
-                </div>
-                <h4 className="text-sm sm:text-base font-bold text-white leading-snug drop-shadow-md">
-                  {currentVideo.title || `${currentVideo.category} Reel`}
-                </h4>
+                <span className="inline-block px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">
+                  {currentVideo.category}
+                </span>
               </div>
 
               {/* Reel Controls Toolbar */}
@@ -361,7 +371,37 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
           </div>
         ) : (
           /* 16:9 Landscape Format Player */
-          <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/20 flex flex-col">
+          <div className="relative w-full max-w-4xl rounded-3xl overflow-hidden bg-black shadow-2xl border border-white/20 flex flex-col select-none">
+            {/* Clickable Navigation Buttons on Left & Right Edges */}
+            {videos.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePrev();
+                  }}
+                  className="absolute left-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/65 hover:bg-black/90 active:scale-90 text-white flex items-center justify-center transition border border-white/30 backdrop-blur-md cursor-pointer z-35 shadow-2xl hover:scale-110"
+                  aria-label="Previous Video"
+                  title="Previous Video"
+                >
+                  <ChevronLeft className="w-6 h-6" />
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleNext();
+                  }}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-black/65 hover:bg-black/90 active:scale-90 text-white flex items-center justify-center transition border border-white/30 backdrop-blur-md cursor-pointer z-35 shadow-2xl hover:scale-110"
+                  aria-label="Next Video"
+                  title="Next Video"
+                >
+                  <ChevronRight className="w-6 h-6" />
+                </button>
+              </>
+            )}
+
             <div className="relative aspect-16/9 w-full bg-black flex items-center justify-center">
               {parsed.sourceType === 'youtube' ? (
                 <iframe
@@ -426,21 +466,13 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                   <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold tracking-wide uppercase">
                     YouTube
                   </span>
-                  <span className="px-2 py-0.5 rounded-md bg-white/10 text-white/90 text-[10px] font-bold">
-                    {parsed.platformLabel}
-                  </span>
                   <span className="text-xs text-white/60">
                     Category: {currentVideo.category}
                   </span>
                 </div>
-                <h3 className="text-base sm:text-lg font-bold text-white truncate">
-                  {currentVideo.title || `${currentVideo.category} Cinematic Video`}
-                </h3>
                 {photographer && (
                   <p className="text-xs text-white/70">
-                    Directed / Filmed by{' '}
-                    <span className="font-semibold text-white">{photographer.name}</span> •{' '}
-                    {photographer.city}
+                    Filmed by <span className="font-semibold text-white">{photographer.name}</span> • {photographer.city}
                   </p>
                 )}
               </div>
@@ -454,7 +486,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                     className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center gap-1.5 border border-white/20 cursor-pointer"
                   >
                     <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
-                    <span>Watch Full Source</span>
+                    <span>Watch Source</span>
                   </a>
                 )}
 
@@ -475,39 +507,31 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             </div>
           </div>
         )}
-
-        {/* Next Video Arrow */}
-        {videos.length > 1 && (
-          <button
-            type="button"
-            onClick={handleNext}
-            className="hidden sm:flex absolute -right-14 top-1/2 -translate-y-1/2 w-11 h-11 rounded-full bg-white/10 hover:bg-white/25 text-white items-center justify-center transition border border-white/20 backdrop-blur-md cursor-pointer hover:scale-110 active:scale-95 z-20"
-            aria-label="Next Video"
-          >
-            <ChevronRight className="w-6 h-6" />
-          </button>
-        )}
       </div>
 
-      {/* Mobile Bottom Thumbnails Navigation Strip */}
+      {/* Bottom Pagination & Navigation Strip */}
       {videos.length > 1 && (
-        <div className="absolute bottom-3 left-4 right-4 flex items-center justify-center gap-2 z-20 sm:hidden">
+        <div className="absolute bottom-3 left-1/2 -translate-x-1/2 flex items-center gap-2.5 bg-black/75 backdrop-blur-md px-4 py-1.5 rounded-full border border-white/25 text-white text-xs z-35 shadow-2xl">
           <button
             type="button"
             onClick={handlePrev}
-            className="px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1"
+            className="hover:text-[#FF6A45] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
           >
-            <ChevronLeft className="w-4 h-4" /> Prev
+            <ChevronLeft className="w-4 h-4" />
+            <span>Prev</span>
           </button>
-          <span className="text-white text-xs font-medium px-2">
+          <span className="text-white/40 font-normal">•</span>
+          <span className="font-bold text-white text-[11px] px-1">
             {currentIndex + 1} / {videos.length}
           </span>
+          <span className="text-white/40 font-normal">•</span>
           <button
             type="button"
             onClick={handleNext}
-            className="px-3 py-1.5 rounded-full bg-white/20 backdrop-blur-md text-white text-xs font-bold flex items-center gap-1"
+            className="hover:text-[#FF6A45] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
           >
-            Next <ChevronRight className="w-4 h-4" />
+            <span>Next</span>
+            <ChevronRight className="w-4 h-4" />
           </button>
         </div>
       )}

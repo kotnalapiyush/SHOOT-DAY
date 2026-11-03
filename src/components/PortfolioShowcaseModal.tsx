@@ -237,15 +237,6 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
           {/* TAB 1: CATEGORY PHOTOS GRID */}
           {activeMediaTab === 'photos' && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#073B2F]">
-                    {activeCategory} — Photo Collection ({categoryPhotos.length} high-res photos)
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#5C6E5E]">Click photo to enlarge</span>
-              </div>
-
               {/* Photos Grid */}
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 sm:gap-3.5">
                 {categoryPhotos.map((imgUrl, idx) => {
@@ -287,15 +278,6 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
           {/* TAB 2: REELS & VIDEOS GRID */}
           {activeMediaTab === 'videos' && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between pb-1 border-b border-[#DCE7D4]">
-                <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-[#073B2F]">
-                    {activeCategory} — {videoFilter === 'reel' ? 'Reel' : 'YouTube'} Videos ({filteredVideos.length} videos)
-                  </span>
-                </div>
-                <span className="text-[11px] text-[#5C6E5E]">Click to play full-screen</span>
-              </div>
-
               {filteredVideos.length === 0 ? (
                 <div className="p-8 text-center bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
                   <Film className="w-8 h-8 text-[#FF6A45] mx-auto mb-2" />
