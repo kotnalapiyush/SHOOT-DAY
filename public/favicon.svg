@@ -1,5 +1,10 @@
-<svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#073B2F"/>
-  <circle cx="16" cy="16" r="10" fill="none" stroke="#F6F3EC" stroke-width="2.6" stroke-dasharray="1 3.2" stroke-linecap="round"/>
-  <circle cx="16" cy="16" r="2.6" fill="#F6F3EC"/>
+<svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+  <!-- Lobby Green rounded square -->
+  <rect width="48" height="48" rx="12" fill="#33684C"/>
+  <!-- Tilted Flash Yellow Camera Mark -->
+  <g transform="rotate(-12.5 24 24)">
+    <rect x="11" y="11" width="26" height="26" rx="7.5" fill="#FFDF70"/>
+    <circle cx="24" cy="24" r="6" fill="#33684C"/>
+    <circle cx="16" cy="16" r="1.8" fill="#FFF3C4"/>
+  </g>
 </svg>

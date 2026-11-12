@@ -163,10 +163,10 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
       )}
 
       {/* Photographer Switcher & Month Navigation Header */}
-      <div className="bg-white border border-[#DCE7D4] rounded-3xl p-4 sm:p-5 text-[#073B2F] shadow-xs space-y-4">
+      <div className="bg-white border border-[#E3EEE7] rounded-3xl p-4 sm:p-5 text-[#12201A] shadow-xs space-y-4">
         {/* Active Photographer Header */}
         {isAdmin ? (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#DCE7D4]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E3EEE7]">
             {/* Top Row: Switcher & Add Photographer button side by side */}
             <div className="flex items-center justify-between gap-2 w-full sm:w-auto">
               <div className="flex items-center gap-2 min-w-0">
@@ -175,10 +175,10 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                   id="select-active-photographer"
                   value={activePhotographer.id}
                   onChange={(e) => onSelectPhotographer(e.target.value)}
-                  className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-2.5 py-1.5 text-xs font-bold text-[#073B2F] focus:outline-none focus:border-[#073B2F] cursor-pointer min-w-0 max-w-[170px] sm:max-w-[220px] truncate"
+                  className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-2.5 py-1.5 text-xs font-bold text-[#12201A] focus:outline-none focus:border-[#33684C] cursor-pointer min-w-0 max-w-[170px] sm:max-w-[220px] truncate"
                 >
                   {photographers.map((p) => (
-                    <option key={p.id} value={p.id} className="bg-white text-[#073B2F]">
+                    <option key={p.id} value={p.id} className="bg-white text-[#12201A]">
                       {p.name} ({p.city}){p.status === 'on_hold' ? ' ⏸ [On Hold]' : ''}
                     </option>
                   ))}
@@ -188,7 +188,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                   <button
                     type="button"
                     onClick={() => onTogglePhotographerStatus?.(activePhotographer.id)}
-                    className="px-2.5 py-1 rounded-lg bg-[#073B2F] hover:bg-[#0c4e3f] text-[#F0FFDA] text-[11px] font-bold flex items-center gap-1 shrink-0 transition cursor-pointer active:scale-95 shadow-2xs"
+                    className="px-2.5 py-1 rounded-lg bg-[#33684C] hover:bg-[#1F4331] text-[#FFDF70] text-[11px] font-bold flex items-center gap-1 shrink-0 transition cursor-pointer active:scale-95 shadow-2xs"
                     title="Click to Activate this photographer for client bookings"
                   >
                     <Play className="w-2.5 h-2.5 fill-current" />
@@ -210,10 +210,10 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 <button
                   type="button"
                   onClick={() => onViewPhotographerDetails?.(activePhotographer)}
-                  className="px-2 py-1 rounded-lg bg-white hover:bg-[#F6F3EC] border border-[#DCE7D4] text-[#073B2F] text-[11px] font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95"
+                  className="px-2 py-1 rounded-lg bg-white hover:bg-[#F6F3EC] border border-[#E3EEE7] text-[#12201A] text-[11px] font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95"
                   title="View full signup details for this photographer"
                 >
-                  <Eye className="w-3 h-3 text-[#073B2F]" />
+                  <Eye className="w-3 h-3 text-[#33684C]" />
                   <span>Details</span>
                 </button>
 
@@ -230,34 +230,34 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
             </div>
 
             <div className="flex items-center justify-end">
-              <span className="hidden sm:inline-flex text-xs px-2.5 py-1 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold whitespace-nowrap shadow-2xs">
+              <span className="hidden sm:inline-flex text-xs px-2.5 py-1 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 font-bold whitespace-nowrap shadow-2xs">
                 Admin Master View
               </span>
             </div>
           </div>
         ) : (
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#DCE7D4]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#E3EEE7]">
             <div className="flex items-center gap-3">
               {activePhotographer.avatarUrl ? (
                 <img
                   src={activePhotographer.avatarUrl}
                   alt={activePhotographer.name}
                   referrerPolicy="no-referrer"
-                  className="w-12 h-12 rounded-2xl object-cover border border-[#DCE7D4] shadow-xs shrink-0"
+                  className="w-12 h-12 rounded-2xl object-cover border border-[#E3EEE7] shadow-xs shrink-0"
                 />
               ) : (
                 <div
                   className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${
-                    activePhotographer.avatarColor || 'from-[#073B2F] to-[#04241d]'
+                    activePhotographer.avatarColor || 'from-[#33684C] to-[#1F4331]'
                   } text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0`}
                 >
                   {activePhotographer.name[0]}
                 </div>
               )}
               <div>
-                <h2 className="text-base font-bold text-[#073B2F] flex items-center gap-2 font-['Space_Grotesk',sans-serif]">
+                <h2 className="text-base font-bold text-[#12201A] flex items-center gap-2 font-headline">
                   <span>{activePhotographer.name}'s Schedule</span>
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-mono font-bold">
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 font-mono font-bold">
                     Partner Portal
                   </span>
                   {activePhotographer.status === 'on_hold' && (
@@ -268,7 +268,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                   )}
                 </h2>
                 <p className="text-xs text-[#5C6E5E] font-medium">
-                  {activePhotographer.title} • <span className="text-[#073B2F] font-semibold">{activePhotographer.city}</span>
+                  {activePhotographer.title} • <span className="text-[#33684C] font-semibold">{activePhotographer.city}</span>
                 </p>
               </div>
             </div>
@@ -278,10 +278,10 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                   type="button"
                   id="btn-partner-self-edit-profile"
                   onClick={onOpenSelfEditProfile}
-                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition shadow-xs shrink-0 active:scale-[0.98]"
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition shadow-xs shrink-0 active:scale-[0.98]"
                   title="Edit your photo, portfolio link, and change password"
                 >
-                  <Camera className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <Camera className="w-3.5 h-3.5 text-[#FFDF70]" />
                   <span>Edit My Profile & Portfolio</span>
                 </button>
               )}
@@ -316,22 +316,22 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="space-y-2">
             {/* Direct date title - dynamically updates day by day e.g. "September 24th" */}
-            <h3 className="text-xl sm:text-2xl font-bold text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif] whitespace-nowrap">
+            <h3 className="text-xl sm:text-2xl font-bold text-[#12201A] tracking-tight font-headline whitespace-nowrap">
               {isAtCurrentMonth
                 ? `${monthNames[currentRealMonth]} ${getOrdinalDay(currentRealDay)}`
                 : `${monthNames[month]} ${year}`}
             </h3>
 
-            {/* Below the date: only Book in Green and Available in Orange */}
+            {/* Below the date: Book in Lobby Green and Available in Butter/Yellow */}
             <div className="flex items-center gap-2.5 text-xs font-mono font-bold">
-              {/* Book in GREEN */}
-              <span className="text-[#073B2F] flex items-center gap-1.5 bg-[#F0FFDA] px-3 py-1.5 rounded-xl border border-[#DCE7D4] shadow-2xs">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#073B2F] inline-block shadow-2xs" />
+              {/* Book in LOBBY GREEN */}
+              <span className="text-[#33684C] flex items-center gap-1.5 bg-[#E3EEE7] px-3 py-1.5 rounded-xl border border-[#33684C]/20 shadow-2xs">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#33684C] inline-block shadow-2xs" />
                 <span>{bookedDaysCount} Book</span>
               </span>
-              {/* Available in ORANGE */}
-              <span className="text-[#FF6A45] flex items-center gap-1.5 bg-[#FFF4EE] px-3 py-1.5 rounded-xl border border-[#FF6A45]/30 shadow-2xs">
-                <span className="w-2.5 h-2.5 rounded-full bg-[#FF6A45] inline-block shadow-2xs" />
+              {/* Available in FLASH YELLOW */}
+              <span className="text-[#12201A] flex items-center gap-1.5 bg-[#FFF3C4] px-3 py-1.5 rounded-xl border border-[#FFDF70] shadow-2xs">
+                <span className="w-2.5 h-2.5 rounded-full bg-[#33684C] inline-block shadow-2xs" />
                 <span>{availableDaysCount} Available</span>
               </span>
             </div>
@@ -346,7 +346,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 const [y, m] = e.target.value.split('-').map(Number);
                 setCurrentDate(new Date(y, m, 1));
               }}
-              className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-2.5 py-1.5 text-xs font-bold text-[#073B2F] focus:outline-none focus:border-[#073B2F] cursor-pointer"
+              className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-2.5 py-1.5 text-xs font-bold text-[#12201A] focus:outline-none focus:border-[#33684C] cursor-pointer"
               title="Select month"
             >
               {[0, 1, 2, 3, 4, 5, 6, 7, 8].map((offset) => {
@@ -354,7 +354,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 const yVal = d.getFullYear();
                 const mVal = d.getMonth();
                 return (
-                  <option key={`${yVal}-${mVal}`} value={`${yVal}-${mVal}`} className="bg-white text-[#073B2F]">
+                  <option key={`${yVal}-${mVal}`} value={`${yVal}-${mVal}`} className="bg-white text-[#12201A]">
                     {monthNames[mVal]} {yVal}
                   </option>
                 );
@@ -362,7 +362,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
             </select>
 
             {/* Clean compact arrow navigation (prev/next) without cut-off text */}
-            <div className="flex items-center bg-[#F6F3EC] p-0.5 rounded-xl border border-[#DCE7D4] shrink-0">
+            <div className="flex items-center bg-[#F6F3EC] p-0.5 rounded-xl border border-[#E3EEE7] shrink-0">
               <button
                 id="btn-cal-prev"
                 type="button"
@@ -371,7 +371,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 className={`p-1.5 rounded-lg transition ${
                   isAtCurrentMonth
                     ? 'text-stone-300 cursor-not-allowed opacity-40'
-                    : 'hover:bg-white text-[#073B2F]'
+                    : 'hover:bg-white text-[#12201A]'
                 }`}
                 aria-label="Previous month"
                 title={isAtCurrentMonth ? 'Cannot go to past months' : 'Previous month'}
@@ -382,7 +382,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 id="btn-cal-next"
                 type="button"
                 onClick={nextMonth}
-                className="p-1.5 rounded-lg hover:bg-white text-[#073B2F] transition"
+                className="p-1.5 rounded-lg hover:bg-white text-[#12201A] transition"
                 aria-label="Next month"
                 title="Next month"
               >
@@ -394,14 +394,14 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
       </div>
 
       {/* Grid Only Calendar */}
-      <div className="bg-white border border-[#DCE7D4] rounded-3xl overflow-hidden shadow-xs">
+      <div className="bg-white border border-[#E3EEE7] rounded-3xl overflow-hidden shadow-xs">
         {/* Day of Week Header */}
-        <div className="grid grid-cols-7 border-b border-[#DCE7D4] bg-[#F6F3EC] text-center py-2.5">
+        <div className="grid grid-cols-7 border-b border-[#E3EEE7] bg-[#F6F3EC] text-center py-2.5">
           {dayNamesFull.map((d, i) => (
             <div
               key={d}
               className={`text-[11px] sm:text-xs font-bold uppercase tracking-wider ${
-                i === 0 || i === 6 ? 'text-[#FF6A45]' : 'text-[#5C6E5E]'
+                i === 0 || i === 6 ? 'text-[#33684C]' : 'text-[#5C6E5E]'
               }`}
             >
               <span className="hidden sm:inline">{d}</span>
@@ -411,7 +411,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
         </div>
 
         {/* Calendar Days */}
-        <div className="grid grid-cols-7 auto-rows-fr bg-[#DCE7D4] gap-[1px]">
+        <div className="grid grid-cols-7 auto-rows-fr bg-[#E3EEE7] gap-[1px]">
           {/* Previous month filler */}
           {Array.from({ length: firstDayIndex }).map((_, idx) => (
             <div
@@ -440,11 +440,11 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                 onClick={() => !isPast && handleDateClick(dateKey)}
                 className={`min-h-[58px] sm:min-h-[85px] p-1.5 sm:p-2.5 transition relative flex flex-col justify-between select-none ${
                   isPast
-                    ? 'bg-[#EFECE6]/90 text-stone-400 cursor-not-allowed border-t sm:border-t-0 border-[#DCE7D4]/60'
+                    ? 'bg-[#EFECE6]/90 text-stone-400 cursor-not-allowed border-t sm:border-t-0 border-[#E3EEE7]/60'
                     : isBooked
-                    ? 'bg-[#F0FFDA]/50 hover:bg-[#F0FFDA] border-t sm:border-t-0 border-[#DCE7D4] cursor-pointer group'
-                    : 'bg-white hover:bg-[#FFF4EE]/60 cursor-pointer group'
-                } ${isToday ? 'ring-2 ring-[#FF6A45] ring-inset' : ''}`}
+                    ? 'bg-[#E3EEE7]/50 hover:bg-[#E3EEE7] border-t sm:border-t-0 border-[#E3EEE7] cursor-pointer group'
+                    : 'bg-white hover:bg-[#FFF3C4]/40 cursor-pointer group'
+                } ${isToday ? 'ring-2 ring-[#FFDF70] ring-inset' : ''}`}
                 title={
                   isPast
                     ? `Date ${dateKey} has passed and cannot be modified.`
@@ -457,18 +457,18 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                     <span
                       className={`text-xs sm:text-sm font-mono font-bold ${
                         isToday
-                          ? 'px-1.5 py-0.5 rounded-md bg-[#FF6A45] text-white font-black shadow-xs'
+                          ? 'px-1.5 py-0.5 rounded-md bg-[#FFDF70] text-[#12201A] font-black shadow-xs'
                           : isPast
                           ? 'text-stone-400/80'
                           : isBooked
-                          ? 'text-[#073B2F] font-black'
-                          : 'text-[#5C6E5E] group-hover:text-[#073B2F]'
+                          ? 'text-[#33684C] font-black'
+                          : 'text-[#5C6E5E] group-hover:text-[#12201A]'
                       }`}
                     >
                       {dayNum}
                     </span>
                     {isToday && (
-                      <span className="hidden sm:inline-block text-[9px] font-mono font-black uppercase px-1 rounded bg-[#FF6A45]/15 text-[#FF6A45]">
+                      <span className="hidden sm:inline-block text-[9px] font-mono font-black uppercase px-1 rounded bg-[#FFDF70] text-[#12201A]">
                         Today
                       </span>
                     )}
@@ -482,7 +482,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                           className={`text-[9px] font-black px-1.5 py-0.5 rounded-full tracking-wider flex items-center gap-1 shadow-2xs ${
                             isPast
                               ? 'bg-stone-300 text-stone-600'
-                              : 'bg-[#073B2F] text-white'
+                              : 'bg-[#33684C] text-white'
                           }`}
                         >
                           <Camera className="w-2.5 h-2.5" />
@@ -494,7 +494,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                           className={`w-2.5 h-2.5 rounded-full inline-block ${
                             isPast
                               ? 'bg-stone-400'
-                              : 'bg-[#073B2F] ring-2 ring-[#073B2F]/30'
+                              : 'bg-[#33684C] ring-2 ring-[#33684C]/30'
                           }`}
                         />
                       </div>
@@ -507,12 +507,12 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
                   <div className="hidden sm:block mt-2 text-[10px]">
                     <p
                       className={`font-bold truncate flex items-center gap-1 ${
-                        isPast ? 'text-stone-500' : 'text-[#073B2F]'
+                        isPast ? 'text-stone-500' : 'text-[#33684C]'
                       }`}
                     >
                       <span
                         className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                          isPast ? 'bg-stone-400' : 'bg-[#073B2F]'
+                          isPast ? 'bg-stone-400' : 'bg-[#33684C]'
                         }`}
                       />
                       <span>{isPast ? 'Past Shoot' : 'Shoot Booked'}</span>
@@ -529,30 +529,30 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
       {selectedDateModal && (
         <div
           id="photographer-status-toggle-modal"
-          className="fixed inset-0 z-50 bg-black/50 backdrop-blur-xs flex items-center justify-center p-4"
+          className="fixed inset-0 z-50 bg-[#12201A]/60 backdrop-blur-xs flex items-center justify-center p-4"
           onClick={() => setSelectedDateModal(null)}
         >
           <div
-            className="bg-white border border-[#DCE7D4] rounded-3xl max-w-sm w-full p-6 text-[#073B2F] shadow-2xl space-y-4 text-center"
+            className="bg-white border border-[#E3EEE7] rounded-3xl max-w-sm w-full p-6 text-[#12201A] shadow-2xl space-y-4 text-center"
             onClick={(e) => e.stopPropagation()}
           >
             <div>
-              <div className="w-11 h-11 rounded-2xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center mx-auto mb-2">
+              <div className="w-11 h-11 rounded-2xl bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 flex items-center justify-center mx-auto mb-2">
                 <CalendarIcon className="w-5 h-5" />
               </div>
-              <h3 className="text-lg font-bold text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-lg font-bold text-[#12201A] tracking-tight font-headline">
                 {formatDateDayMonth(selectedDateModal)}
               </h3>
               <p className="text-xs text-[#5C6E5E] mt-0.5">
-                Set date status for <strong className="text-[#073B2F]">{activePhotographer.name}</strong>
+                Set date status for <strong className="text-[#33684C]">{activePhotographer.name}</strong>
               </p>
             </div>
 
-            <div className="p-3 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4] text-xs">
+            <div className="p-3 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7] text-xs">
               <span className="text-[#5C6E5E]">Current status: </span>
               <strong
                 className={
-                  modalCurrentStatus === 'booked' ? 'text-[#073B2F] font-black' : 'text-[#FF6A45] font-black'
+                  modalCurrentStatus === 'booked' ? 'text-[#33684C] font-black' : 'text-[#12201A] font-black'
                 }
               >
                 {modalCurrentStatus.toUpperCase()}
@@ -560,30 +560,30 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-3 pt-1">
-              {/* Book button in GREEN */}
+              {/* Book button in LOBBY GREEN */}
               <button
                 id="btn-modal-mark-booked"
                 type="button"
                 onClick={() => handleSelectStatus(selectedDateModal, 'booked')}
-                className={`py-4 px-3 rounded-2xl text-xs font-bold transition flex flex-col items-center justify-center gap-2 border shadow-xs min-h-[72px] ${
+                className={`py-4 px-3 rounded-2xl text-xs font-bold transition flex flex-col items-center justify-center gap-2 border shadow-xs min-h-[72px] cursor-pointer ${
                   modalCurrentStatus === 'booked'
-                    ? 'bg-[#073B2F] text-white border-[#073B2F] ring-2 ring-[#073B2F]/20 font-black'
-                    : 'bg-[#F6F3EC] hover:bg-[#F0FFDA] text-[#073B2F] border-[#DCE7D4]'
+                    ? 'bg-[#33684C] text-white border-[#33684C] ring-2 ring-[#33684C]/20 font-black'
+                    : 'bg-[#F6F3EC] hover:bg-[#E3EEE7] text-[#33684C] border-[#E3EEE7]'
                 }`}
               >
                 <Camera className="w-5 h-5" />
                 <span>Book</span>
               </button>
 
-              {/* Available button in ORANGE */}
+              {/* Available button in FLASH YELLOW */}
               <button
                 id="btn-modal-mark-available"
                 type="button"
                 onClick={() => handleSelectStatus(selectedDateModal, 'available')}
-                className={`py-4 px-3 rounded-2xl text-xs font-bold transition flex flex-col items-center justify-center gap-2 border shadow-xs min-h-[72px] ${
+                className={`py-4 px-3 rounded-2xl text-xs font-bold transition flex flex-col items-center justify-center gap-2 border shadow-xs min-h-[72px] cursor-pointer ${
                   modalCurrentStatus === 'available'
-                    ? 'bg-[#FF6A45] text-white border-[#FF6A45] ring-2 ring-[#FF6A45]/20 font-black'
-                    : 'bg-[#F6F3EC] hover:bg-[#FFF4EE] text-[#FF6A45] border-[#DCE7D4]'
+                    ? 'bg-[#FFDF70] text-[#12201A] border-[#FFDF70] ring-2 ring-[#33684C]/20 font-black'
+                    : 'bg-[#F6F3EC] hover:bg-[#FFF3C4] text-[#12201A] border-[#E3EEE7]'
                 }`}
               >
                 <Check className="w-5 h-5 stroke-3" />
@@ -594,7 +594,7 @@ export const PhotographerCalendar: React.FC<PhotographerCalendarProps> = ({
             <button
               type="button"
               onClick={() => setSelectedDateModal(null)}
-              className="w-full py-2.5 rounded-xl text-xs text-[#5C6E5E] hover:text-[#073B2F] transition"
+              className="w-full py-2.5 rounded-xl text-xs text-[#5C6E5E] hover:text-[#12201A] transition cursor-pointer"
             >
               Cancel
             </button>

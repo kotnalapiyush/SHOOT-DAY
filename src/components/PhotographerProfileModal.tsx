@@ -235,21 +235,21 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
   return (
     <div
       id="modal-photographer-profile-backdrop"
-      className="fixed inset-0 z-50 bg-black/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
+      className="fixed inset-0 z-50 bg-[#12201A]/70 backdrop-blur-xs flex items-center justify-center p-4 overflow-y-auto"
       onClick={onClose}
     >
       <div
         id="modal-photographer-profile-content"
-        className="bg-white border border-[#DCE7D4] rounded-3xl max-w-lg w-full p-6 text-[#073B2F] shadow-2xl space-y-4 my-auto"
+        className="bg-white border border-[#E3EEE7] rounded-3xl max-w-lg w-full p-6 text-[#12201A] shadow-2xl space-y-4 my-auto"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-[#DCE7D4] pb-3">
+        <div className="flex items-center justify-between border-b border-[#E3EEE7] pb-3">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 flex items-center justify-center">
               <Camera className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-base font-bold text-[#12201A] tracking-tight font-headline">
                 {isEditing ? `Edit ${photographerToEdit?.name}'s Profile` : 'Onboard Partner Photographer'}
               </h3>
               <p className="text-xs text-[#5C6E5E]">
@@ -260,7 +260,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
           <button
             type="button"
             onClick={onClose}
-            className="text-[#5C6E5E] hover:text-[#073B2F] p-1 rounded-lg text-sm"
+            className="text-[#5C6E5E] hover:text-[#12201A] p-1 rounded-lg text-sm cursor-pointer"
           >
             ✕
           </button>
@@ -268,27 +268,27 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
         {createdCredentials ? (
           <div className="space-y-4 py-2">
-            <div className="p-4 rounded-2xl bg-[#F0FFDA] border border-[#DCE7D4] text-[#073B2F] space-y-3">
-              <div className="flex items-center gap-2 text-[#073B2F] font-bold text-sm">
-                <Check className="w-5 h-5 text-emerald-700" />
+            <div className="p-4 rounded-2xl bg-[#E3EEE7] border border-[#33684C]/20 text-[#12201A] space-y-3">
+              <div className="flex items-center gap-2 text-[#33684C] font-bold text-sm">
+                <Check className="w-5 h-5 text-[#33684C]" />
                 <span>Photographer Profile & Account Created!</span>
               </div>
               <p className="text-xs text-[#5C6E5E]">
-                The profile for <strong className="text-[#073B2F]">{createdCredentials.name}</strong> is live. Share these credentials with the photographer so they can log in to manage their calendar and bookings:
+                The profile for <strong className="text-[#33684C]">{createdCredentials.name}</strong> is live. Share these credentials with the photographer so they can log in to manage their calendar and bookings:
               </p>
 
-              <div className="bg-white border border-[#DCE7D4] rounded-xl p-3.5 space-y-2 text-xs">
+              <div className="bg-white border border-[#E3EEE7] rounded-xl p-3.5 space-y-2 text-xs">
                 <div className="flex items-center justify-between text-[#5C6E5E]">
                   <span>Portal:</span>
-                  <span className="text-[#073B2F] select-all font-mono">{window.location.origin}</span>
+                  <span className="text-[#12201A] select-all font-mono">{window.location.origin}</span>
                 </div>
                 <div className="flex items-center justify-between text-[#5C6E5E]">
                   <span>Login Email:</span>
-                  <span className="text-[#073B2F] font-bold select-all font-mono">{createdCredentials.email}</span>
+                  <span className="text-[#12201A] font-bold select-all font-mono">{createdCredentials.email}</span>
                 </div>
                 <div className="flex items-center justify-between text-[#5C6E5E]">
                   <span>Password:</span>
-                  <span className="text-[#073B2F] font-bold select-all font-mono">{createdCredentials.pass}</span>
+                  <span className="text-[#12201A] font-bold select-all font-mono">{createdCredentials.pass}</span>
                 </div>
               </div>
             </div>
@@ -297,15 +297,15 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
               <button
                 type="button"
                 onClick={handleCopyCredentials}
-                className="flex-1 py-3 px-4 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm active:scale-[0.98]"
+                className="flex-1 py-3 px-4 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white font-bold text-xs transition flex items-center justify-center gap-2 shadow-sm active:scale-[0.98] cursor-pointer"
               >
-                {copied ? <CheckCheck className="w-4 h-4 text-[#F0FFDA]" /> : <Copy className="w-4 h-4 text-[#F0FFDA]" />}
+                {copied ? <CheckCheck className="w-4 h-4 text-[#FFDF70]" /> : <Copy className="w-4 h-4 text-[#FFDF70]" />}
                 <span>{copied ? 'Credentials Copied to Clipboard!' : 'Copy Login Credentials for WhatsApp'}</span>
               </button>
               <button
                 type="button"
                 onClick={onClose}
-                className="py-3 px-5 rounded-xl bg-[#F6F3EC] hover:bg-[#ece8df] text-[#073B2F] border border-[#DCE7D4] text-xs font-semibold transition"
+                className="py-3 px-5 rounded-xl bg-[#F6F3EC] hover:bg-[#ece8df] text-[#12201A] border border-[#E3EEE7] text-xs font-semibold transition cursor-pointer"
               >
                 Done
               </button>
@@ -315,7 +315,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
           <form onSubmit={handleSubmit} className="space-y-3.5 text-xs">
           {/* Photographer Full Name */}
           <div>
-            <label className="block text-xs font-medium text-[#073B2F] mb-1">
+            <label className="block text-xs font-medium text-[#12201A] mb-1">
               Photographer Full Name *
             </label>
             <div className="relative">
@@ -327,16 +327,16 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 placeholder="e.g. Vikramaditya Rathore"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
               />
             </div>
           </div>
 
           {/* Profile Picture Section */}
-          <div className="p-3 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+          <div className="p-3 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
             <div>
-              <label className="block text-[11px] font-bold text-[#073B2F] mb-1 flex items-center gap-1">
-                <Camera className="w-3.5 h-3.5 text-[#073B2F]" />
+              <label className="block text-[11px] font-bold text-[#12201A] mb-1 flex items-center gap-1">
+                <Camera className="w-3.5 h-3.5 text-[#33684C]" />
                 <span>Profile Photo URL</span>
               </label>
               <div className="flex items-center gap-2">
@@ -344,14 +344,14 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                   src={avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
                   alt="Preview"
                   referrerPolicy="no-referrer"
-                  className="w-9 h-9 rounded-xl object-cover border border-[#DCE7D4] bg-white shrink-0"
+                  className="w-9 h-9 rounded-xl object-cover border border-[#E3EEE7] bg-white shrink-0"
                 />
                 <input
                   type="url"
                   placeholder="https://images.unsplash.com/..."
                   value={avatarUrl}
                   onChange={(e) => setAvatarUrl(e.target.value)}
-                  className="flex-1 bg-white border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-2.5 py-1.5 text-xs text-[#073B2F] focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                  className="flex-1 bg-white border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-2.5 py-1.5 text-xs text-[#12201A] focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
             </div>
@@ -360,13 +360,13 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
           {/* City / Hub with Manual Putting Option */}
           <div>
             <div className="flex items-center justify-between mb-1">
-              <label className="block text-xs font-medium text-[#073B2F]">
+              <label className="block text-xs font-medium text-[#12201A]">
                 Primary City / Base Hub
               </label>
               <button
                 type="button"
                 onClick={() => setIsCustomCity(!isCustomCity)}
-                className="text-[11px] text-[#073B2F] hover:underline font-semibold"
+                className="text-[11px] text-[#33684C] hover:underline font-semibold cursor-pointer"
               >
                 {isCustomCity ? '← Choose from List' : 'Enter Manually'}
               </button>
@@ -379,7 +379,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                   placeholder="Type city manually (e.g. Udaipur, Shimla, Varanasi)..."
                   value={customCityInput}
                   onChange={(e) => setCustomCityInput(e.target.value)}
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                 />
               ) : (
                 <select
@@ -391,7 +391,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                       setCity(e.target.value);
                     }
                   }}
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:ring-1 focus:ring-[#073B2F] cursor-pointer"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-2 text-xs text-[#12201A] focus:outline-none focus:ring-1 focus:ring-[#33684C] cursor-pointer"
                 >
                   {INDIAN_CITIES.map((c) => (
                     <option key={c} value={c}>
@@ -406,7 +406,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
           {/* Title */}
           <div>
-            <label className="block text-xs font-medium text-[#073B2F] mb-1">
+            <label className="block text-xs font-medium text-[#12201A] mb-1">
               Title / Specialty Tagline
             </label>
             <input
@@ -414,14 +414,14 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
               placeholder="e.g. Commercial, F&B & Product Campaign Specialist"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+              className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
             />
           </div>
 
           {/* Contact Details (Phone & Email) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-medium text-[#073B2F] mb-1">
+              <label className="block text-xs font-medium text-[#12201A] mb-1">
                 WhatsApp / Phone Number (+91) *
               </label>
               <div className="relative">
@@ -432,13 +432,13 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                   placeholder="+91 98123 45678"
                   value={phone}
                   onChange={(e) => setPhone(e.target.value)}
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
             </div>
 
             <div>
-              <label className="block text-xs font-medium text-[#073B2F] mb-1">
+              <label className="block text-xs font-medium text-[#12201A] mb-1">
                 Email Address
               </label>
               <div className="relative">
@@ -448,7 +448,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                   placeholder="name@studio.in"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
             </div>
@@ -456,7 +456,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
           {/* Experience in Years */}
           <div>
-            <label className="block text-xs font-medium text-[#073B2F] mb-1">
+            <label className="block text-xs font-medium text-[#12201A] mb-1">
               Experience (Years)
             </label>
             <input
@@ -465,13 +465,13 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
               max="40"
               value={experienceYears}
               onChange={(e) => setExperienceYears(e.target.value)}
-              className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+              className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-3 py-2 text-xs text-[#12201A] focus:outline-none focus:ring-1 focus:ring-[#33684C]"
             />
           </div>
 
           {/* Status Selection: Active vs On Hold per User Request */}
           <div>
-            <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-[#12201A] mb-1.5 uppercase tracking-wide">
               Photographer Status
             </label>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -482,21 +482,21 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 onClick={() => setStatus('active')}
                 className={`p-3 rounded-2xl border text-left flex items-start gap-3 transition cursor-pointer ${
                   status === 'active'
-                    ? 'bg-[#F0FFDA] border-[#073B2F] text-[#073B2F] shadow-xs ring-1 ring-[#073B2F]'
-                    : 'bg-white border-[#DCE7D4] text-[#5C6E5E] hover:border-[#073B2F]'
+                    ? 'bg-[#E3EEE7] border-[#33684C] text-[#12201A] shadow-xs ring-1 ring-[#33684C]'
+                    : 'bg-white border-[#E3EEE7] text-[#5C6E5E] hover:border-[#33684C]'
                 }`}
               >
                 <div
                   className={`w-4 h-4 rounded-full mt-0.5 flex items-center justify-center border shrink-0 ${
-                    status === 'active' ? 'border-[#073B2F] bg-[#073B2F]' : 'border-stone-400 bg-white'
+                    status === 'active' ? 'border-[#33684C] bg-[#33684C]' : 'border-stone-400 bg-white'
                   }`}
                 >
                   {status === 'active' && <div className="w-1.5 h-1.5 rounded-full bg-white" />}
                 </div>
                 <div>
-                  <div className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
+                  <div className="text-xs font-bold text-[#12201A] flex items-center gap-1.5">
                     <span>Active Status</span>
-                    <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                   </div>
                   <p className="text-[11px] text-[#5C6E5E] mt-0.5 leading-snug">
                     Working on Shoot Lobby. Visible to clients and accepting bookings.
@@ -512,7 +512,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 className={`p-3 rounded-2xl border text-left flex items-start gap-3 transition cursor-pointer ${
                   status === 'on_hold'
                     ? 'bg-amber-50 border-amber-500 text-amber-950 shadow-xs ring-1 ring-amber-500'
-                    : 'bg-white border-[#DCE7D4] text-[#5C6E5E] hover:border-amber-400'
+                    : 'bg-white border-[#E3EEE7] text-[#5C6E5E] hover:border-amber-400'
                 }`}
               >
                 <div
@@ -549,7 +549,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
           {/* Specialties Selection: Multi-select Dropdown + Manual Putting Option */}
           <div>
-            <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 uppercase tracking-wide">
+            <label className="block text-xs font-semibold text-[#12201A] mb-1.5 uppercase tracking-wide">
               Photography Genres & Commercial Specialties
             </label>
 
@@ -559,7 +559,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 type="button"
                 id="btn-toggle-specialties-dropdown"
                 onClick={() => setIsSpecialtiesDropdownOpen(!isSpecialtiesDropdownOpen)}
-                className="w-full bg-[#F6F3EC] border border-[#DCE7D4] hover:border-[#073B2F] rounded-xl px-3 py-2.5 text-xs text-[#073B2F] font-medium flex items-center justify-between transition"
+                className="w-full bg-[#F6F3EC] border border-[#E3EEE7] hover:border-[#33684C] rounded-xl px-3 py-2.5 text-xs text-[#12201A] font-medium flex items-center justify-between transition cursor-pointer"
               >
                 <span>
                   {specialties.length > 0
@@ -575,8 +575,8 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
               {/* Dropdown Menu with Multi-select Checkboxes */}
               {isSpecialtiesDropdownOpen && (
-                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-3 z-30 max-h-56 overflow-y-auto space-y-1 animate-in fade-in zoom-in-95 duration-150">
-                  <div className="text-[11px] font-bold text-[#5C6E5E] uppercase tracking-wider px-1 pb-1 border-b border-[#DCE7D4]">
+                <div className="absolute top-full left-0 right-0 mt-1.5 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-3 z-30 max-h-56 overflow-y-auto space-y-1 animate-in fade-in zoom-in-95 duration-150">
+                  <div className="text-[11px] font-bold text-[#5C6E5E] uppercase tracking-wider px-1 pb-1 border-b border-[#E3EEE7]">
                     Select multiple specialties:
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-1 pt-1">
@@ -587,17 +587,17 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                           key={spec}
                           type="button"
                           onClick={() => toggleSpecialty(spec)}
-                          className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition w-full ${
+                          className={`flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs text-left transition w-full cursor-pointer ${
                             isSelected
-                              ? 'bg-[#F0FFDA] text-[#073B2F] font-bold'
+                              ? 'bg-[#E3EEE7] text-[#33684C] font-bold'
                               : 'text-[#5C6E5E] hover:bg-[#F6F3EC]'
                           }`}
                         >
                           <div
                             className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 ${
                               isSelected
-                                ? 'bg-[#073B2F] border-[#073B2F] text-white'
-                                : 'border-[#DCE7D4] bg-white'
+                                ? 'bg-[#33684C] border-[#33684C] text-white'
+                                : 'border-[#E3EEE7] bg-white'
                             }`}
                           >
                             {isSelected && <Check className="w-3 h-3 stroke-3" />}
@@ -625,13 +625,13 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                     handleAddCustomSpecialty();
                   }
                 }}
-                className="flex-1 bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-3 py-2 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                className="flex-1 bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-3 py-2 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
               />
               <button
                 id="btn-add-manual-genre"
                 type="button"
                 onClick={handleAddCustomSpecialty}
-                className="px-3.5 py-2 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition shrink-0 shadow-xs"
+                className="px-3.5 py-2 bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold rounded-xl transition shrink-0 shadow-xs cursor-pointer"
               >
                 + Add
               </button>
@@ -643,13 +643,13 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 {specialties.map((spec) => (
                   <span
                     key={spec}
-                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs bg-[#073B2F] text-white font-semibold shadow-xs"
+                    className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-xl text-xs bg-[#33684C] text-white font-semibold shadow-xs"
                   >
                     <span>{spec}</span>
                     <button
                       type="button"
                       onClick={() => toggleSpecialty(spec)}
-                      className="text-[#F0FFDA] hover:text-white p-0.5 rounded-full hover:bg-white/20 transition"
+                      className="text-[#FFDF70] hover:text-white p-0.5 rounded-full hover:bg-white/20 transition cursor-pointer"
                       aria-label={`Remove ${spec}`}
                     >
                       <X className="w-3 h-3 stroke-2" />
@@ -662,7 +662,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
           {/* Photographer Bio & Commercial Style - Generous height so text is never cut off */}
           <div>
-            <label className="block text-xs font-medium text-[#073B2F] mb-1">
+            <label className="block text-xs font-medium text-[#12201A] mb-1">
               Photographer Bio & Commercial Style
             </label>
             <textarea
@@ -670,23 +670,23 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
               placeholder="Tell clients about your photography journey, style, setup, aesthetic, equipment, and portfolio experience..."
               value={bio}
               onChange={(e) => setBio(e.target.value)}
-              className="w-full min-h-[96px] bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl p-3 text-xs leading-relaxed text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+              className="w-full min-h-[96px] bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl p-3 text-xs leading-relaxed text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
             />
           </div>
 
           {/* Photographer Portal Login Credentials Section */}
-          <div className="p-3.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl space-y-2.5">
+          <div className="p-3.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-2xl space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <KeyRound className="w-4 h-4 text-[#073B2F]" />
-                <span className="text-xs font-bold text-[#073B2F]">Photographer Login Credentials</span>
+                <KeyRound className="w-4 h-4 text-[#33684C]" />
+                <span className="text-xs font-bold text-[#12201A]">Photographer Login Credentials</span>
               </div>
               <button
                 type="button"
                 onClick={handleGeneratePassword}
-                className="text-[11px] text-[#073B2F] hover:underline font-semibold flex items-center gap-1"
+                className="text-[11px] text-[#33684C] hover:underline font-semibold flex items-center gap-1 cursor-pointer"
               >
-                <Sparkles className="w-3 h-3" />
+                <Sparkles className="w-3 h-3 text-[#33684C]" />
                 <span>Auto-Generate Password</span>
               </button>
             </div>
@@ -696,7 +696,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
               <div>
-                <label className="block text-[11px] font-medium text-[#073B2F] mb-1">
+                <label className="block text-[11px] font-medium text-[#12201A] mb-1">
                   Login Email / Username
                 </label>
                 <input
@@ -704,19 +704,19 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                   placeholder={email || (name ? `${name.toLowerCase().replace(/[^a-z0-9]/g, '')}@shootlobby.in` : 'photog@studio.in')}
                   value={loginEmail}
                   onChange={(e) => setLoginEmail(e.target.value)}
-                  className="w-full bg-white border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-3 py-2 text-xs text-[#073B2F] placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-white border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-3 py-2 text-xs text-[#12201A] placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
 
               <div>
                 <div className="flex items-center justify-between mb-1">
-                  <label className="block text-[11px] font-medium text-[#073B2F]">
+                  <label className="block text-[11px] font-medium text-[#12201A]">
                     Login Password
                   </label>
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="text-[10px] text-[#5C6E5E] hover:text-[#073B2F] flex items-center gap-0.5"
+                    className="text-[10px] text-[#5C6E5E] hover:text-[#12201A] flex items-center gap-0.5 cursor-pointer"
                   >
                     {showPassword ? <EyeOff className="w-3 h-3" /> : <Eye className="w-3 h-3" />}
                     <span>{showPassword ? 'Hide' : 'Reveal'}</span>
@@ -728,7 +728,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                     placeholder={name ? `${name.split(' ')[0].toLowerCase()}123` : 'pass123'}
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    className="w-full bg-white border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl px-3 py-2 text-xs font-mono font-medium text-[#073B2F] placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] focus:border-[#33684C] rounded-xl px-3 py-2 text-xs font-mono font-medium text-[#12201A] placeholder-stone-400 focus:outline-none focus:ring-1 focus:ring-[#33684C]"
                   />
                 </div>
               </div>
@@ -751,7 +751,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                 <button
                   type="button"
                   onClick={() => setShowDeleteConfirm(false)}
-                  className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-[#5C6E5E] border border-rose-200 hover:bg-rose-50 transition"
+                  className="px-3 py-1.5 rounded-xl text-xs font-semibold bg-white text-[#5C6E5E] border border-rose-200 hover:bg-rose-50 transition cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -762,7 +762,7 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
                     onDeleteProfile(photographerToEdit.id);
                     onClose();
                   }}
-                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1.5 shadow-xs"
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold bg-rose-600 hover:bg-rose-700 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Confirm Delete</span>
@@ -772,14 +772,14 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
           )}
 
           {/* Footer Actions */}
-          <div className="pt-3 border-t border-[#DCE7D4] flex items-center justify-between gap-2">
+          <div className="pt-3 border-t border-[#E3EEE7] flex items-center justify-between gap-2">
             <div>
               {isEditing && onDeleteProfile && !showDeleteConfirm && (
                 <button
                   type="button"
                   id="btn-delete-photographer-profile"
                   onClick={() => setShowDeleteConfirm(true)}
-                  className="px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 transition flex items-center gap-1.5"
+                  className="px-3 py-2 rounded-xl text-xs font-bold text-rose-600 hover:text-rose-700 hover:bg-rose-50 border border-rose-200 transition flex items-center gap-1.5 cursor-pointer"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                   <span>Delete Profile</span>
@@ -791,14 +791,14 @@ export const PhotographerProfileModal: React.FC<PhotographerProfileModalProps> =
               <button
                 type="button"
                 onClick={onClose}
-                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F6F3EC] hover:bg-[#ece8df] border border-[#DCE7D4] text-[#073B2F] transition"
+                className="px-4 py-2 rounded-xl text-xs font-semibold bg-[#F6F3EC] hover:bg-[#ece8df] border border-[#E3EEE7] text-[#12201A] transition cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 id="btn-save-photographer-profile"
                 type="submit"
-                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-sm active:scale-[0.98]"
+                className="px-5 py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition flex items-center gap-1.5 shadow-sm active:scale-[0.98] cursor-pointer"
               >
                 <Check className="w-4 h-4 stroke-2" />
                 <span>{isEditing ? 'Save Changes' : 'Create & Add Photographer'}</span>

@@ -107,15 +107,15 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
   return (
     <div
       id="monthly-shoot-days-search-root"
-      className="bg-white border border-[#DCE7D4] rounded-3xl p-4 sm:p-6 text-[#073B2F] shadow-sm space-y-5"
+      className="bg-white border border-[#E3EEE7] rounded-3xl p-4 sm:p-6 text-[#12201A] shadow-sm space-y-5"
     >
       {/* Section Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#DCE7D4] pb-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-[#E3EEE7] pb-4">
         <div>
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-xs font-bold mb-1">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 text-xs font-bold mb-1">
             <span>Monthly Shoot Days & Guys Availability Search</span>
           </div>
-          <h2 className="text-lg sm:text-xl font-black text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif]">
+          <h2 className="text-lg sm:text-xl font-black text-[#12201A] tracking-tight font-headline">
             Check How Many Days the Guys Are Booked & Available
           </h2>
           <p className="text-xs text-[#5C6E5E]">
@@ -124,14 +124,14 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
         </div>
 
         {/* View Scope Toggle (Single Month vs Past 2 Months Comparison) */}
-        <div className="flex items-center bg-[#F6F3EC] p-1 rounded-2xl border border-[#DCE7D4] text-xs shrink-0">
+        <div className="flex items-center bg-[#F6F3EC] p-1 rounded-2xl border border-[#E3EEE7] text-xs shrink-0">
           <button
             type="button"
             onClick={() => setViewScope('single')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl font-bold transition cursor-pointer ${
               viewScope === 'single'
-                ? 'bg-[#073B2F] text-white shadow-xs'
-                : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'bg-[#33684C] text-white shadow-xs'
+                : 'text-[#5C6E5E] hover:text-[#12201A]'
             }`}
           >
             Month Breakdown
@@ -139,10 +139,10 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
           <button
             type="button"
             onClick={() => setViewScope('two_months')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition ${
+            className={`px-3 py-1.5 rounded-xl font-bold transition cursor-pointer ${
               viewScope === 'two_months'
-                ? 'bg-[#073B2F] text-white shadow-xs'
-                : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'bg-[#33684C] text-white shadow-xs'
+                : 'text-[#5C6E5E] hover:text-[#12201A]'
             }`}
           >
             Past 2 Months Search
@@ -169,10 +169,10 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                 setSelectedMonthOffset(tab.offset);
                 setViewScope('single');
               }}
-              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 border ${
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition shrink-0 border cursor-pointer ${
                 viewScope === 'single' && selectedMonthOffset === tab.offset
-                  ? 'bg-[#073B2F] text-white border-[#073B2F] shadow-xs'
-                  : 'bg-[#F6F3EC] text-[#073B2F] border-[#DCE7D4] hover:border-[#073B2F]'
+                  ? 'bg-[#33684C] text-white border-[#33684C] shadow-xs'
+                  : 'bg-[#F6F3EC] text-[#12201A] border-[#E3EEE7] hover:border-[#33684C]'
               }`}
             >
               {tab.label}
@@ -188,13 +188,13 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
             placeholder="Search guy by name or city..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full bg-[#F6F3EC] border border-[#DCE7D4] focus:border-[#073B2F] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#073B2F] placeholder-[#5C6E5E]/70 focus:outline-none transition"
+            className="w-full bg-[#F6F3EC] border border-[#E3EEE7] focus:border-[#33684C] rounded-xl pl-9 pr-3 py-1.5 text-xs text-[#12201A] placeholder-[#5C6E5E]/70 focus:outline-none transition"
           />
           {searchQuery && (
             <button
               type="button"
               onClick={() => setSearchQuery('')}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#073B2F] text-xs"
+              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#12201A] text-xs"
             >
               ✕
             </button>
@@ -204,7 +204,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
 
       {/* Aggregate Metric Banner for the Selected Month */}
       {viewScope === 'single' && (
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4]">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3.5 sm:p-4 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7]">
           {/* 1. Booked Shoot Days in Coral/Amber */}
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 rounded-xl bg-amber-100 text-amber-800 border border-amber-300 flex items-center justify-center font-bold">
@@ -220,16 +220,16 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
             </div>
           </div>
 
-          {/* 2. Available Days in Forest Green */}
+          {/* 2. Available Days in Lobby Green */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center font-bold">
+            <div className="w-10 h-10 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#33684C]/20 flex items-center justify-center font-bold">
               <CalendarIcon className="w-5 h-5" />
             </div>
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-[#5C6E5E]">
                 Available Days ({targetMonthName})
               </div>
-              <div className="text-xl sm:text-2xl font-black text-[#073B2F] font-mono">
+              <div className="text-xl sm:text-2xl font-black text-[#33684C] font-mono">
                 {teamTotals.totalAvailable} <span className="text-xs font-normal text-[#5C6E5E]">days</span>
               </div>
             </div>
@@ -237,14 +237,14 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
 
           {/* 3. Verified Shoots on Record */}
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center font-bold shadow-2xs">
-              <CheckCircle2 className="w-5 h-5 text-[#073B2F]" />
+            <div className="w-10 h-10 rounded-xl bg-white text-[#33684C] border border-[#E3EEE7] flex items-center justify-center font-bold shadow-2xs">
+              <CheckCircle2 className="w-5 h-5 text-[#33684C]" />
             </div>
             <div>
               <div className="text-[11px] font-semibold uppercase tracking-wider text-[#5C6E5E]">
                 Client Shoots on Record
               </div>
-              <div className="text-xl sm:text-2xl font-black text-[#073B2F] font-mono">
+              <div className="text-xl sm:text-2xl font-black text-[#12201A] font-mono">
                 {teamTotals.totalShoots} <span className="text-xs font-normal text-[#5C6E5E]">shoots</span>
               </div>
             </div>
@@ -257,16 +257,16 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between text-xs text-[#5C6E5E] px-1">
             <span>
-              Showing data for <strong className="text-[#073B2F]">{targetMonthName} {targetYear}</strong> ({filteredPhotographers.length} photographers)
+              Showing data for <strong className="text-[#33684C]">{targetMonthName} {targetYear}</strong> ({filteredPhotographers.length} photographers)
             </span>
             <span className="text-[11px] flex items-center gap-3">
               <span className="flex items-center gap-1">
                 <span className="w-2.5 h-2.5 rounded-full bg-amber-500" />
-                <strong className="text-[#073B2F]">Amber = Booked</strong>
+                <strong className="text-[#12201A]">Amber = Booked</strong>
               </span>
               <span className="flex items-center gap-1">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500" />
-                <strong className="text-[#073B2F]">Green = Available</strong>
+                <span className="w-2.5 h-2.5 rounded-full bg-[#33684C]" />
+                <strong className="text-[#12201A]">Green = Available</strong>
               </span>
             </span>
           </div>
@@ -281,17 +281,17 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                   key={p.id}
                   className={`p-4 rounded-2xl border transition relative flex flex-col justify-between space-y-3 ${
                     isActive
-                      ? 'bg-[#F0FFDA]/50 border-[#073B2F] ring-1 ring-[#073B2F]/30'
-                      : 'bg-[#F6F3EC]/50 border-[#DCE7D4] hover:border-[#073B2F]'
+                      ? 'bg-[#E3EEE7]/50 border-[#33684C] ring-1 ring-[#33684C]/30'
+                      : 'bg-[#F6F3EC]/50 border-[#E3EEE7] hover:border-[#33684C]'
                   }`}
                 >
                   {/* Top Bar: Photographer & Location */}
                   <div className="flex items-start justify-between gap-2">
                     <div>
                       <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">{p.name}</h4>
+                        <h4 className="text-sm font-bold text-[#12201A] font-headline">{p.name}</h4>
                         {isActive && (
-                          <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-[#073B2F] text-white">
+                          <span className="text-[9px] font-black uppercase px-2 py-0.5 rounded-md bg-[#33684C] text-white">
                             Active
                           </span>
                         )}
@@ -311,7 +311,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                         onSelectPhotographer(p.id);
                         onNavigateCalendarMonth(targetYear, targetMonthIdx);
                       }}
-                      className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#F0FFDA] text-xs font-bold text-[#073B2F] border border-[#DCE7D4] hover:border-[#073B2F] flex items-center gap-1 transition shadow-2xs"
+                      className="px-2.5 py-1.5 rounded-xl bg-white hover:bg-[#E3EEE7] text-xs font-bold text-[#33684C] border border-[#E3EEE7] hover:border-[#33684C] flex items-center gap-1 transition shadow-2xs cursor-pointer"
                       title="Open this month on the calendar above"
                     >
                       <span>View Calendar</span>
@@ -320,7 +320,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                   </div>
 
                   {/* Days Booked vs Available Breakdown Card */}
-                  <div className="grid grid-cols-2 gap-2 bg-white p-3 rounded-xl border border-[#DCE7D4]">
+                  <div className="grid grid-cols-2 gap-2 bg-white p-3 rounded-xl border border-[#E3EEE7]">
                     {/* Booked Days */}
                     <div className="flex items-center gap-2.5">
                       <span className="w-3 h-3 rounded-full bg-amber-500 shrink-0" />
@@ -333,11 +333,11 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                     </div>
 
                     {/* Available Days */}
-                    <div className="flex items-center gap-2.5 border-l border-[#DCE7D4] pl-2.5">
-                      <span className="w-3 h-3 rounded-full bg-emerald-500 shrink-0" />
+                    <div className="flex items-center gap-2.5 border-l border-[#E3EEE7] pl-2.5">
+                      <span className="w-3 h-3 rounded-full bg-[#33684C] shrink-0" />
                       <div>
                         <div className="text-[10px] uppercase font-bold text-[#5C6E5E]">Available Days</div>
-                        <div className="text-base font-black text-[#073B2F] font-mono">
+                        <div className="text-base font-black text-[#33684C] font-mono">
                           {stats.available} <span className="text-[10px] font-normal text-[#5C6E5E]">days</span>
                         </div>
                       </div>
@@ -353,20 +353,20 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                         title={`${stats.booked} days booked`}
                       />
                       <div
-                        className="bg-emerald-500 h-full"
+                        className="bg-[#33684C] h-full"
                         style={{ width: `${(stats.available / stats.daysInM) * 100}%` }}
                         title={`${stats.available} days available`}
                       />
                     </div>
                     <div className="flex justify-between text-[10px] font-mono text-[#5C6E5E] mt-1">
                       <span className="text-amber-800">{Math.round((stats.booked / stats.daysInM) * 100)}% Booked</span>
-                      <span className="text-[#073B2F]">{Math.round((stats.available / stats.daysInM) * 100)}% Available</span>
+                      <span className="text-[#33684C]">{Math.round((stats.available / stats.daysInM) * 100)}% Available</span>
                     </div>
                   </div>
 
                   {/* Shoots list in this month */}
                   {stats.shoots.length > 0 && (
-                    <div className="border-t border-[#DCE7D4] pt-2">
+                    <div className="border-t border-[#E3EEE7] pt-2">
                       <span className="text-[10px] uppercase tracking-wider text-[#5C6E5E] font-bold block mb-1">
                         Booked Shoots in {targetMonthName}:
                       </span>
@@ -374,9 +374,9 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                         {stats.shoots.map((s) => (
                           <div
                             key={s.id}
-                            className="text-[11px] bg-white px-2.5 py-1 rounded-lg border border-[#DCE7D4] flex items-center justify-between shadow-2xs"
+                            className="text-[11px] bg-white px-2.5 py-1 rounded-lg border border-[#E3EEE7] flex items-center justify-between shadow-2xs"
                           >
-                            <span className="font-semibold text-[#073B2F] truncate max-w-[180px]">
+                            <span className="font-semibold text-[#12201A] truncate max-w-[180px]">
                               {s.clientName} ({s.shootType})
                             </span>
                             <span className="font-mono text-amber-800 text-[10px] shrink-0 font-bold">
@@ -397,16 +397,16 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
         <div className="space-y-3">
           <div className="flex items-center justify-between text-xs text-[#5C6E5E] px-1">
             <span>
-              Comparing shoot days across <strong className="text-[#073B2F]">{monthNames[prevMonth2Date.getMonth()]}</strong> and <strong className="text-[#073B2F]">{monthNames[prevMonth1Date.getMonth()]}</strong>
+              Comparing shoot days across <strong className="text-[#33684C]">{monthNames[prevMonth2Date.getMonth()]}</strong> and <strong className="text-[#33684C]">{monthNames[prevMonth1Date.getMonth()]}</strong>
             </span>
-            <span className="text-xs text-[#073B2F] font-mono font-bold">
+            <span className="text-xs text-[#33684C] font-mono font-bold">
               Past 2 Months History
             </span>
           </div>
 
-          <div className="overflow-x-auto rounded-2xl border border-[#DCE7D4] bg-white shadow-2xs">
-            <table className="w-full text-left text-xs text-[#073B2F]">
-              <thead className="bg-[#F6F3EC] border-b border-[#DCE7D4] text-[11px] uppercase tracking-wider text-[#5C6E5E]">
+          <div className="overflow-x-auto rounded-2xl border border-[#E3EEE7] bg-white shadow-2xs">
+            <table className="w-full text-left text-xs text-[#12201A]">
+              <thead className="bg-[#F6F3EC] border-b border-[#E3EEE7] text-[11px] uppercase tracking-wider text-[#5C6E5E]">
                 <tr>
                   <th className="p-3 font-bold">Photographer</th>
                   <th className="p-3 font-bold text-center">
@@ -415,13 +415,13 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                   <th className="p-3 font-bold text-center">
                     {monthNames[prevMonth1Date.getMonth()]} ({prevMonth1Date.getFullYear()})
                   </th>
-                  <th className="p-3 font-bold text-center text-[#073B2F]">
+                  <th className="p-3 font-bold text-center text-[#12201A]">
                     Total 2-Mo Booked
                   </th>
                   <th className="p-3 font-bold text-right">Action</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-[#DCE7D4]">
+              <tbody className="divide-y divide-[#E3EEE7]">
                 {filteredPhotographers.map((p) => {
                   const m2Stats = getMonthStats(p.id, prevMonth2Date.getFullYear(), prevMonth2Date.getMonth());
                   const m1Stats = getMonthStats(p.id, prevMonth1Date.getFullYear(), prevMonth1Date.getMonth());
@@ -430,7 +430,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                   return (
                     <tr key={p.id} className="hover:bg-[#F6F3EC]/50 transition">
                       <td className="p-3">
-                        <div className="font-bold text-[#073B2F]">{p.name}</div>
+                        <div className="font-bold text-[#12201A]">{p.name}</div>
                         <div className="text-[10px] text-[#5C6E5E]">{p.city} • {p.title}</div>
                       </td>
 
@@ -441,7 +441,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                             {m2Stats.booked} Booked
                           </span>
                           <span className="text-stone-400">/</span>
-                          <span className="text-[#073B2F] font-mono">
+                          <span className="text-[#33684C] font-mono">
                             {m2Stats.available} Avail
                           </span>
                         </div>
@@ -454,7 +454,7 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                             {m1Stats.booked} Booked
                           </span>
                           <span className="text-stone-400">/</span>
-                          <span className="text-[#073B2F] font-mono">
+                          <span className="text-[#33684C] font-mono">
                             {m1Stats.available} Avail
                           </span>
                         </div>
@@ -474,10 +474,10 @@ export const MonthlyShootDaysSearch: React.FC<MonthlyShootDaysSearchProps> = ({
                             onSelectPhotographer(p.id);
                             onNavigateCalendarMonth(prevMonth1Date.getFullYear(), prevMonth1Date.getMonth());
                           }}
-                          className="px-2.5 py-1 rounded-lg bg-[#F6F3EC] hover:bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] hover:border-[#073B2F] text-xs font-semibold inline-flex items-center gap-1 transition shadow-2xs"
+                          className="px-2.5 py-1 rounded-lg bg-[#F6F3EC] hover:bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] hover:border-[#33684C] text-xs font-semibold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer"
                         >
                           <span>Open</span>
-                          <ArrowUpRight className="w-3 h-3 text-[#073B2F]" />
+                          <ArrowUpRight className="w-3 h-3 text-[#33684C]" />
                         </button>
                       </td>
                     </tr>

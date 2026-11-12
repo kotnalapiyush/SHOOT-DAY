@@ -826,15 +826,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white border border-[#DCE7D4] rounded-3xl max-w-3xl w-full text-[#073B2F] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white border border-[#E3EEE7] rounded-3xl max-w-3xl w-full text-[#33684C] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Modal Header */}
-        <div className="px-5 sm:px-7 py-4 border-b border-[#DCE7D4] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-7 py-4 border-b border-[#E3EEE7] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#073B2F] text-white flex items-center justify-center font-bold text-sm shadow-xs">
-              <Camera className="w-5 h-5 text-[#FF6A45]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#33684C] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+              <Camera className="w-5 h-5 text-[#FFDF70]" />
             </div>
             <div>
-              <h2 className="text-base sm:text-lg font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+              <h2 className="text-base sm:text-lg font-bold text-[#33684C] font-headline">
                 My Profile & Portfolio Settings
               </h2>
               <p className="text-xs text-[#5C6E5E]">
@@ -845,7 +845,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           <button
             type="button"
             onClick={onClose}
-            className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition cursor-pointer"
+            className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#33684C] flex items-center justify-center transition cursor-pointer"
             aria-label="Close"
           >
             <X className="w-5 h-5" />
@@ -853,14 +853,14 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
         </div>
 
         {/* Navigation Tabs */}
-        <div className="flex items-center border-b border-[#DCE7D4] bg-[#FAF8F5] px-5 sm:px-7 gap-2 overflow-x-auto shrink-0">
+        <div className="flex items-center border-b border-[#E3EEE7] bg-[#FAF8F5] px-5 sm:px-7 gap-2 overflow-x-auto shrink-0">
           <button
             type="button"
             onClick={() => setActiveTab('profile')}
             className={`py-3 px-3.5 text-xs font-bold border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'profile'
-                ? 'border-[#073B2F] text-[#073B2F]'
-                : 'border-transparent text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'border-[#33684C] text-[#33684C]'
+                : 'border-transparent text-[#5C6E5E] hover:text-[#33684C]'
             }`}
           >
             <User className="w-3.5 h-3.5" />
@@ -871,8 +871,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             onClick={() => setActiveTab('showcase')}
             className={`py-3 px-3.5 text-xs font-bold border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'showcase'
-                ? 'border-[#073B2F] text-[#073B2F]'
-                : 'border-transparent text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'border-[#33684C] text-[#33684C]'
+                : 'border-transparent text-[#5C6E5E] hover:text-[#33684C]'
             }`}
           >
             <Layers className="w-3.5 h-3.5" />
@@ -883,11 +883,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             onClick={() => setActiveTab('videos')}
             className={`py-3 px-3.5 text-xs font-bold border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'videos'
-                ? 'border-[#073B2F] text-[#073B2F]'
-                : 'border-transparent text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'border-[#33684C] text-[#33684C]'
+                : 'border-transparent text-[#5C6E5E] hover:text-[#33684C]'
             }`}
           >
-            <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
+            <Film className="w-3.5 h-3.5 text-[#FFDF70]" />
             <span>Videos</span>
           </button>
           <button
@@ -895,8 +895,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             onClick={() => setActiveTab('password')}
             className={`py-3 px-3.5 text-xs font-bold border-b-2 transition flex items-center gap-1.5 whitespace-nowrap cursor-pointer ${
               activeTab === 'password'
-                ? 'border-[#073B2F] text-[#073B2F]'
-                : 'border-transparent text-[#5C6E5E] hover:text-[#073B2F]'
+                ? 'border-[#33684C] text-[#33684C]'
+                : 'border-transparent text-[#5C6E5E] hover:text-[#33684C]'
             }`}
           >
             <KeyRound className="w-3.5 h-3.5" />
@@ -917,8 +917,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           {activeTab === 'profile' && (
             <div className="space-y-5">
               {/* Profile Image Upload & Preview */}
-              <div className="p-4 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4] space-y-3">
-                <label className="text-xs font-bold text-[#073B2F] block">
+              <div className="p-4 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7] space-y-3">
+                <label className="text-xs font-bold text-[#33684C] block">
                   Profile Picture
                 </label>
                 <div className="flex flex-col sm:flex-row items-center gap-4">
@@ -951,9 +951,9 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       <button
                         type="button"
                         onClick={() => fileInputRef.current?.click()}
-                        className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-[#073B2F] border border-[#DCE7D4] hover:bg-stone-50 transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
+                        className="px-3.5 py-2 rounded-xl text-xs font-bold bg-white text-[#33684C] border border-[#E3EEE7] hover:bg-stone-50 transition flex items-center gap-1.5 shadow-2xs cursor-pointer"
                       >
-                        <Upload className="w-3.5 h-3.5 text-[#073B2F]" />
+                        <Upload className="w-3.5 h-3.5 text-[#33684C]" />
                         <span>Upload Photo</span>
                       </button>
 
@@ -974,22 +974,22 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               {/* Basic Fields */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Full Name</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Full Name</label>
                   <input
                     type="text"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     required
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs font-bold text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs font-bold text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Base City</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Base City</label>
                   <select
                     value={city}
                     onChange={(e) => setCity(e.target.value)}
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs font-bold text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs font-bold text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   >
                     {INDIAN_CITIES.map((c) => (
                       <option key={c} value={c}>
@@ -1000,57 +1000,57 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Professional Title</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Professional Title</label>
                   <input
                     type="text"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
                     required
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Years of Experience</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Years of Experience</label>
                   <input
                     type="number"
                     min="1"
                     max="40"
                     value={experienceYears}
                     onChange={(e) => setExperienceYears(e.target.value)}
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Phone Number</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Phone Number</label>
                   <input
                     type="tel"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   />
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">Email Address</label>
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">Email Address</label>
                   <input
                     type="email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                    className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3 py-2 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                   />
                 </div>
               </div>
 
               {/* Bio */}
               <div>
-                <label className="text-xs font-bold text-[#073B2F] block mb-1">Bio / Story</label>
+                <label className="text-xs font-bold text-[#33684C] block mb-1">Bio / Story</label>
                 <textarea
                   rows={3}
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="w-full bg-white border border-[#DCE7D4] rounded-xl p-3 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F] resize-none"
+                  className="w-full bg-white border border-[#E3EEE7] rounded-xl p-3 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C] resize-none"
                 />
               </div>
             </div>
@@ -1060,13 +1060,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           {activeTab === 'showcase' && (
             <div className="space-y-6">
               {/* Category Selection Bar */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4] space-y-3.5">
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7] space-y-3.5">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                    <Layers className="w-4 h-4 text-[#FF6A45]" />
+                  <label className="text-xs font-bold text-[#33684C] flex items-center gap-1.5">
+                    <Layers className="w-4 h-4 text-[#FFDF70]" />
                     <span>Specialization Category Selection Bar</span>
                   </label>
-                  <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
+                  <span className="text-[11px] font-bold text-[#33684C] bg-[#E3EEE7] px-2.5 py-0.5 rounded-full border border-[#E3EEE7]">
                     {specialties.length} active
                   </span>
                 </div>
@@ -1083,11 +1083,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                     }}
                     className={`w-full bg-white border rounded-xl px-3 py-2 flex flex-wrap items-center gap-1.5 transition cursor-pointer shadow-2xs min-h-[46px] ${
                       isCategoryBarOpen
-                        ? 'border-[#073B2F] ring-2 ring-[#073B2F]/15'
-                        : 'border-[#DCE7D4] hover:border-[#073B2F]'
+                        ? 'border-[#33684C] ring-2 ring-[#33684C]/15'
+                        : 'border-[#E3EEE7] hover:border-[#33684C]'
                     }`}
                   >
-                    <Layers className="w-4 h-4 text-[#FF6A45] shrink-0 mr-1" />
+                    <Layers className="w-4 h-4 text-[#FFDF70] shrink-0 mr-1" />
 
                     {/* Active Categories as Chips INSIDE the selection bar */}
                     {specialties.map((spec) => {
@@ -1102,11 +1102,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           }}
                           className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg text-xs font-bold border transition cursor-pointer select-none active:scale-95 ${
                             isCurrentShowcase
-                              ? 'bg-[#073B2F] text-white border-[#073B2F] shadow-xs'
-                              : 'bg-[#F0FFDA] text-[#073B2F] border-[#DCE7D4] hover:border-[#073B2F]'
+                              ? 'bg-[#33684C] text-white border-[#33684C] shadow-xs'
+                              : 'bg-[#E3EEE7] text-[#33684C] border-[#E3EEE7] hover:border-[#33684C]'
                           }`}
                         >
-                          <Check className={`w-3 h-3 ${isCurrentShowcase ? 'text-[#FF6A45]' : 'text-[#073B2F]'}`} />
+                          <Check className={`w-3 h-3 ${isCurrentShowcase ? 'text-[#FFDF70]' : 'text-[#33684C]'}`} />
                           <span>{spec}</span>
                           <button
                             type="button"
@@ -1117,7 +1117,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             className={`p-0.5 rounded-full transition cursor-pointer ml-0.5 ${
                               isCurrentShowcase
                                 ? 'hover:bg-white/20 text-white/80 hover:text-white'
-                                : 'hover:bg-stone-200 text-[#5C6E5E] hover:text-[#073B2F]'
+                                : 'hover:bg-stone-200 text-[#5C6E5E] hover:text-[#33684C]'
                             }`}
                             title={`Remove ${spec}`}
                           >
@@ -1147,7 +1147,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         }
                       }}
                       placeholder={specialties.length === 0 ? "Select categories or type custom shoot..." : "+ Add shoot category..."}
-                      className="min-w-[130px] flex-1 text-xs font-medium text-[#073B2F] placeholder-[#5C6E5E]/70 bg-transparent focus:outline-none py-1"
+                      className="min-w-[130px] flex-1 text-xs font-medium text-[#33684C] placeholder-[#5C6E5E]/70 bg-transparent focus:outline-none py-1"
                     />
 
                     <div className="flex items-center gap-1.5 shrink-0 ml-auto">
@@ -1163,12 +1163,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           <X className="w-3.5 h-3.5" />
                         </button>
                       )}
-                      <span className="text-[10px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2 py-0.5 rounded-full border border-[#DCE7D4] shrink-0">
+                      <span className="text-[10px] font-bold text-[#33684C] bg-[#E3EEE7] px-2 py-0.5 rounded-full border border-[#E3EEE7] shrink-0">
                         {specialties.length} active
                       </span>
                       <ChevronDown
                         className={`w-4 h-4 text-[#5C6E5E] transition-transform duration-200 ${
-                          isCategoryBarOpen ? 'rotate-180 text-[#073B2F]' : ''
+                          isCategoryBarOpen ? 'rotate-180 text-[#33684C]' : ''
                         }`}
                       />
                     </div>
@@ -1176,12 +1176,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                   {/* Dropdown Options Menu */}
                   {isCategoryBarOpen && (
-                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-3 z-40 max-h-80 overflow-y-auto space-y-2 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="absolute top-full left-0 right-0 mt-2 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-3 z-40 max-h-80 overflow-y-auto space-y-2 animate-in fade-in zoom-in-95 duration-150">
                       {/* Dropdown Top Bar */}
-                      <div className="flex items-center justify-between pb-2 border-b border-[#DCE7D4]">
+                      <div className="flex items-center justify-between pb-2 border-b border-[#E3EEE7]">
                         <div className="flex items-center gap-1.5">
-                          <Layers className="w-3.5 h-3.5 text-[#FF6A45]" />
-                          <span className="text-xs font-bold text-[#073B2F]">Select Shoot Categories</span>
+                          <Layers className="w-3.5 h-3.5 text-[#FFDF70]" />
+                          <span className="text-xs font-bold text-[#33684C]">Select Shoot Categories</span>
                         </div>
                         <span className="text-[11px] font-semibold text-[#5C6E5E]">
                           {specialties.length} selected
@@ -1199,13 +1199,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                           <button
                             type="button"
                             onClick={() => handleAddCustomShoot(categorySearchQuery)}
-                            className="w-full text-left p-2.5 rounded-xl bg-[#F0FFDA] hover:bg-[#e4fabf] text-[#073B2F] text-xs font-bold transition flex items-center justify-between border border-[#073B2F]/20 cursor-pointer shadow-xs"
+                            className="w-full text-left p-2.5 rounded-xl bg-[#E3EEE7] hover:bg-[#d5e6dc] text-[#33684C] text-xs font-bold transition flex items-center justify-between border border-[#33684C]/20 cursor-pointer shadow-xs"
                           >
                             <span className="flex items-center gap-2">
-                              <Sparkles className="w-3.5 h-3.5 text-[#FF6A45]" />
+                              <Sparkles className="w-3.5 h-3.5 text-[#FFDF70]" />
                               <span>Add Custom Shoot: "{categorySearchQuery.trim()}"</span>
                             </span>
-                            <span className="text-[10px] bg-[#073B2F] text-white px-2 py-0.5 rounded-md font-semibold">
+                            <span className="text-[10px] bg-[#33684C] text-white px-2 py-0.5 rounded-md font-semibold">
                               Add & Open
                             </span>
                           </button>
@@ -1229,22 +1229,22 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                 key={spec}
                                 type="button"
                                 onClick={() => toggleSpecialty(spec)}
-                                className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between cursor-pointer hover:bg-[#F6F3EC] text-[#073B2F]"
+                                className="w-full text-left px-3 py-2 rounded-xl text-xs font-semibold transition flex items-center justify-between cursor-pointer hover:bg-[#F6F3EC] text-[#33684C]"
                               >
                                 <div className="flex items-center gap-2">
                                   <div
                                     className={`w-4 h-4 rounded-md flex items-center justify-center border transition ${
                                       isSelected
-                                        ? 'border-[#FF6A45] bg-[#FF6A45] text-white'
-                                        : 'border-[#DCE7D4] bg-white'
+                                        ? 'border-[#33684C] bg-[#FFDF70] text-[#12201A]'
+                                        : 'border-[#E3EEE7] bg-white'
                                     }`}
                                   >
                                     {isSelected && <Check className="w-3 h-3 stroke-3" />}
                                   </div>
-                                  <span className={isSelected ? 'font-bold text-[#073B2F]' : 'text-[#073B2F]'}>{spec}</span>
+                                  <span className={isSelected ? 'font-bold text-[#33684C]' : 'text-[#33684C]'}>{spec}</span>
                                 </div>
                                 {isSelected && (
-                                  <span className="text-[10px] font-bold text-[#FF6A45]">Selected</span>
+                                  <span className="text-[10px] font-bold text-[#FFDF70]">Selected</span>
                                 )}
                               </button>
                             );
@@ -1252,7 +1252,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       </div>
 
                       {/* Unified Other / Custom in the Selection Bar */}
-                      <div className="pt-2 mt-2 border-t border-[#DCE7D4]">
+                      <div className="pt-2 mt-2 border-t border-[#E3EEE7]">
                         <div className="text-[10px] font-bold text-[#5C6E5E] uppercase tracking-wider px-1 mb-1">
                           Other / Custom Specialization
                         </div>
@@ -1264,19 +1264,19 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                               setShowOtherCustomInput(true);
                               setTimeout(() => otherCustomInputRef.current?.focus(), 50);
                             }}
-                            className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#073B2F] hover:bg-[#F6F3EC] transition flex items-center justify-between cursor-pointer group"
+                            className="w-full text-left px-3 py-2 rounded-xl text-xs font-bold text-[#33684C] hover:bg-[#F6F3EC] transition flex items-center justify-between cursor-pointer group"
                           >
                             <span className="flex items-center gap-2">
-                              <Plus className="w-3.5 h-3.5 text-[#FF6A45] group-hover:scale-110 transition" />
+                              <Plus className="w-3.5 h-3.5 text-[#FFDF70] group-hover:scale-110 transition" />
                               <span>+ Add Custom Shoot Type</span>
                             </span>
                             <span className="text-[10px] text-[#5C6E5E]">Specify custom name</span>
                           </button>
                         ) : (
-                          <div className="p-2.5 bg-[#F6F3EC] rounded-xl border border-[#DCE7D4] space-y-2 mt-1">
+                          <div className="p-2.5 bg-[#F6F3EC] rounded-xl border border-[#E3EEE7] space-y-2 mt-1">
                             <div className="flex items-center justify-between">
-                              <span className="text-[11px] font-bold text-[#073B2F] flex items-center gap-1.5">
-                                <Sparkles className="w-3 h-3 text-[#FF6A45]" />
+                              <span className="text-[11px] font-bold text-[#33684C] flex items-center gap-1.5">
+                                <Sparkles className="w-3 h-3 text-[#FFDF70]" />
                                 <span>Write custom shoot name:</span>
                               </span>
                               <button
@@ -1300,13 +1300,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                   }
                                 }}
                                 placeholder="e.g. Drone Photography, Maternity Shoot..."
-                                className="flex-1 bg-white border border-[#DCE7D4] rounded-lg px-2.5 py-1.5 text-xs text-[#073B2F] font-semibold focus:outline-none focus:border-[#073B2F]"
+                                className="flex-1 bg-white border border-[#E3EEE7] rounded-lg px-2.5 py-1.5 text-xs text-[#33684C] font-semibold focus:outline-none focus:border-[#33684C]"
                               />
                               <button
                                 type="button"
                                 onClick={() => handleAddCustomShoot()}
                                 disabled={!otherCustomInputValue.trim()}
-                                className="px-3 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white text-xs font-bold rounded-lg transition cursor-pointer shrink-0"
+                                className="px-3 py-1.5 bg-[#33684C] hover:bg-[#1F4331] disabled:opacity-40 text-white text-xs font-bold rounded-lg transition cursor-pointer shrink-0"
                               >
                                 Add
                               </button>
@@ -1316,13 +1316,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       </div>
 
                       {/* Sticky Bottom Done Button */}
-                      <div className="pt-2 mt-2 border-t border-[#DCE7D4] sticky bottom-0 bg-white">
+                      <div className="pt-2 mt-2 border-t border-[#E3EEE7] sticky bottom-0 bg-white">
                         <button
                           type="button"
                           onClick={() => setIsCategoryBarOpen(false)}
-                          className="w-full py-2 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs active:scale-98"
+                          className="w-full py-2 bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition shadow-xs active:scale-98"
                         >
-                          <Check className="w-4 h-4 text-[#FF6A45]" />
+                          <Check className="w-4 h-4 text-[#FFDF70]" />
                           <span>Done</span>
                         </button>
                       </div>
@@ -1335,8 +1335,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               <div ref={showcaseSectionRef} className="space-y-3.5">
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <div>
-                    <h4 className="text-xs sm:text-sm font-bold text-[#073B2F] flex items-center gap-1.5 font-['Space_Grotesk',sans-serif]">
-                      <Layers className="w-4 h-4 text-[#FF6A45]" />
+                    <h4 className="text-xs sm:text-sm font-bold text-[#33684C] flex items-center gap-1.5 font-headline">
+                      <Layers className="w-4 h-4 text-[#FFDF70]" />
                       <span>Clickable Category Showcase</span>
                     </h4>
                     <p className="text-[11px] text-[#5C6E5E]">
@@ -1346,7 +1346,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   <button
                     type="button"
                     onClick={handleResetCategoryPhotos}
-                    className="px-2.5 py-1.5 text-xs font-semibold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] rounded-lg transition flex items-center gap-1 cursor-pointer self-start sm:self-auto"
+                    className="px-2.5 py-1.5 text-xs font-semibold text-[#5C6E5E] hover:text-[#33684C] bg-white border border-[#E3EEE7] rounded-lg transition flex items-center gap-1 cursor-pointer self-start sm:self-auto"
                     title="Reset to default gallery photos for this category"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1368,8 +1368,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         }}
                         className={`px-3.5 py-2 rounded-xl text-xs font-bold transition cursor-pointer active:scale-95 ${
                           isSelected
-                            ? 'bg-[#073B2F] text-white shadow-xs'
-                            : 'bg-[#F6F3EC] text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                            ? 'bg-[#33684C] text-white shadow-xs'
+                            : 'bg-[#F6F3EC] text-[#33684C] hover:bg-[#ECE7DC] border border-[#E3EEE7]'
                         }`}
                       >
                         <span>{cat}</span>
@@ -1379,15 +1379,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
 
                 {/* Active Category Work & Upload Card */}
-                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#DCE7D4] space-y-4 shadow-xs">
+                <div className="p-4 sm:p-5 rounded-2xl bg-white border border-[#E3EEE7] space-y-4 shadow-xs">
                   {/* Category Header */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#DCE7D4]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#E3EEE7]">
                     <div>
                       <div className="flex items-center gap-2">
-                        <span className="text-sm font-bold text-[#073B2F]">
+                        <span className="text-sm font-bold text-[#33684C]">
                           {activeCategoryTab} Portfolio
                         </span>
-                        <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
+                        <span className="text-[11px] font-bold text-[#33684C] bg-[#E3EEE7] px-2.5 py-0.5 rounded-full border border-[#E3EEE7]">
                           {currentCategoryPhotos.length} / 15 Photos
                         </span>
                       </div>
@@ -1397,8 +1397,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                     </div>
 
                     <div className="flex items-center gap-2 self-start sm:self-auto flex-wrap">
-                      <label className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 shrink-0">
-                        <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
+                      <label className="px-3.5 py-1.5 bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-xs active:scale-95 shrink-0">
+                        <Upload className="w-3.5 h-3.5 text-[#FFDF70]" />
                         <span>+ Upload Photos</span>
                         <input
                           type="file"
@@ -1418,11 +1418,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         onClick={() => setShowUrlInputBar((prev) => !prev)}
                         className={`px-3.5 py-1.5 text-xs font-bold rounded-xl transition flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95 shrink-0 border ${
                           showUrlInputBar
-                            ? 'bg-[#073B2F] text-white border-[#073B2F]'
-                            : 'bg-white hover:bg-[#F6F3EC] text-[#073B2F] border-[#DCE7D4]'
+                            ? 'bg-[#33684C] text-white border-[#33684C]'
+                            : 'bg-white hover:bg-[#F6F3EC] text-[#33684C] border-[#E3EEE7]'
                         }`}
                       >
-                        <LinkIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                        <LinkIcon className="w-3.5 h-3.5 text-[#FFDF70]" />
                         <span>+ Add Photo Link</span>
                       </button>
                     </div>
@@ -1430,16 +1430,16 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                   {/* Batch / Single URL Input Bar */}
                   {showUrlInputBar && (
-                    <div className="p-4 bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl space-y-3 animate-in fade-in">
+                    <div className="p-4 bg-[#F6F3EC] border border-[#E3EEE7] rounded-2xl space-y-3 animate-in fade-in">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                          <LinkIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                        <span className="text-xs font-bold text-[#33684C] flex items-center gap-1.5">
+                          <LinkIcon className="w-3.5 h-3.5 text-[#FFDF70]" />
                           <span>Paste Photo Link(s) — Google Drive, Unsplash, or Direct Image URL</span>
                         </span>
                         <button
                           type="button"
                           onClick={() => setShowUrlInputBar(false)}
-                          className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                          className="text-[#5C6E5E] hover:text-[#33684C] cursor-pointer"
                         >
                           <X className="w-3.5 h-3.5" />
                         </button>
@@ -1449,7 +1449,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         value={batchUrlInput}
                         onChange={(e) => setBatchUrlInput(e.target.value)}
                         placeholder="Paste image links here (e.g. Google Drive image link, Unsplash, or direct image URL). For multiple photos, separate with new line or comma..."
-                        className="w-full bg-white border border-[#DCE7D4] rounded-xl p-3 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F] resize-none"
+                        className="w-full bg-white border border-[#E3EEE7] rounded-xl p-3 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C] resize-none"
                         autoFocus
                       />
                       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
@@ -1463,7 +1463,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                               setShowUrlInputBar(false);
                               setBatchUrlInput('');
                             }}
-                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] font-semibold cursor-pointer"
+                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#33684C] font-semibold cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -1471,9 +1471,9 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             type="button"
                             onClick={handleApplyBatchUrls}
                             disabled={!batchUrlInput.trim()}
-                            className="px-4 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
+                            className="px-4 py-1.5 bg-[#33684C] hover:bg-[#1F4331] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95 flex items-center gap-1.5"
                           >
-                            <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                            <Plus className="w-3.5 h-3.5 text-[#FFDF70]" />
                             <span>Add Photo Link(s)</span>
                           </button>
                         </div>
@@ -1483,10 +1483,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                   {/* Individual Slot Link Replacement Drawer */}
                   {urlReplaceSlotIndex !== null && (
-                    <div className="p-4 bg-[#F0FFDA] border border-[#073B2F]/30 rounded-2xl space-y-3 animate-in fade-in">
+                    <div className="p-4 bg-[#E3EEE7] border border-[#33684C]/30 rounded-2xl space-y-3 animate-in fade-in">
                       <div className="flex items-center justify-between">
-                        <span className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                          <LinkIcon className="w-4 h-4 text-[#FF6A45]" />
+                        <span className="text-xs font-bold text-[#33684C] flex items-center gap-1.5">
+                          <LinkIcon className="w-4 h-4 text-[#FFDF70]" />
                           <span>Replace Photo Slot {urlReplaceSlotIndex + 1} with Link</span>
                         </span>
                         <button
@@ -1495,7 +1495,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             setUrlReplaceSlotIndex(null);
                             setUrlReplaceInput('');
                           }}
-                          className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                          className="text-[#5C6E5E] hover:text-[#33684C] cursor-pointer"
                         >
                           <X className="w-4 h-4" />
                         </button>
@@ -1505,7 +1505,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         value={urlReplaceInput}
                         onChange={(e) => setUrlReplaceInput(e.target.value)}
                         placeholder="Paste Google Drive photo link, Unsplash, or direct image link..."
-                        className="w-full bg-white border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                        className="w-full bg-white border border-[#E3EEE7] rounded-xl px-3.5 py-2.5 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                         autoFocus
                       />
                       <div className="flex items-center justify-between">
@@ -1519,7 +1519,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                               setUrlReplaceSlotIndex(null);
                               setUrlReplaceInput('');
                             }}
-                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] font-semibold cursor-pointer"
+                            className="px-3 py-1.5 text-xs text-[#5C6E5E] hover:text-[#33684C] font-semibold cursor-pointer"
                           >
                             Cancel
                           </button>
@@ -1527,7 +1527,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             type="button"
                             onClick={handleApplySlotUrl}
                             disabled={!urlReplaceInput.trim()}
-                            className="px-4 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95"
+                            className="px-4 py-1.5 bg-[#33684C] hover:bg-[#1F4331] disabled:opacity-40 text-white text-xs font-bold rounded-xl transition shadow-xs cursor-pointer active:scale-95"
                           >
                             Update Slot {urlReplaceSlotIndex + 1}
                           </button>
@@ -1538,15 +1538,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                   {/* Feedback Message */}
                   {uploadStatusMsg && (
-                    <div className="p-3 bg-[#F0FFDA] border border-[#DCE7D4] rounded-xl flex items-center justify-between text-xs text-[#073B2F] animate-in fade-in">
+                    <div className="p-3 bg-[#E3EEE7] border border-[#E3EEE7] rounded-xl flex items-center justify-between text-xs text-[#33684C] animate-in fade-in">
                       <div className="flex items-center gap-2">
-                        <CheckCircle2 className="w-4 h-4 text-[#073B2F] shrink-0" />
+                        <CheckCircle2 className="w-4 h-4 text-[#33684C] shrink-0" />
                         <span className="font-semibold">{uploadStatusMsg}</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => setUploadStatusMsg(null)}
-                        className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                        className="text-[#5C6E5E] hover:text-[#33684C] cursor-pointer"
                       >
                         <X className="w-3.5 h-3.5" />
                       </button>
@@ -1556,29 +1556,29 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   {/* 15 Photos Grid */}
                   <div className="space-y-2.5">
                     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-1">
-                      <span className="text-[11px] font-bold text-[#073B2F] flex items-center gap-1.5">
+                      <span className="text-[11px] font-bold text-[#33684C] flex items-center gap-1.5">
                         <span>{activeCategoryTab} Gallery ({currentCategoryPhotos.length} Photos)</span>
                         <span className="text-[10px] text-[#5C6E5E] font-normal">Up to 15 photos</span>
                       </span>
                       <span className="text-[11px] text-[#5C6E5E] flex items-center gap-1 font-medium">
-                        <GripVertical className="w-3.5 h-3.5 text-[#073B2F]" />
+                        <GripVertical className="w-3.5 h-3.5 text-[#33684C]" />
                         <span>Touch photo to delete/change • Drag to reorder</span>
                       </span>
                     </div>
 
                     {/* Undo delete banner */}
                     {lastDeletedPhoto && lastDeletedPhoto.category === activeCategoryTab && (
-                      <div className="p-2.5 bg-[#FFF4EE] border border-[#FF6A45]/40 rounded-xl flex items-center justify-between gap-2 text-xs animate-in fade-in">
-                        <span className="text-[#073B2F] flex items-center gap-1.5 font-medium">
+                      <div className="p-2.5 bg-[#FFF3C4] border border-[#33684C]/40 rounded-xl flex items-center justify-between gap-2 text-xs animate-in fade-in">
+                        <span className="text-[#33684C] flex items-center gap-1.5 font-medium">
                           <Trash2 className="w-3.5 h-3.5 text-red-500" />
                           <span>Deleted photo (Slot {lastDeletedPhoto.index + 1})</span>
                         </span>
                         <button
                           type="button"
                           onClick={handleUndoDelete}
-                          className="px-2.5 py-1 bg-white hover:bg-stone-50 border border-[#DCE7D4] text-[#073B2F] font-bold rounded-lg text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
+                          className="px-2.5 py-1 bg-white hover:bg-stone-50 border border-[#E3EEE7] text-[#33684C] font-bold rounded-lg text-xs flex items-center gap-1 cursor-pointer shadow-xs active:scale-95"
                         >
-                          <Undo2 className="w-3 h-3 text-[#073B2F]" />
+                          <Undo2 className="w-3 h-3 text-[#33684C]" />
                           <span>Undo Delete</span>
                         </button>
                       </div>
@@ -1635,12 +1635,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                             }}
                             className={`group relative aspect-4/3 rounded-xl overflow-hidden bg-stone-100 border transition cursor-pointer select-none ${
                               isDragging
-                                ? 'opacity-35 scale-95 border-2 border-dashed border-[#073B2F]'
+                                ? 'opacity-35 scale-95 border-2 border-dashed border-[#33684C]'
                                 : isDragOver
-                                ? 'ring-3 ring-[#073B2F] ring-offset-2 scale-102 border-[#073B2F]'
+                                ? 'ring-3 ring-[#33684C] ring-offset-2 scale-102 border-[#33684C]'
                                 : isTouched
-                                ? 'ring-2 ring-[#FF6A45] ring-offset-1 border-[#FF6A45] shadow-md'
-                                : 'border-[#DCE7D4] hover:border-[#073B2F]'
+                                ? 'ring-2 ring-[#33684C] ring-offset-1 border-[#33684C] shadow-md'
+                                : 'border-[#E3EEE7] hover:border-[#33684C]'
                             }`}
                           >
                             <img
@@ -1728,10 +1728,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                     replaceTargetSlotRef.current = idx;
                                     replaceFileInputRef.current?.click();
                                   }}
-                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#073B2F] text-[10px] font-bold shadow-xs hover:bg-[#F0FFDA] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#33684C] text-[10px] font-bold shadow-xs hover:bg-[#E3EEE7] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
                                   title="Upload new image file"
                                 >
-                                  <Camera className="w-3 h-3 text-[#073B2F]" />
+                                  <Camera className="w-3 h-3 text-[#33684C]" />
                                   <span>Upload</span>
                                 </button>
                                 <button
@@ -1742,10 +1742,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                     setUrlReplaceInput(imgUrl.startsWith('data:') ? '' : imgUrl);
                                     setTouchedPhotoIndex(null);
                                   }}
-                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#073B2F] text-[10px] font-bold shadow-xs hover:bg-[#F0FFDA] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
+                                  className="flex-1 px-2 py-1.5 rounded-lg bg-white text-[#33684C] text-[10px] font-bold shadow-xs hover:bg-[#E3EEE7] transition cursor-pointer flex items-center justify-center gap-1 active:scale-95"
                                   title="Paste image link or Google Drive URL"
                                 >
-                                  <LinkIcon className="w-3 h-3 text-[#FF6A45]" />
+                                  <LinkIcon className="w-3 h-3 text-[#FFDF70]" />
                                   <span>Paste Link</span>
                                 </button>
                               </div>
@@ -1805,12 +1805,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       {/* Add Photo Slot Button if gallery has fewer than 15 photos */}
                       {currentCategoryPhotos.length < 15 && (
                         <label
-                          className="aspect-4/3 rounded-xl border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-white hover:bg-[#F0FFDA]/30 transition flex flex-col items-center justify-center gap-1.5 text-xs text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer p-3 group relative select-none"
+                          className="aspect-4/3 rounded-xl border-2 border-dashed border-[#E3EEE7] hover:border-[#33684C] bg-white hover:bg-[#E3EEE7]/30 transition flex flex-col items-center justify-center gap-1.5 text-xs text-[#5C6E5E] hover:text-[#33684C] cursor-pointer p-3 group relative select-none"
                         >
-                          <div className="w-9 h-9 rounded-full bg-[#F6F3EC] group-hover:bg-[#073B2F] flex items-center justify-center transition shadow-2xs">
-                            <Plus className="w-5 h-5 text-[#FF6A45] group-hover:text-[#F0FFDA]" />
+                          <div className="w-9 h-9 rounded-full bg-[#F6F3EC] group-hover:bg-[#33684C] flex items-center justify-center transition shadow-2xs">
+                            <Plus className="w-5 h-5 text-[#FFDF70] group-hover:text-[#E3EEE7]" />
                           </div>
-                          <span className="font-bold text-xs text-[#073B2F]">+ Add Photo</span>
+                          <span className="font-bold text-xs text-[#33684C]">+ Add Photo</span>
                           <span className="text-[10px] text-[#5C6E5E]">Slot {currentCategoryPhotos.length + 1} of 15</span>
                           <input
                             type="file"
@@ -1846,15 +1846,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           {activeTab === 'videos' && (
             <div className="space-y-6">
               {/* Category selector pills */}
-              <div className="p-4 sm:p-5 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4] space-y-3.5">
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7] space-y-3.5">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Film className="w-4 h-4 text-[#FF6A45]" />
-                    <label className="text-xs font-bold text-[#073B2F]">
+                    <Film className="w-4 h-4 text-[#FFDF70]" />
+                    <label className="text-xs font-bold text-[#33684C]">
                       Select Shoot Category for Video & Reels Showcase
                     </label>
                   </div>
-                  <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
+                  <span className="text-[11px] font-bold text-[#33684C] bg-[#E3EEE7] px-2.5 py-0.5 rounded-full border border-[#E3EEE7]">
                     {currentCategoryVideos.length} / 6 Videos
                   </span>
                 </div>
@@ -1875,8 +1875,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         onClick={() => setActiveCategoryTab(cat)}
                         className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer ${
                           isSelected
-                            ? 'bg-[#073B2F] text-white shadow-xs'
-                            : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                            ? 'bg-[#33684C] text-white shadow-xs'
+                            : 'bg-white text-[#33684C] hover:bg-[#ECE7DC] border border-[#E3EEE7]'
                         }`}
                       >
                         <span>{cat}</span>
@@ -1892,13 +1892,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               </div>
 
               {/* Category Header & Controls */}
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#DCE7D4]">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2 border-b border-[#E3EEE7]">
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="text-sm font-bold text-[#073B2F]">
+                    <span className="text-sm font-bold text-[#33684C]">
                       {activeCategoryTab} Videos
                     </span>
-                    <span className="text-[11px] font-bold text-[#073B2F] bg-[#F0FFDA] px-2.5 py-0.5 rounded-full border border-[#DCE7D4]">
+                    <span className="text-[11px] font-bold text-[#33684C] bg-[#E3EEE7] px-2.5 py-0.5 rounded-full border border-[#E3EEE7]">
                       {currentCategoryVideos.length} / 6 Videos
                     </span>
                   </div>
@@ -1911,15 +1911,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   <button
                     type="button"
                     onClick={() => setIsAddVideoModalOpen(true)}
-                    className="px-3.5 py-1.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
+                    className="px-3.5 py-1.5 bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold rounded-xl transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 shrink-0"
                   >
-                    <Plus className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <Plus className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>+ Add Video</span>
                   </button>
                   <button
                     type="button"
                     onClick={handleResetCategoryVideos}
-                    className="px-2.5 py-1.5 text-xs font-semibold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] rounded-lg transition flex items-center gap-1 cursor-pointer"
+                    className="px-2.5 py-1.5 text-xs font-semibold text-[#5C6E5E] hover:text-[#33684C] bg-white border border-[#E3EEE7] rounded-lg transition flex items-center gap-1 cursor-pointer"
                     title="Reset to default videos for this category"
                   >
                     <RotateCcw className="w-3 h-3" />
@@ -1930,15 +1930,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
               {/* Feedback Message */}
               {uploadStatusMsg && (
-                <div className="p-3 bg-[#F0FFDA] border border-[#DCE7D4] rounded-xl flex items-center justify-between text-xs text-[#073B2F] animate-in fade-in">
+                <div className="p-3 bg-[#E3EEE7] border border-[#E3EEE7] rounded-xl flex items-center justify-between text-xs text-[#33684C] animate-in fade-in">
                   <div className="flex items-center gap-2">
-                    <CheckCircle2 className="w-4 h-4 text-[#073B2F] shrink-0" />
+                    <CheckCircle2 className="w-4 h-4 text-[#33684C] shrink-0" />
                     <span className="font-semibold">{uploadStatusMsg}</span>
                   </div>
                   <button
                     type="button"
                     onClick={() => setUploadStatusMsg(null)}
-                    className="text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                    className="text-[#5C6E5E] hover:text-[#33684C] cursor-pointer"
                   >
                     <X className="w-3.5 h-3.5" />
                   </button>
@@ -1953,7 +1953,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   return (
                     <div
                       key={video.id || vIdx}
-                      className="group relative rounded-2xl overflow-hidden bg-white border border-[#DCE7D4] hover:border-[#073B2F] transition-all shadow-xs flex flex-col justify-between"
+                      className="group relative rounded-2xl overflow-hidden bg-white border border-[#E3EEE7] hover:border-[#33684C] transition-all shadow-xs flex flex-col justify-between"
                     >
                       {/* Video Thumbnail Viewport */}
                       <div
@@ -1978,7 +1978,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                         <div className="absolute top-2 left-2 right-2 flex items-center justify-between z-10">
                           <div className="flex items-center gap-1">
                             {isReel ? (
-                              <span className="px-2 py-0.5 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-sm">
+                              <span className="px-2 py-0.5 rounded-md bg-[#FFDF70] text-[#12201A] text-[10px] font-bold flex items-center gap-1 shadow-sm">
                                 <Smartphone className="w-3 h-3" />
                                 <span>Reel</span>
                               </span>
@@ -2002,10 +2002,10 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                 videoCoverReplaceTargetIdRef.current = video.id;
                                 videoCoverReplaceInputRef.current?.click();
                               }}
-                              className="px-2 py-1 rounded-md bg-black/60 hover:bg-[#073B2F] text-white text-[10px] font-bold flex items-center gap-1 transition shadow-md cursor-pointer hover:scale-105 active:scale-95 backdrop-blur-xs"
+                              className="px-2 py-1 rounded-md bg-black/60 hover:bg-[#33684C] text-white text-[10px] font-bold flex items-center gap-1 transition shadow-md cursor-pointer hover:scale-105 active:scale-95 backdrop-blur-xs"
                               title="Upload or change cover image for this video"
                             >
-                              <Camera className="w-3 h-3 text-[#FF6A45]" />
+                              <Camera className="w-3 h-3 text-[#FFDF70]" />
                               <span>Cover</span>
                             </button>
 
@@ -2033,7 +2033,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
                       {/* Video Card Footer */}
                       <div className="p-3 bg-white space-y-1">
-                        <p className="text-xs font-bold text-[#073B2F] truncate">
+                        <p className="text-xs font-bold text-[#33684C] truncate">
                           {video.title || `${activeCategoryTab} Video`}
                         </p>
                         <div className="flex items-center justify-between text-[11px] text-[#5C6E5E]">
@@ -2046,7 +2046,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                                 index: vIdx,
                               });
                             }}
-                            className="text-[#FF6A45] font-bold hover:underline cursor-pointer flex items-center gap-0.5"
+                            className="text-[#33684C] font-bold hover:underline cursor-pointer flex items-center gap-0.5"
                           >
                             <span>Play Preview</span>
                           </button>
@@ -2061,12 +2061,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   <button
                     type="button"
                     onClick={() => setIsAddVideoModalOpen(true)}
-                    className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-white hover:bg-[#F0FFDA]/30 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition min-h-[220px] group shadow-2xs"
+                    className="border-2 border-dashed border-[#E3EEE7] hover:border-[#33684C] bg-white hover:bg-[#E3EEE7]/30 rounded-2xl p-6 flex flex-col items-center justify-center text-center cursor-pointer transition min-h-[220px] group shadow-2xs"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#F6F3EC] group-hover:bg-[#073B2F] flex items-center justify-center transition mb-2 shadow-2xs">
-                      <Plus className="w-6 h-6 text-[#FF6A45] group-hover:text-white" />
+                    <div className="w-12 h-12 rounded-full bg-[#F6F3EC] group-hover:bg-[#33684C] flex items-center justify-center transition mb-2 shadow-2xs">
+                      <Plus className="w-6 h-6 text-[#FFDF70] group-hover:text-white" />
                     </div>
-                    <p className="text-xs sm:text-sm font-bold text-[#073B2F]">
+                    <p className="text-xs sm:text-sm font-bold text-[#33684C]">
                       + Add Video Slot {currentCategoryVideos.length + 1}
                     </p>
                     <p className="text-[11px] text-[#5C6E5E] mt-1 max-w-[200px]">
@@ -2090,9 +2090,9 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           {/* TAB 3: CHANGE PASSWORD & ADMIN SYNC */}
           {activeTab === 'password' && (
             <div className="space-y-4">
-              <div className="p-4 rounded-2xl bg-[#F0FFDA] border border-[#DCE7D4] flex items-start gap-3">
-                <Shield className="w-5 h-5 text-[#073B2F] shrink-0 mt-0.5" />
-                <div className="text-xs text-[#073B2F] leading-relaxed">
+              <div className="p-4 rounded-2xl bg-[#E3EEE7] border border-[#E3EEE7] flex items-start gap-3">
+                <Shield className="w-5 h-5 text-[#33684C] shrink-0 mt-0.5" />
+                <div className="text-xs text-[#33684C] leading-relaxed">
                   <p className="font-bold mb-1">Admin Master Password Protection</p>
                   <p className="text-[#5C6E5E]">
                     When you update your password here, your new password is automatically updated and synced with the
@@ -2101,16 +2101,16 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                 </div>
               </div>
 
-              <div className="p-4 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4] space-y-3">
+              <div className="p-4 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7] space-y-3">
                 <div className="flex items-center justify-between">
                   <span className="text-xs text-[#5C6E5E] font-medium">Your Current Password:</span>
-                  <span className="text-xs font-mono font-bold bg-white px-2.5 py-1 rounded-lg border border-[#DCE7D4] text-[#073B2F]">
+                  <span className="text-xs font-mono font-bold bg-white px-2.5 py-1 rounded-lg border border-[#E3EEE7] text-[#33684C]">
                     {photographer.loginPassword || `${photographer.name.split(' ')[0].toLowerCase()}123`}
                   </span>
                 </div>
 
                 <div>
-                  <label className="text-xs font-bold text-[#073B2F] block mb-1">
+                  <label className="text-xs font-bold text-[#33684C] block mb-1">
                     Set New Portal Password
                   </label>
                   <div className="relative">
@@ -2120,12 +2120,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       value={newPassword}
                       onChange={(e) => setNewPassword(e.target.value)}
                       placeholder="Enter new secure password (leave empty to keep current)"
-                      className="w-full bg-white border border-[#DCE7D4] rounded-xl pl-9 pr-10 py-2 text-xs font-mono text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                      className="w-full bg-white border border-[#E3EEE7] rounded-xl pl-9 pr-10 py-2 text-xs font-mono text-[#33684C] focus:outline-none focus:border-[#33684C]"
                     />
                     <button
                       type="button"
                       onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#073B2F] cursor-pointer"
+                      className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#33684C] cursor-pointer"
                     >
                       {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     </button>
@@ -2139,19 +2139,19 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
           )}
 
           {/* Action Buttons */}
-          <div className="pt-4 border-t border-[#DCE7D4] flex items-center justify-between gap-3 shrink-0">
+          <div className="pt-4 border-t border-[#E3EEE7] flex items-center justify-between gap-3 shrink-0">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] hover:bg-stone-50 transition cursor-pointer"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:text-[#33684C] bg-white border border-[#E3EEE7] hover:bg-stone-50 transition cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-xs active:scale-[0.98] cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition flex items-center gap-1.5 shadow-xs active:scale-[0.98] cursor-pointer"
             >
-              <Check className="w-4 h-4 text-[#F0FFDA]" />
+              <Check className="w-4 h-4 text-[#E3EEE7]" />
               <span>Save & Sync Profile</span>
             </button>
           </div>
@@ -2166,12 +2166,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             if (e.target === e.currentTarget) setIsAddVideoModalOpen(false);
           }}
         >
-          <div className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 space-y-5 border border-[#DCE7D4] shadow-2xl animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-3xl max-w-xl w-full p-5 sm:p-6 space-y-5 border border-[#E3EEE7] shadow-2xl animate-in zoom-in-95 duration-150 max-h-[90vh] overflow-y-auto">
             {/* Modal Header */}
-            <div className="flex items-center justify-between border-b border-[#DCE7D4] pb-3">
+            <div className="flex items-center justify-between border-b border-[#E3EEE7] pb-3">
               <div>
-                <h3 className="text-sm sm:text-base font-bold text-[#073B2F] flex items-center gap-2">
-                  <Film className="w-5 h-5 text-[#FF6A45]" />
+                <h3 className="text-sm sm:text-base font-bold text-[#33684C] flex items-center gap-2">
+                  <Film className="w-5 h-5 text-[#FFDF70]" />
                   <span>Add Video to "{activeCategoryTab}"</span>
                 </h3>
                 <p className="text-[11px] text-[#5C6E5E] mt-0.5">
@@ -2181,7 +2181,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               <button
                 type="button"
                 onClick={() => setIsAddVideoModalOpen(false)}
-                className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-stone-200 text-[#073B2F] flex items-center justify-center cursor-pointer transition"
+                className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-stone-200 text-[#33684C] flex items-center justify-center cursor-pointer transition"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -2189,8 +2189,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
 
             {/* STEP 1: CHOOSE FORMAT FIRST */}
             <div className="space-y-2">
-              <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+              <label className="text-xs font-bold text-[#33684C] flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-[#33684C] text-white flex items-center justify-center text-[10px] font-bold">1</span>
                 <span>Choose Video Format First (Required)</span>
               </label>
 
@@ -2201,20 +2201,20 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   onClick={() => setVideoUploadFormat('reel')}
                   className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
                     videoUploadFormat === 'reel'
-                      ? 'border-[#FF6A45] bg-[#FFF5F2] shadow-xs ring-2 ring-[#FF6A45]/20'
-                      : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
+                      ? 'border-[#33684C] bg-[#FFF3C4] shadow-xs ring-2 ring-[#33684C]/20'
+                      : 'border-[#E3EEE7] hover:border-stone-400 bg-white'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    videoUploadFormat === 'reel' ? 'bg-[#FF6A45] text-white' : 'bg-stone-100 text-[#073B2F]'
+                    videoUploadFormat === 'reel' ? 'bg-[#FFDF70] text-[#12201A]' : 'bg-stone-100 text-[#33684C]'
                   }`}>
                     <Smartphone className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-[#073B2F]">1. Reel</span>
+                      <span className="text-xs font-bold text-[#33684C]">1. Reel</span>
                       {videoUploadFormat === 'reel' && (
-                        <span className="text-[10px] font-bold bg-[#FF6A45] text-white px-1.5 py-0.2 rounded-full">
+                        <span className="text-[10px] font-bold bg-[#FFDF70] text-[#12201A] px-1.5 py-0.2 rounded-full">
                           Selected
                         </span>
                       )}
@@ -2232,17 +2232,17 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   className={`p-3.5 rounded-2xl border-2 text-left transition-all cursor-pointer flex items-start gap-3 ${
                     videoUploadFormat === 'youtube'
                       ? 'border-amber-500 bg-amber-50/50 shadow-xs ring-2 ring-amber-500/20'
-                      : 'border-[#DCE7D4] hover:border-stone-400 bg-white'
+                      : 'border-[#E3EEE7] hover:border-stone-400 bg-white'
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center shrink-0 ${
-                    videoUploadFormat === 'youtube' ? 'bg-amber-600 text-white' : 'bg-stone-100 text-[#073B2F]'
+                    videoUploadFormat === 'youtube' ? 'bg-amber-600 text-white' : 'bg-stone-100 text-[#33684C]'
                   }`}>
                     <Tv className="w-5 h-5" />
                   </div>
                   <div>
                     <div className="flex items-center gap-1.5">
-                      <span className="text-xs font-bold text-[#073B2F]">2. YouTube</span>
+                      <span className="text-xs font-bold text-[#33684C]">2. YouTube</span>
                       {videoUploadFormat === 'youtube' && (
                         <span className="text-[10px] font-bold bg-amber-600 text-white px-1.5 py-0.2 rounded-full">
                           Selected
@@ -2258,22 +2258,22 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             </div>
 
             {/* STEP 2: SOURCE MODE (URL vs UPLOAD) */}
-            <div className="space-y-3 pt-2 border-t border-[#DCE7D4]">
+            <div className="space-y-3 pt-2 border-t border-[#E3EEE7]">
               <div className="flex items-center justify-between">
-                <label className="text-xs font-bold text-[#073B2F] flex items-center gap-1.5">
-                  <span className="w-5 h-5 rounded-full bg-[#073B2F] text-white flex items-center justify-center text-[10px] font-bold">2</span>
+                <label className="text-xs font-bold text-[#33684C] flex items-center gap-1.5">
+                  <span className="w-5 h-5 rounded-full bg-[#33684C] text-white flex items-center justify-center text-[10px] font-bold">2</span>
                   <span>Video Source</span>
                 </label>
 
                 {/* Toggle */}
-                <div className="flex items-center bg-[#F6F3EC] p-1 rounded-xl border border-[#DCE7D4] text-xs">
+                <div className="flex items-center bg-[#F6F3EC] p-1 rounded-xl border border-[#E3EEE7] text-xs">
                   <button
                     type="button"
                     onClick={() => setVideoInputMode('url')}
                     className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
                       videoInputMode === 'url'
-                        ? 'bg-[#073B2F] text-white shadow-2xs'
-                        : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                        ? 'bg-[#33684C] text-white shadow-2xs'
+                        : 'text-[#5C6E5E] hover:text-[#33684C]'
                     }`}
                   >
                     Paste Video Link
@@ -2283,8 +2283,8 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                     onClick={() => setVideoInputMode('upload')}
                     className={`px-3 py-1 rounded-lg font-bold transition cursor-pointer ${
                       videoInputMode === 'upload'
-                        ? 'bg-[#073B2F] text-white shadow-2xs'
-                        : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                        ? 'bg-[#33684C] text-white shadow-2xs'
+                        : 'text-[#5C6E5E] hover:text-[#33684C]'
                     }`}
                   >
                     Upload Video File
@@ -2296,7 +2296,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
               {videoInputMode === 'url' ? (
                 <div className="space-y-2">
                   <div className="space-y-1">
-                    <label className="text-[11px] font-bold text-[#073B2F] block">
+                    <label className="text-[11px] font-bold text-[#33684C] block">
                       Video URL / Link
                     </label>
                     <input
@@ -2304,14 +2304,14 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                       value={videoUrlInput}
                       onChange={(e) => setVideoUrlInput(e.target.value)}
                       placeholder="Paste Google Drive link, Instagram reel link, YouTube link, or any video link..."
-                      className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                      className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-3.5 py-2.5 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                       autoFocus
                     />
                   </div>
 
                   {videoUrlInput.trim() && (
-                    <div className="p-2 rounded-lg bg-[#F0FFDA] border border-[#DCE7D4] flex items-center gap-2 text-xs text-[#073B2F]">
-                      <Sparkles className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <div className="p-2 rounded-lg bg-[#E3EEE7] border border-[#E3EEE7] flex items-center gap-2 text-xs text-[#33684C]">
+                      <Sparkles className="w-3.5 h-3.5 text-[#FFDF70]" />
                       <span className="font-semibold">
                         Detected platform: <strong>{detectVideoPlatformName(videoUrlInput)}</strong>
                       </span>
@@ -2319,7 +2319,7 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   )}
 
                   <div className="flex flex-wrap gap-1.5 pt-1 text-[10px] text-[#5C6E5E]">
-                    <span className="font-bold text-[#073B2F]">Supported:</span>
+                    <span className="font-bold text-[#33684C]">Supported:</span>
                     <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Google Drive</span>
                     <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">Instagram Reels</span>
                     <span className="px-2 py-0.5 rounded bg-stone-100 border border-stone-200">YouTube / Shorts</span>
@@ -2339,12 +2339,12 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   />
                   <div
                     onClick={() => videoFileInputRef.current?.click()}
-                    className="border-2 border-dashed border-[#DCE7D4] hover:border-[#073B2F] bg-[#FAF8F5] hover:bg-[#F0FFDA]/30 rounded-2xl p-6 text-center cursor-pointer transition group"
+                    className="border-2 border-dashed border-[#E3EEE7] hover:border-[#33684C] bg-[#FAF8F5] hover:bg-[#E3EEE7]/30 rounded-2xl p-6 text-center cursor-pointer transition group"
                   >
-                    <div className="w-12 h-12 rounded-full bg-white group-hover:bg-[#073B2F] mx-auto flex items-center justify-center transition shadow-2xs border border-[#DCE7D4] mb-2">
-                      <Upload className="w-5 h-5 text-[#FF6A45] group-hover:text-white transition" />
+                    <div className="w-12 h-12 rounded-full bg-white group-hover:bg-[#33684C] mx-auto flex items-center justify-center transition shadow-2xs border border-[#E3EEE7] mb-2">
+                      <Upload className="w-5 h-5 text-[#FFDF70] group-hover:text-white transition" />
                     </div>
-                    <p className="text-xs font-bold text-[#073B2F]">
+                    <p className="text-xs font-bold text-[#33684C]">
                       Click to choose video file ({videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'})
                     </p>
                     <p className="text-[11px] text-[#5C6E5E] mt-1">
@@ -2369,15 +2369,15 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   value={videoTitleInput}
                   onChange={(e) => setVideoTitleInput(e.target.value)}
                   placeholder={`e.g. ${activeCategoryTab} Campaign ${videoUploadFormat === 'reel' ? 'Reel' : 'Film'}`}
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2 text-xs text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-3.5 py-2 text-xs text-[#33684C] focus:outline-none focus:border-[#33684C]"
                 />
               </div>
 
               {/* Cover Thumbnail Section */}
-              <div className="space-y-2 pt-2 border-t border-[#DCE7D4]/60">
+              <div className="space-y-2 pt-2 border-t border-[#E3EEE7]/60">
                 <div className="flex items-center justify-between">
-                  <label className="text-[11px] font-bold text-[#073B2F] flex items-center gap-1.5">
-                    <Camera className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <label className="text-[11px] font-bold text-[#33684C] flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>Cover Thumbnail (Optional)</span>
                   </label>
                   {videoCustomCover ? (
@@ -2404,13 +2404,13 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   <button
                     type="button"
                     onClick={() => videoCoverFileInputRef.current?.click()}
-                    className="px-3 py-1.5 rounded-xl bg-white border border-[#DCE7D4] hover:border-[#073B2F] text-xs font-semibold text-[#073B2F] flex items-center gap-1.5 cursor-pointer transition shadow-2xs hover:bg-[#F0FFDA]/30"
+                    className="px-3 py-1.5 rounded-xl bg-white border border-[#E3EEE7] hover:border-[#33684C] text-xs font-semibold text-[#33684C] flex items-center gap-1.5 cursor-pointer transition shadow-2xs hover:bg-[#E3EEE7]/30"
                   >
-                    <Upload className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <Upload className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>Upload Custom Cover Image</span>
                   </button>
                   {videoCustomCover && (
-                    <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#DCE7D4] relative shrink-0">
+                    <div className="w-9 h-9 rounded-lg overflow-hidden border border-[#E3EEE7] relative shrink-0">
                       <img src={videoCustomCover} alt="Cover preview" className="w-full h-full object-cover" />
                     </div>
                   )}
@@ -2422,11 +2422,11 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
             </div>
 
             {/* Modal Actions */}
-            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#DCE7D4]">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#E3EEE7]">
               <button
                 type="button"
                 onClick={() => setIsAddVideoModalOpen(false)}
-                className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:text-[#073B2F] bg-white border border-[#DCE7D4] hover:bg-stone-50 transition cursor-pointer"
+                className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:text-[#33684C] bg-white border border-[#E3EEE7] hover:bg-stone-50 transition cursor-pointer"
               >
                 Cancel
               </button>
@@ -2435,18 +2435,18 @@ export const PhotographerSelfEditModal: React.FC<PhotographerSelfEditModalProps>
                   type="button"
                   onClick={handleAddVideoByUrl}
                   disabled={!videoUrlInput.trim()}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] disabled:opacity-40 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] disabled:opacity-40 text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
                 >
-                  <Plus className="w-4 h-4 text-[#FF6A45]" />
+                  <Plus className="w-4 h-4 text-[#FFDF70]" />
                   <span>+ Add {videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'} Video</span>
                 </button>
               ) : (
                 <button
                   type="button"
                   onClick={() => videoFileInputRef.current?.click()}
-                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
+                  className="px-5 py-2.5 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95"
                 >
-                  <Upload className="w-4 h-4 text-[#FF6A45]" />
+                  <Upload className="w-4 h-4 text-[#FFDF70]" />
                   <span>Choose Video File ({videoUploadFormat === 'reel' ? 'Reel' : 'YouTube'})</span>
                 </button>
               )}

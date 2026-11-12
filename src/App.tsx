@@ -621,26 +621,26 @@ export default function App() {
 
   return (
     <div
-      className="min-h-screen flex flex-col font-sans antialiased bg-[#F6F3EC] text-[#073B2F] selection:bg-[#FF6A45] selection:text-white"
+      className="min-h-screen flex flex-col font-sans antialiased bg-[#F6F3EC] text-[#12201A] selection:bg-[#FFDF70] selection:text-[#12201A]"
     >
       {/* Toast Alert for Instant Booking */}
       {recentAlert && (
         <div
           id="real-time-booking-banner"
-          className="fixed top-20 sm:top-24 right-4 z-50 max-w-md bg-white border border-[#DCE7D4] rounded-3xl p-4 shadow-xl text-[#073B2F] flex items-start gap-3 animate-in slide-in-from-top-4"
+          className="fixed top-20 sm:top-24 right-4 z-50 max-w-md bg-white border border-[#E3EEE7] rounded-3xl p-4 shadow-xl text-[#12201A] flex items-start gap-3 animate-in slide-in-from-top-4"
         >
-          <div className="w-10 h-10 rounded-2xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
-            <Bell className="w-5 h-5 text-[#073B2F]" />
+          <div className="w-10 h-10 rounded-2xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+            <Bell className="w-5 h-5 text-[#33684C]" />
           </div>
           <div className="flex-1 min-w-0">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-bold text-[#FF6A45]">
+              <span className="text-xs font-bold text-[#33684C]">
                 {recentAlert.title}
               </span>
               <button
                 type="button"
                 onClick={() => setRecentAlert(null)}
-                className="text-[#5C6E5E] hover:text-[#073B2F] text-xs px-1"
+                className="text-[#5C6E5E] hover:text-[#12201A] text-xs px-1 cursor-pointer"
               >
                 ✕
               </button>
@@ -653,10 +653,10 @@ export default function App() {
                   handleSelectShootFromNotif(recentAlert.photographerId, recentAlert.date);
                   setRecentAlert(null);
                 }}
-                className="px-3 py-1.5 rounded-xl bg-[#073B2F] hover:bg-[#052920] text-white text-xs font-bold inline-flex items-center gap-1 transition"
+                className="px-3 py-1.5 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold inline-flex items-center gap-1 transition cursor-pointer"
               >
                 <span>View on Calendar</span>
-                <ArrowRight className="w-3 h-3" />
+                <ArrowRight className="w-3 h-3 text-[#FFDF70]" />
               </button>
             </div>
           </div>
@@ -686,19 +686,19 @@ export default function App() {
         {viewMode === 'photographer' ? (
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8 space-y-6">
             {/* Photographer View Controls */}
-            <div className="flex flex-wrap items-center justify-between border-b border-[#DCE7D4] pb-3.5 gap-3">
+            <div className="flex flex-wrap items-center justify-between border-b border-[#E3EEE7] pb-3.5 gap-3">
               <div className="flex flex-wrap items-center gap-2">
                 <button
                   id="tab-photographer-calendar"
                   type="button"
                   onClick={() => setPhotographerTab('calendar')}
-                  className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer ${
                     photographerTab === 'calendar'
-                      ? 'bg-[#073B2F] text-white border border-[#073B2F] shadow-xs font-bold'
-                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                      ? 'bg-[#33684C] text-white border border-[#33684C] shadow-xs font-bold'
+                      : 'text-[#5C6E5E] hover:text-[#12201A]'
                   }`}
                 >
-                  <CalendarIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <CalendarIcon className="w-3.5 h-3.5 text-[#FFDF70]" />
                   <span>Calendar</span>
                 </button>
 
@@ -706,13 +706,13 @@ export default function App() {
                   id="tab-photographer-shoots-list"
                   type="button"
                   onClick={() => setPhotographerTab('shoots')}
-                  className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-2xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer ${
                     photographerTab === 'shoots'
-                      ? 'bg-[#073B2F] text-white border border-[#073B2F] shadow-xs font-bold'
-                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                      ? 'bg-[#33684C] text-white border border-[#33684C] shadow-xs font-bold'
+                      : 'text-[#5C6E5E] hover:text-[#12201A]'
                   }`}
                 >
-                  <ListOrdered className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <ListOrdered className="w-3.5 h-3.5 text-[#FFDF70]" />
                   <span>Shoot Details ({shoots.length})</span>
                 </button>
               </div>
@@ -723,10 +723,10 @@ export default function App() {
                     type="button"
                     id="btn-admin-manage-photographers-subbar"
                     onClick={() => setIsAdminPhotographersModalOpen(true)}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#073B2F] text-white hover:bg-[#0c4e3f] shadow-2xs border border-[#073B2F] transition active:scale-[0.98] cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-bold bg-[#33684C] text-white hover:bg-[#1F4331] shadow-2xs border border-[#33684C] transition active:scale-[0.98] cursor-pointer"
                     title="Review registered photographers and manage status"
                   >
-                    <Users className="w-3.5 h-3.5 text-[#F0FFDA]" />
+                    <Users className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>Manage Photographers ({photographers.length})</span>
                   </button>
                 </div>
@@ -789,7 +789,7 @@ export default function App() {
 
       {/* Footer showcasing Shoot Lobby Branding */}
       <footer
-        className="mt-auto border-t border-[#DCE7D4] bg-white py-8 text-xs text-[#5C6E5E]"
+        className="mt-auto border-t border-[#E3EEE7] bg-white py-8 text-xs text-[#5C6E5E]"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="flex items-center gap-3">
@@ -802,7 +802,7 @@ export default function App() {
               <button
                 type="button"
                 onClick={() => setIsLoginModalOpen(true)}
-                className="text-[#FF6A45] hover:underline font-bold"
+                className="text-[#33684C] hover:underline font-bold cursor-pointer"
               >
                 Photographer Portal
               </button>
@@ -907,18 +907,18 @@ export default function App() {
         <div className="fixed inset-0 z-[60] flex items-center justify-center p-4 bg-black/60 backdrop-blur-xs animate-in fade-in">
           <div
             id="modal-confirm-delete-photographer"
-            className="w-full max-w-md bg-white rounded-3xl p-6 border border-[#DCE7D4] shadow-2xl space-y-4"
+            className="w-full max-w-md bg-white rounded-3xl p-6 border border-[#E3EEE7] shadow-2xl space-y-4"
           >
             <div className="flex items-start gap-3">
               <div className="w-10 h-10 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shrink-0">
                 <AlertTriangle className="w-5 h-5" />
               </div>
               <div>
-                <h3 className="text-base font-bold text-[#073B2F]">
+                <h3 className="text-base font-bold text-[#12201A]">
                   Delete Photographer Profile?
                 </h3>
                 <p className="text-xs text-[#5C6E5E] mt-1">
-                  Are you sure you want to remove <strong className="text-[#073B2F]">{photographerToDelete.name}</strong> ({photographerToDelete.city}) from Shoot Lobby?
+                  Are you sure you want to remove <strong className="text-[#12201A]">{photographerToDelete.name}</strong> ({photographerToDelete.city}) from Shoot Lobby?
                 </p>
               </div>
             </div>

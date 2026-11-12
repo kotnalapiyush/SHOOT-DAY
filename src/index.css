@@ -1,31 +1,35 @@
 @import "tailwindcss";
 
 :root {
-  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  color: #073B2F;
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  color: #12201A;
   background-color: #F6F3EC;
+
+  --color-lobby-green: #33684C;
+  --color-flash-yellow: #FFDF70;
+  --color-deep-forest: #1F4331;
+  --color-mint: #E3EEE7;
+  --color-butter: #FFF3C4;
+  --color-cream: #F6F3EC;
+  --color-ink: #12201A;
 }
 
-/* Prevent horizontal page wobble or shaking on mobile view */
-html,
-body {
-  overflow-x: hidden;
-  max-width: 100vw;
-  -webkit-text-size-adjust: 100%;
+/* Baskervville Editorial Headline Font */
+.font-headline,
+.font-serif,
+.font-baskervville {
+  font-family: 'Baskervville', Georgia, Cambria, serif;
 }
 
-/* Prevent iOS Safari from auto-zooming when tapping inputs/textareas */
-@media screen and (max-width: 640px) {
-  input,
-  select,
-  textarea {
-    font-size: 16px !important;
-  }
+/* Plus Jakarta Sans Body & UI Font */
+.font-body,
+.font-sans {
+  font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
-/* Space Grotesk headline font */
+/* Logo display wordmark */
 .font-display {
-  font-family: 'Space Grotesk', system-ui, sans-serif;
+  font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
 }
 
 /* Remove awkward default browser black outline on buttons */
@@ -59,12 +63,12 @@ input[type="date"]::-webkit-calendar-picker-indicator {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #DCE7D4;
+  background: #E3EEE7;
   border-radius: 9999px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #5C6E5E;
+  background: #33684C;
 }
 
 @keyframes marquee {

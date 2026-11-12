@@ -124,15 +124,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-xs animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md bg-white border border-[#DCE7D4] rounded-3xl shadow-2xl overflow-hidden text-[#073B2F] transition-colors">
+      <div className="relative w-full max-w-md bg-white border border-[#E3EEE7] rounded-3xl shadow-2xl overflow-hidden text-[#12201A] transition-colors">
         {/* Header */}
-        <div className="p-6 border-b border-[#DCE7D4] flex items-center justify-between">
+        <div className="p-6 border-b border-[#E3EEE7] flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F0FFDA] border border-[#DCE7D4] flex items-center justify-center text-[#073B2F]">
+            <div className="w-10 h-10 rounded-2xl bg-[#E3EEE7] border border-[#E3EEE7] flex items-center justify-center text-[#33684C]">
               <Lock className="w-5 h-5" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#073B2F] flex items-center gap-2 font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-base font-bold text-[#12201A] flex items-center gap-2 font-sans">
                 <span>Secure Portal Login</span>
               </h3>
               <p className="text-xs text-[#5C6E5E]">
@@ -143,7 +143,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-stone-200 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition"
+            className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-stone-200 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -151,20 +151,20 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
         {/* Tab Selection: Photographer vs Admin */}
         <div className="p-6 pb-2">
-          <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+          <div className="grid grid-cols-2 gap-1.5 p-1 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
             <button
               type="button"
               onClick={() => {
                 setRoleTab('photographer');
                 setError(null);
               }}
-              className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 whitespace-nowrap ${
+              className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer ${
                 roleTab === 'photographer'
-                  ? 'bg-[#073B2F] text-white shadow-xs'
-                  : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                  ? 'bg-[#33684C] text-white shadow-xs'
+                  : 'text-[#5C6E5E] hover:text-[#12201A]'
               }`}
             >
-              <Camera className="w-4 h-4 shrink-0" />
+              <Camera className="w-4 h-4 shrink-0 text-[#FFDF70]" />
               <span>Shoot Partner</span>
             </button>
             <button
@@ -173,13 +173,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 setRoleTab('admin');
                 setError(null);
               }}
-              className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 whitespace-nowrap ${
+              className={`py-2.5 px-2 sm:px-3 rounded-xl text-xs font-bold transition flex items-center justify-center gap-2 whitespace-nowrap cursor-pointer ${
                 roleTab === 'admin'
-                  ? 'bg-[#073B2F] text-white shadow-xs'
-                  : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                  ? 'bg-[#33684C] text-white shadow-xs'
+                  : 'text-[#5C6E5E] hover:text-[#12201A]'
               }`}
             >
-              <Shield className="w-4 h-4 shrink-0" />
+              <Shield className="w-4 h-4 shrink-0 text-[#FFDF70]" />
               <span>Studio Admin</span>
             </button>
           </div>
@@ -206,8 +206,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           {roleTab === 'photographer' ? (
             <form onSubmit={handlePhotographerLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 flex items-center gap-1.5">
-                  <User className="w-3.5 h-3.5 text-[#073B2F]" />
+                <label className="block text-xs font-semibold text-[#12201A] mb-1.5 flex items-center gap-1.5">
+                  <User className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Shoot Partner Email / Username:</span>
                 </label>
                 <input
@@ -216,13 +216,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={photographerIdInput}
                   onChange={(e) => setPhotographerIdInput(e.target.value)}
                   placeholder="e.g. rohan.sharma@lensdelhi.in"
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#073B2F] focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-3.5 py-2.5 text-xs text-[#12201A] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#33684C] focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 flex items-center gap-1.5">
-                  <KeyRound className="w-3.5 h-3.5 text-[#073B2F]" />
+                <label className="block text-xs font-semibold text-[#12201A] mb-1.5 flex items-center gap-1.5">
+                  <KeyRound className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Password:</span>
                 </label>
                 <div className="relative">
@@ -232,12 +232,12 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={photographerPassword}
                     onChange={(e) => setPhotographerPassword(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-[#073B2F] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#073B2F] focus:ring-1 focus:ring-[#073B2F]"
+                    className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-[#12201A] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#33684C] focus:ring-1 focus:ring-[#33684C]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#073B2F]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#12201A]"
                   >
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
@@ -264,8 +264,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         onClick={() => handleSelectQuickPhotographer(p)}
                         className={`text-[11px] px-2.5 py-1 rounded-lg border transition cursor-pointer ${
                           isSelected
-                            ? 'bg-[#F0FFDA] border-[#073B2F] text-[#073B2F] font-bold'
-                            : 'bg-[#F6F3EC] border-[#DCE7D4] text-[#5C6E5E] hover:border-[#073B2F]'
+                            ? 'bg-[#E3EEE7] border-[#33684C] text-[#12201A] font-bold'
+                            : 'bg-[#F6F3EC] border-[#E3EEE7] text-[#5C6E5E] hover:border-[#33684C]'
                         }`}
                       >
                         {p.name || 'Photographer'} ({p.city || 'India'})
@@ -277,15 +277,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 rounded-xl bg-[#FF6A45] hover:bg-[#e55835] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
+                className="w-full mt-2 py-3 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
               >
-                <Camera className="w-4 h-4" />
+                <Camera className="w-4 h-4 text-[#FFDF70]" />
                 <span>Sign In as Shoot Partner</span>
               </button>
 
               {/* Link to Self-Registration */}
               {onOpenPhotographerSignUp && (
-                <div className="pt-2 text-center border-t border-[#DCE7D4]">
+                <div className="pt-2 text-center border-t border-[#E3EEE7]">
                   <p className="text-[11px] text-[#5C6E5E]">
                     Not on the platform yet?
                   </p>
@@ -295,7 +295,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                       onClose();
                       onOpenPhotographerSignUp();
                     }}
-                    className="mt-1 inline-flex items-center gap-1.5 text-xs font-bold text-[#073B2F] hover:text-[#FF6A45] transition cursor-pointer"
+                    className="mt-1 inline-flex items-center gap-1.5 text-xs font-bold text-[#33684C] hover:underline transition cursor-pointer"
                   >
                     <span>Sign Up & Create Your Profile Here →</span>
                   </button>
@@ -305,8 +305,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           ) : (
             <form onSubmit={handleAdminLogin} className="space-y-4">
               <div>
-                <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 flex items-center gap-1.5">
-                  <Shield className="w-3.5 h-3.5 text-[#073B2F]" />
+                <label className="block text-xs font-semibold text-[#12201A] mb-1.5 flex items-center gap-1.5">
+                  <Shield className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Admin Email:</span>
                 </label>
                 <input
@@ -315,13 +315,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={adminEmail}
                   onChange={(e) => setAdminEmail(e.target.value)}
                   placeholder="kotnalapiyush@gmail.com"
-                  className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl px-3.5 py-2.5 text-xs text-[#073B2F] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#073B2F] focus:ring-1 focus:ring-[#073B2F]"
+                  className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl px-3.5 py-2.5 text-xs text-[#12201A] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#33684C] focus:ring-1 focus:ring-[#33684C]"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-semibold text-[#073B2F] mb-1.5 flex items-center gap-1.5">
-                  <KeyRound className="w-3.5 h-3.5 text-[#073B2F]" />
+                <label className="block text-xs font-semibold text-[#12201A] mb-1.5 flex items-center gap-1.5">
+                  <KeyRound className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Admin Password:</span>
                 </label>
                 <div className="relative">
@@ -331,21 +331,21 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={adminPassword}
                     onChange={(e) => setAdminPassword(e.target.value)}
                     placeholder="Enter admin password"
-                    className="w-full bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-[#073B2F] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#073B2F] focus:ring-1 focus:ring-[#073B2F]"
+                    className="w-full bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-[#12201A] placeholder:text-[#5C6E5E]/60 focus:outline-none focus:border-[#33684C] focus:ring-1 focus:ring-[#33684C]"
                   />
                   <button
                     type="button"
                     onClick={() => setShowPass(!showPass)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#073B2F]"
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#12201A]"
                   >
                     {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
               </div>
 
-              <div className="p-3 rounded-xl bg-[#F6F3EC] border border-[#DCE7D4] text-[11px] text-[#073B2F]">
-                <div className="flex items-center gap-1.5 text-[#073B2F] font-bold mb-1">
-                  <Sparkles className="w-3.5 h-3.5 text-[#FF6A45]" />
+              <div className="p-3 rounded-xl bg-[#F6F3EC] border border-[#E3EEE7] text-[11px] text-[#12201A]">
+                <div className="flex items-center gap-1.5 text-[#12201A] font-bold mb-1">
+                  <Sparkles className="w-3.5 h-3.5 text-[#FFDF70]" />
                   <span>Admin Privileges:</span>
                 </div>
                 <p className="text-[#5C6E5E] leading-relaxed">
@@ -355,9 +355,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
               <button
                 type="submit"
-                className="w-full mt-2 py-3 rounded-xl bg-[#FF6A45] hover:bg-[#e55835] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 active:scale-[0.98]"
+                className="w-full mt-2 py-3 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white font-extrabold text-xs shadow-xs transition flex items-center justify-center gap-2 active:scale-[0.98] cursor-pointer"
               >
-                <Shield className="w-4 h-4" />
+                <Shield className="w-4 h-4 text-[#FFDF70]" />
                 <span>Sign In as Studio Admin</span>
               </button>
             </form>
@@ -365,7 +365,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         </div>
 
         {/* Footer info */}
-        <div className="p-4 bg-[#FAF8F5] border-t border-[#DCE7D4] text-center">
+        <div className="p-4 bg-[#FAF8F5] border-t border-[#E3EEE7] text-center">
           <p className="text-[11px] text-[#5C6E5E]">
             Public visitors see only the Client Booking Portal without requiring any login.
           </p>

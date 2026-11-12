@@ -214,48 +214,50 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
     (calYear === now.getFullYear() && calMonth <= now.getMonth());
 
   return (
-    <div id="shoot-lobby-page-root" className="w-full bg-[#F6F3EC]/40 text-[#073B2F] pb-16">
-      {/* 1. Integrated Hero & Filter Section */}
-      <section className="relative z-30 bg-white border-b border-[#DCE7D4]">
-        {/* Studio Photographer Background Visual on right side with seamless gradient fade */}
-        <div className="absolute right-0 top-0 bottom-0 w-full sm:w-[55%] md:w-[50%] lg:w-[46%] pointer-events-none overflow-hidden select-none z-0">
-          <img
-            src={heroStudioImage}
-            alt="Commercial photoshoot studio with camera operator and lighting"
-            referrerPolicy="no-referrer"
-            className="w-full h-full object-cover object-[75%_center] sm:object-center opacity-70 sm:opacity-90"
-          />
-          {/* Smooth horizontal gradient fade to white on the left ensuring crisp text contrast */}
-          <div className="absolute inset-0 bg-gradient-to-r from-white via-white/95 via-35% sm:via-white/70 to-transparent" />
-          {/* Subtle top/bottom edge feather */}
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-white/40 sm:hidden" />
-        </div>
+    <div id="shoot-lobby-page-root" className="w-full bg-[#F6F3EC]/40 text-[#12201A] pb-16">
+      {/* 1. Official Shoot Lobby Brand Hero Section (Brand Guidelines Page 6) */}
+      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="relative overflow-hidden rounded-3xl bg-[#33684C] text-white p-6 sm:p-9 lg:p-11 shadow-sm">
+          {/* Subtle atmospheric ambient glow */}
+          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
+          <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 rounded-full bg-[#1F4331]/40 blur-2xl pointer-events-none" />
 
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-9 lg:pt-10 pb-7 sm:pb-8 z-10">
-          {/* Left Hero Content */}
-          <div className="max-w-3xl lg:max-w-4xl">
-            {/* Main Headline - "Are you free?" in vibrant brand orange */}
-            <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-bold text-[#073B2F] tracking-tight leading-[1.2] mb-3 font-['Space_Grotesk',sans-serif]">
-              <span>Stop asking Photographers,</span>
-              <span className="block mt-1 sm:mt-1.5 text-[#FF6A45] font-extrabold underline decoration-[#FF6A45]/40 decoration-4 underline-offset-8">
-                Are you free?
-              </span>
-            </h1>
+          {/* Floating Yellow Camera Mark at top right corner as in Page 6 */}
+          <div className="absolute -top-3 -right-3 sm:top-2 sm:right-4 w-24 h-24 sm:w-32 sm:h-32 opacity-95 pointer-events-none select-none z-10">
+            <img
+              src="/assets/shoot-lobby-camera-mark.png"
+              alt="Shoot Lobby Camera Mark"
+              className="w-full h-full object-contain filter drop-shadow-md"
+            />
+          </div>
 
-            {/* Subheadline - Clean Shoot Lobby text without extra icon */}
-            <p className="text-[#5C6E5E] text-base sm:text-lg font-normal leading-relaxed mb-6 max-w-2xl flex flex-wrap items-center gap-x-2 gap-y-1">
-              <span>Check their schedule and plan your shoot with</span>
-              <span className="font-bold tracking-[0.12em] uppercase text-[#073B2F]">
-                Shoot Lobby
-              </span>
-            </p>
+          <div className="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            {/* Left Column: Tag, Headline, Subtitle, Search Filter */}
+            <div className="lg:col-span-7">
+              {/* Tag */}
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-bold text-[#E3EEE7] tracking-wider uppercase mb-4 backdrop-blur-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#FFDF70]" />
+                <span>FOR AGENCIES · VERIFIED EXPERTS ONLY</span>
+              </div>
 
-            {/* Search / Filter Bar Card */}
-            <div
-              className={`bg-white rounded-2xl border border-[#DCE7D4] p-2.5 sm:p-3 transition-all duration-200 w-full shadow-sm ${
-                selectedShootType === 'Other Shoot' ? 'max-w-3xl lg:max-w-5xl' : 'max-w-3xl lg:max-w-4xl'
-              }`}
-            >
+              {/* Main Headline in Baskervville (Guidelines Page 4 & 6) */}
+              <h1 className="text-3xl sm:text-4xl lg:text-[44px] font-normal text-white tracking-tight leading-[1.14] mb-3 font-headline">
+                <span>Stop asking</span><br />
+                <span>photographers,</span><br />
+                <span>are you <span className="italic text-[#FFDF70] font-normal">free?</span></span>
+              </h1>
+
+              {/* Subheadline in clean sans */}
+              <p className="text-[#E3EEE7] text-sm sm:text-base font-normal leading-relaxed mb-6 sm:mb-7 max-w-lg font-sans">
+                Check their schedule and plan your shoot with Shoot Lobby.
+              </p>
+
+              {/* Search / Filter Bar Card */}
+              <div
+                className={`bg-white rounded-2xl border border-[#E3EEE7] p-2 sm:p-2.5 transition-all duration-200 w-full shadow-xl text-[#12201A] ${
+                  selectedShootType === 'Other Shoot' ? 'max-w-3xl lg:max-w-5xl' : 'max-w-2xl'
+                }`}
+              >
               <div
                 className={`grid gap-2.5 items-center ${
                   selectedShootType === 'Other Shoot'
@@ -274,22 +276,22 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                     }}
                     className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
                       isDatePopoverOpen
-                        ? 'border-[#073B2F] ring-1 ring-[#073B2F]/40 bg-[#F6F3EC]'
-                        : 'border-[#DCE7D4] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#073B2F]/50'
+                        ? 'border-[#33684C] ring-1 ring-[#33684C]/40 bg-[#F6F3EC]'
+                        : 'border-[#E3EEE7] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#33684C]/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
-                      <CalendarIcon className="w-5 h-5 text-[#073B2F]" />
+                    <div className="w-10 h-10 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                      <CalendarIcon className="w-5 h-5 text-[#33684C]" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
                       <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
                         Shoot Date
                       </div>
-                      <div className="text-xs sm:text-sm font-bold text-[#073B2F] whitespace-nowrap truncate">
+                      <div className="text-xs sm:text-sm font-bold text-[#12201A] whitespace-nowrap truncate">
                         {formatFilterDateDisplay(selectedDate)}
                       </div>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#073B2F] transition shrink-0 ml-auto" />
+                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#33684C] transition shrink-0 ml-auto" />
                   </button>
 
                   {/* Date Popover Calendar: Centered on mobile so top/bottom are never cut off, anchored on desktop */}
@@ -301,10 +303,10 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                         onClick={() => setIsDatePopoverOpen(false)}
                       >
                         <div
-                          className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-[320px] border border-[#DCE7D4] animate-in fade-in zoom-in-95 duration-150"
+                          className="bg-white rounded-2xl shadow-2xl p-4 w-full max-w-[320px] border border-[#E3EEE7] animate-in fade-in zoom-in-95 duration-150"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#DCE7D4]">
+                          <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#E3EEE7]">
                             <button
                               type="button"
                               disabled={isCurrentOrPastMonth}
@@ -317,13 +319,13 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                               className={`p-2 rounded-lg transition ${
                                 isCurrentOrPastMonth
                                   ? 'text-stone-300 cursor-not-allowed opacity-30'
-                                  : 'hover:bg-[#F6F3EC] text-[#073B2F]'
+                                  : 'hover:bg-[#F6F3EC] text-[#33684C]'
                               }`}
                               title={isCurrentOrPastMonth ? 'Cannot navigate to past months' : 'Previous Month'}
                             >
                               <ChevronLeft className="w-5 h-5" />
                             </button>
-                            <span className="font-bold text-base text-[#073B2F]">
+                            <span className="font-bold text-base text-[#12201A]">
                               {MONTHS_SHORT[calMonth]} {calYear}
                             </span>
                             <button
@@ -333,7 +335,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   new Date(calYear, calMonth + 1, 1)
                                 )
                               }
-                              className="p-2 rounded-lg hover:bg-[#F6F3EC] text-[#073B2F]"
+                              className="p-2 rounded-lg hover:bg-[#F6F3EC] text-[#33684C]"
                             >
                               <ChevronRight className="w-5 h-5" />
                             </button>
@@ -371,8 +373,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                     isPast
                                       ? 'text-stone-300 bg-stone-50 cursor-not-allowed opacity-35 select-none'
                                       : isSelected
-                                      ? 'bg-[#073B2F] text-white shadow-sm'
-                                      : 'text-[#073B2F] hover:bg-[#F6F3EC] hover:text-[#073B2F]'
+                                      ? 'bg-[#33684C] text-white shadow-sm'
+                                      : 'text-[#12201A] hover:bg-[#F6F3EC]'
                                   }`}
                                   title={isPast ? 'Past date cannot be selected' : undefined}
                                 >
@@ -382,12 +384,12 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                             })}
                           </div>
 
-                          <div className="mt-4 pt-3 border-t border-[#DCE7D4] flex items-center justify-between">
-                            <span className="text-xs text-[#5C6E5E]">Selected: <strong className="text-[#073B2F]">{formatFilterDateDisplay(selectedDate)}</strong></span>
+                          <div className="mt-4 pt-3 border-t border-[#E3EEE7] flex items-center justify-between">
+                            <span className="text-xs text-[#5C6E5E]">Selected: <strong className="text-[#33684C]">{formatFilterDateDisplay(selectedDate)}</strong></span>
                             <button
                               type="button"
                               onClick={() => setIsDatePopoverOpen(false)}
-                              className="px-3 py-1.5 rounded-lg bg-[#F6F3EC] hover:bg-[#ece8df] border border-[#DCE7D4] text-xs font-bold text-[#073B2F]"
+                              className="px-3 py-1.5 rounded-lg bg-[#F6F3EC] hover:bg-[#ece8df] border border-[#E3EEE7] text-xs font-bold text-[#12201A]"
                             >
                               Close
                             </button>
@@ -396,8 +398,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       </div>
 
                       {/* Desktop Anchored Dropdown Popover */}
-                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-80 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-4 z-50 text-[#073B2F] animate-in fade-in zoom-in-95 duration-150">
-                        <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#DCE7D4]">
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-80 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-4 z-50 text-[#12201A] animate-in fade-in zoom-in-95 duration-150">
+                        <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E3EEE7]">
                           <button
                             type="button"
                             disabled={isCurrentOrPastMonth}
@@ -410,13 +412,13 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                             className={`p-1.5 rounded-lg transition outline-none focus:outline-none ${
                               isCurrentOrPastMonth
                                 ? 'text-stone-300 cursor-not-allowed opacity-30'
-                                : 'hover:bg-[#F6F3EC] text-[#073B2F]'
+                                : 'hover:bg-[#F6F3EC] text-[#33684C]'
                             }`}
                             title={isCurrentOrPastMonth ? 'Cannot navigate to past months' : 'Previous Month'}
                           >
                             <ChevronLeft className="w-4 h-4" />
                           </button>
-                          <span className="font-bold text-sm text-[#073B2F]">
+                          <span className="font-bold text-sm text-[#12201A]">
                             {MONTHS_SHORT[calMonth]} {calYear}
                           </span>
                           <button
@@ -426,7 +428,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                 new Date(calYear, calMonth + 1, 1)
                               )
                             }
-                            className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#073B2F] outline-none focus:outline-none"
+                            className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#33684C] outline-none focus:outline-none"
                           >
                             <ChevronRight className="w-4 h-4" />
                           </button>
@@ -464,8 +466,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   isPast
                                     ? 'text-stone-300 bg-stone-50 cursor-not-allowed opacity-35 select-none'
                                     : isSelected
-                                    ? 'bg-[#073B2F] text-white shadow-sm'
-                                    : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                                    ? 'bg-[#33684C] text-white shadow-sm'
+                                    : 'text-[#12201A] hover:bg-[#F6F3EC]'
                                 }`}
                                 title={isPast ? 'Past date cannot be selected' : undefined}
                               >
@@ -490,22 +492,22 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                     }}
                     className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
                       isTypeDropdownOpen
-                        ? 'border-[#073B2F] ring-1 ring-[#073B2F]/40 bg-[#F6F3EC]'
-                        : 'border-[#DCE7D4] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#073B2F]/50'
+                        ? 'border-[#33684C] ring-1 ring-[#33684C]/40 bg-[#F6F3EC]'
+                        : 'border-[#E3EEE7] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#33684C]/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
-                      <Camera className="w-5 h-5 text-[#073B2F]" />
+                    <div className="w-10 h-10 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                      <Camera className="w-5 h-5 text-[#33684C]" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
                       <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
                         Type of Shoot
                       </div>
-                      <div className="text-xs sm:text-sm font-bold text-[#073B2F] whitespace-nowrap truncate">
+                      <div className="text-xs sm:text-sm font-bold text-[#12201A] whitespace-nowrap truncate">
                         {selectedShootType}
                       </div>
                     </div>
-                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#073B2F] transition shrink-0 ml-auto" />
+                    <ChevronDown className="w-4 h-4 text-[#5C6E5E] group-hover:text-[#33684C] transition shrink-0 ml-auto" />
                   </button>
 
                   {/* Type Dropdown Menu: Centered on mobile, anchored on desktop */}
@@ -517,15 +519,15 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                         onClick={() => setIsTypeDropdownOpen(false)}
                       >
                         <div
-                          className="bg-white border border-[#DCE7D4] rounded-2xl shadow-2xl p-3 w-full max-w-[320px] z-50 animate-in fade-in zoom-in-95 duration-150 max-h-[75vh] overflow-y-auto"
+                          className="bg-white border border-[#E3EEE7] rounded-2xl shadow-2xl p-3 w-full max-w-[320px] z-50 animate-in fade-in zoom-in-95 duration-150 max-h-[75vh] overflow-y-auto"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <div className="text-xs font-bold text-[#5C6E5E] uppercase tracking-wider px-2 py-2 mb-1 border-b border-[#DCE7D4] flex items-center justify-between">
+                          <div className="text-xs font-bold text-[#5C6E5E] uppercase tracking-wider px-2 py-2 mb-1 border-b border-[#E3EEE7] flex items-center justify-between">
                             <span>Select Type of Shoot</span>
                             <button
                               type="button"
                               onClick={() => setIsTypeDropdownOpen(false)}
-                              className="text-[#5C6E5E] hover:text-[#073B2F] text-xs"
+                              className="text-[#5C6E5E] hover:text-[#12201A] text-xs"
                             >
                               ✕
                             </button>
@@ -543,12 +545,12 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   }}
                                   className={`w-full px-3 py-2.5 rounded-xl text-xs font-semibold text-left flex items-center justify-between transition ${
                                     isSelected
-                                      ? 'bg-[#073B2F] text-white font-bold'
-                                      : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                                      ? 'bg-[#33684C] text-white font-bold'
+                                      : 'text-[#12201A] hover:bg-[#F6F3EC]'
                                   }`}
                                 >
                                   <span>{type}</span>
-                                  {isSelected && <Check className="w-4 h-4 text-[#F0FFDA]" />}
+                                  {isSelected && <Check className="w-4 h-4 text-[#FFDF70]" />}
                                 </button>
                               );
                             })}
@@ -557,7 +559,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       </div>
 
                       {/* Desktop Anchored Dropdown */}
-                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-full sm:w-72 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-full sm:w-72 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
                         {SHOOT_TYPES.map((type) => {
                           const isSelected = type === selectedShootType;
                           return (
@@ -570,12 +572,12 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                               }}
                               className={`w-full px-3 py-2 rounded-xl text-xs font-semibold text-left flex items-center justify-between transition outline-none focus:outline-none ${
                                 isSelected
-                                  ? 'bg-[#073B2F] text-white font-bold'
-                                  : 'text-[#073B2F] hover:bg-[#F6F3EC]'
+                                  ? 'bg-[#33684C] text-white font-bold'
+                                  : 'text-[#12201A] hover:bg-[#F6F3EC]'
                               }`}
                             >
                               <span>{type}</span>
-                              {isSelected && <Check className="w-3.5 h-3.5 text-[#F0FFDA]" />}
+                              {isSelected && <Check className="w-3.5 h-3.5 text-[#FFDF70]" />}
                             </button>
                           );
                         })}
@@ -587,9 +589,9 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                 {/* Column 3: Specify Shoot (separate column appearing when 'Other Shoot' is selected) */}
                 {selectedShootType === 'Other Shoot' && (
                   <div className="relative flex animate-in fade-in zoom-in-95 duration-150">
-                    <div className="w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border border-[#DCE7D4] bg-white hover:border-[#073B2F]/50 focus-within:border-[#073B2F] focus-within:ring-1 focus-within:ring-[#073B2F]/40 transition text-left group">
-                      <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shrink-0">
-                        <FileText className="w-5 h-5 text-[#073B2F]" />
+                    <div className="w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border border-[#E3EEE7] bg-white hover:border-[#33684C]/50 focus-within:border-[#33684C] focus-within:ring-1 focus-within:ring-[#33684C]/40 transition text-left group">
+                      <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                        <FileText className="w-5 h-5 text-[#33684C]" />
                       </div>
                       <div className="flex-1 min-w-0 pr-1">
                         <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
@@ -600,7 +602,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                           placeholder="e.g. Drone, Maternity..."
                           value={customShootQuery}
                           onChange={(e) => setCustomShootQuery(e.target.value)}
-                          className="w-full bg-transparent text-xs sm:text-sm font-bold text-[#073B2F] focus:outline-none placeholder:text-[#5C6E5E]/60 truncate"
+                          className="w-full bg-transparent text-xs sm:text-sm font-bold text-[#12201A] focus:outline-none placeholder:text-[#5C6E5E]/60 truncate"
                           autoFocus
                         />
                       </div>
@@ -608,36 +610,160 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                   </div>
                 )}
 
-                {/* Column Action: Check Availability Button (always in the same row / grid) */}
+                {/* Column Action: Check Availability Button (Flash Yellow #FFDF70 on Green Hero) */}
                 <button
                   type="button"
                   id="btn-find-available-photographers"
                   onClick={handleFindClick}
-                  className="w-full sm:w-auto h-[52px] sm:h-[54px] px-6 sm:px-7 bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-[0.98] text-white font-bold rounded-xl flex items-center justify-center gap-2 transition text-xs sm:text-sm whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none shrink-0 shadow-xs cursor-pointer"
+                  className="w-full sm:w-auto h-[50px] sm:h-[52px] px-6 sm:px-7 bg-[#FFDF70] hover:bg-[#fbd351] active:scale-[0.98] text-[#12201A] font-extrabold rounded-xl flex items-center justify-center gap-2 transition text-xs sm:text-sm whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none shrink-0 shadow-xs cursor-pointer select-none"
                 >
-                  <span>Check Availability</span>
-                  <ArrowRight className="w-4 h-4" />
+                  <span>Check availability</span>
+                  <ArrowRight className="w-4 h-4 text-[#12201A]" />
                 </button>
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* 2. Available Photographers Section */}
-      <section ref={resultsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 sm:pt-10">
-        {/* Section Heading without extra icon */}
+          {/* Right Column: Live Studio Availability Interactive Calendar Card (Brand Guidelines Page 6) */}
+          <div className="hidden lg:flex lg:col-span-5 justify-end">
+            <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-2xl text-[#12201A] w-full max-w-[310px] border border-white/20 select-none">
+              {/* Header */}
+              <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#E3EEE7]">
+                <div className="flex items-center gap-1.5">
+                  <span className="font-bold text-sm text-[#12201A]">
+                    {MONTHS_SHORT[calMonth]} {calYear}
+                  </span>
+                  <div className="flex items-center">
+                    <button
+                      type="button"
+                      disabled={isCurrentOrPastMonth}
+                      onClick={() => {
+                        if (isCurrentOrPastMonth) return;
+                        setPopoverMonth(new Date(calYear, calMonth - 1, 1));
+                      }}
+                      className={`p-1 rounded hover:bg-[#F6F3EC] text-[#12201A] ${
+                        isCurrentOrPastMonth ? 'opacity-25 cursor-not-allowed' : ''
+                      }`}
+                      title="Previous month"
+                    >
+                      <ChevronLeft className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setPopoverMonth(new Date(calYear, calMonth + 1, 1))}
+                      className="p-1 rounded hover:bg-[#F6F3EC] text-[#12201A]"
+                      title="Next month"
+                    >
+                      <ChevronRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+
+                <span className="text-[10px] font-bold text-[#33684C] bg-[#E3EEE7] px-2 py-0.5 rounded-full flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#33684C] animate-pulse" />
+                  <span>Live availability</span>
+                </span>
+              </div>
+
+              {/* Day of Week Headers: M T W T F S S */}
+              <div className="grid grid-cols-7 text-center text-[10px] font-bold uppercase text-[#5C6E5E] mb-1.5">
+                {['M', 'T', 'W', 'T', 'F', 'S', 'S'].map((d, i) => (
+                  <div key={i} className="py-0.5">
+                    {d}
+                  </div>
+                ))}
+              </div>
+
+              {/* Days Grid */}
+              <div className="grid grid-cols-7 gap-1 text-xs">
+                {/* Empty cells before month starts (Monday aligned) */}
+                {Array.from({ length: (firstDayIndex + 6) % 7 }).map((_, i) => (
+                  <div key={`empty-hero-${i}`} className="h-7 w-7" />
+                ))}
+                {Array.from({ length: daysInMonth }).map((_, i) => {
+                  const dayNum = i + 1;
+                  const dateKey = `${calYear}-${String(calMonth + 1).padStart(2, '0')}-${String(dayNum).padStart(2, '0')}`;
+                  const isSelected = dateKey === selectedDate;
+                  const isPast = dateKey < todayKey;
+
+                  // Check if date has available photographers
+                  const hasAvailable = displayPhotographers.some(
+                    (p) => availability[p.id]?.[dateKey] !== 'booked'
+                  );
+                  const isBooked = !hasAvailable;
+
+                  return (
+                    <button
+                      key={`hero-day-${dateKey}`}
+                      type="button"
+                      disabled={isPast}
+                      onClick={() => {
+                        if (isPast) return;
+                        setSelectedDate(dateKey);
+                      }}
+                      className={`h-7 w-7 mx-auto rounded-lg flex items-center justify-center font-bold text-xs transition cursor-pointer ${
+                        isPast
+                          ? 'text-stone-300 opacity-30 cursor-not-allowed'
+                          : isSelected
+                          ? 'bg-[#FFDF70] text-[#12201A] shadow-xs ring-2 ring-[#FFDF70]/40 font-extrabold'
+                          : isBooked
+                          ? 'text-stone-400 line-through decoration-stone-300'
+                          : 'text-[#12201A] hover:bg-[#E3EEE7]'
+                      }`}
+                      title={
+                        isPast
+                          ? 'Past date'
+                          : isSelected
+                          ? 'Your selected shoot date'
+                          : isBooked
+                          ? 'Fully booked'
+                          : 'Click to select this shoot date'
+                      }
+                    >
+                      {dayNum}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Legend matching Page 6 */}
+              <div className="mt-3.5 pt-2.5 border-t border-[#E3EEE7] flex items-center justify-between text-[10px] text-[#5C6E5E]">
+                <span className="flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-[#33684C]" />
+                  <span>Free</span>
+                </span>
+                <span className="flex items-center gap-1 font-bold text-[#12201A]">
+                  <span className="w-2 h-2 rounded-sm bg-[#FFDF70]" />
+                  <span>Your date</span>
+                </span>
+                <span className="flex items-center gap-1 text-stone-400">
+                  <span className="line-through">00</span>
+                  <span>Booked</span>
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+      {/* 2. Available Photographers Section (Guidelines Page 6) */}
+      <section ref={resultsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12">
+        {/* Section Heading in Baskervville Serif */}
         <div className="mb-6 sm:mb-8">
-          <h2 className="text-lg sm:text-2xl font-bold text-[#073B2F] tracking-tight font-['Space_Grotesk',sans-serif]">
-            Available Photographers ({displayPhotographers.length})
+          <h2 className="text-2xl sm:text-3xl font-normal text-[#12201A] tracking-tight font-headline">
+            Available photographers ({displayPhotographers.length})
           </h2>
+          <p className="text-xs sm:text-sm text-[#5C6E5E] mt-1 font-sans">
+            Free on {formatFilterDateDisplay(selectedDate)} · {selectedShootType}
+          </p>
         </div>
 
         {/* Photographers Grid */}
         {displayPhotographers.length === 0 ? (
-          <div className="text-center py-16 px-4 bg-white rounded-3xl border border-[#DCE7D4]">
+          <div className="text-center py-16 px-4 bg-white rounded-3xl border border-[#E3EEE7]">
             <Camera className="w-12 h-12 text-[#5C6E5E]/40 mx-auto mb-3" />
-            <h3 className="text-base font-bold text-[#073B2F]">No photographers available for this exact date</h3>
+            <h3 className="text-base font-bold text-[#12201A]">No photographers available for this exact date</h3>
             <p className="text-xs text-[#5C6E5E] mt-1 max-w-sm mx-auto">
               Try picking another nearby date or selecting a different shoot category.
             </p>
@@ -649,7 +775,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                 <div
                   key={p.id}
                   id={`photographer-card-${p.id}`}
-                  className="bg-white rounded-2xl sm:rounded-3xl border border-[#DCE7D4] hover:border-[#073B2F]/40 p-5 sm:p-6 transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
+                  className="bg-white rounded-2xl sm:rounded-3xl border border-[#E3EEE7] hover:border-[#33684C]/50 p-5 sm:p-6 transition-all flex flex-col justify-between shadow-xs hover:shadow-md"
                 >
                   <div>
                     {/* Top Row: Avatar, Name, Available Badge, Location & Exp */}
@@ -658,22 +784,22 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                         src={p.avatarUrl || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80'}
                         alt={p.name}
                         referrerPolicy="no-referrer"
-                        className="w-16 h-16 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+                        className="w-16 h-16 rounded-2xl object-cover border border-[#E3EEE7] shrink-0"
                       />
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-1 flex-wrap">
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <h3 className="text-base font-bold text-[#073B2F] truncate">
+                            <h3 className="text-base font-bold text-[#12201A] truncate">
                               {p.name}
                             </h3>
                             {p.registeredAt && (
-                              <span className="bg-[#FF6A45]/15 text-[#FF6A45] border border-[#FF6A45]/30 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shrink-0 uppercase tracking-wider">
+                              <span className="bg-[#FFF3C4] text-[#12201A] border border-[#FFDF70]/60 text-[9px] font-extrabold px-1.5 py-0.5 rounded-md shrink-0 uppercase tracking-wider">
                                 New Partner
                               </span>
                             )}
                           </div>
-                          <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                          <span className="bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                             <span>Available</span>
                           </span>
                         </div>
@@ -685,7 +811,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                     </div>
 
                     {/* Headline / Specialty Title */}
-                    <h4 className="text-[14px] sm:text-[15px] font-bold text-[#073B2F] mt-4 leading-snug">
+                    <h4 className="text-[14px] sm:text-[15px] font-bold text-[#12201A] mt-4 leading-snug">
                       {p.title}
                     </h4>
 
@@ -717,8 +843,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                     }}
                                     className={`text-xs font-bold px-3 py-1.5 rounded-xl transition cursor-pointer active:scale-95 ${
                                       isSelected
-                                        ? 'bg-[#073B2F] text-white shadow-xs'
-                                        : 'bg-[#F6F3EC] text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                                        ? 'bg-[#33684C] text-white shadow-xs'
+                                        : 'bg-[#F6F3EC] text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                                     }`}
                                   >
                                     <span>{spec}</span>
@@ -729,17 +855,17 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                           </div>
 
                           {/* Category Media Showcase Strip (Photos vs Reels/Videos) */}
-                          <div className="mt-4 pt-3 border-t border-[#DCE7D4]/60">
+                          <div className="mt-4 pt-3 border-t border-[#E3EEE7]">
                             <div className="flex items-center justify-between mb-2">
                               {/* Media Type Switcher: Photos vs Reels */}
-                              <div className="flex items-center bg-[#F6F3EC] p-0.5 rounded-lg border border-[#DCE7D4] text-[11px]">
+                              <div className="flex items-center bg-[#F6F3EC] p-0.5 rounded-lg border border-[#E3EEE7] text-[11px]">
                                 <button
                                   type="button"
                                   onClick={() => setCardMediaType((prev) => ({ ...prev, [p.id]: 'photos' }))}
                                   className={`px-2 py-0.5 rounded-md font-bold transition flex items-center gap-1 cursor-pointer ${
                                     activeMedia === 'photos'
-                                      ? 'bg-[#073B2F] text-white shadow-2xs'
-                                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                                      ? 'bg-[#33684C] text-white shadow-2xs'
+                                      : 'text-[#5C6E5E] hover:text-[#12201A]'
                                   }`}
                                 >
                                   <Camera className="w-3 h-3" />
@@ -750,8 +876,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   onClick={() => setCardMediaType((prev) => ({ ...prev, [p.id]: 'videos' }))}
                                   className={`px-2 py-0.5 rounded-md font-bold transition flex items-center gap-1 cursor-pointer ${
                                     activeMedia === 'videos'
-                                      ? 'bg-[#FF6A45] text-white shadow-2xs'
-                                      : 'text-[#5C6E5E] hover:text-[#073B2F]'
+                                      ? 'bg-[#33684C] text-white shadow-2xs'
+                                      : 'text-[#5C6E5E] hover:text-[#12201A]'
                                   }`}
                                 >
                                   <Film className="w-3 h-3" />
@@ -765,10 +891,10 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                   setSelectedShowcaseCategory(activeCardCategory);
                                   setPortfolioShowcasePhotographer(p);
                                 }}
-                                className="text-xs font-bold text-[#073B2F] hover:text-[#0c4e3f] flex items-center gap-1.5 hover:underline cursor-pointer group"
+                                className="text-xs font-bold text-[#33684C] hover:text-[#1F4331] flex items-center gap-1.5 hover:underline cursor-pointer group"
                               >
                                 <span>{activeCardCategory} see all</span>
-                                <ArrowRight className="w-3.5 h-3.5 text-[#FF6A45] transition-transform group-hover:translate-x-0.5" />
+                                <ArrowRight className="w-3.5 h-3.5 text-[#33684C] transition-transform group-hover:translate-x-0.5" />
                               </button>
                             </div>
 
@@ -782,7 +908,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                 }}
                                 className="w-full group/sample text-left transition cursor-pointer"
                               >
-                                <div className="grid grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] group-hover/sample:border-[#073B2F] transition">
+                                <div className="grid grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#E3EEE7] group-hover/sample:border-[#33684C] transition">
                                   {category6Photos.map((sampleImg, sIdx) => (
                                     <div key={sIdx} className="relative aspect-4/3 overflow-hidden rounded-lg bg-stone-200">
                                       <img
@@ -796,8 +922,8 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                 </div>
                               </button>
                             ) : (
-                              /* Videos Showcase Strip - Uniform tall format, no mixed YouTube landscape format */
-                              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#DCE7D4] transition">
+                              /* Videos Showcase Strip - Uniform tall format */
+                              <div className="grid grid-cols-3 sm:grid-cols-6 gap-1 sm:gap-1.5 rounded-xl overflow-hidden p-1 bg-[#F6F3EC] border border-[#E3EEE7] transition">
                                 {category6Videos.slice(0, 6).map((video, vIdx) => {
                                   return (
                                     <div
@@ -809,7 +935,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                           photographer: p,
                                         });
                                       }}
-                                      className="relative rounded-lg overflow-hidden bg-stone-900 border border-[#DCE7D4] cursor-pointer group hover:border-[#073B2F] transition-all shadow-2xs aspect-9/14 sm:aspect-9/16"
+                                      className="relative rounded-lg overflow-hidden bg-stone-900 border border-[#E3EEE7] cursor-pointer group hover:border-[#33684C] transition-all shadow-2xs aspect-9/14 sm:aspect-9/16"
                                     >
                                       <VideoThumbnailPoster
                                         video={video}
@@ -819,7 +945,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                                       />
                                       {/* Video Badge */}
                                       <div className="absolute top-1 left-1 z-10">
-                                        <span className="px-1 py-0.2 rounded-sm bg-[#FF6A45] text-white text-[8px] font-bold">
+                                        <span className="px-1 py-0.2 rounded-sm bg-[#33684C] text-white text-[8px] font-bold">
                                           Video
                                         </span>
                                       </div>
@@ -840,22 +966,22 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                     })()}
                   </div>
 
-                  {/* Action Buttons: Forest Green for booking */}
+                  {/* Action Buttons: Lobby Green for booking */}
                   <div className="mt-6 space-y-2">
                     <button
                       type="button"
                       onClick={() => handleBookClick(p)}
-                      className="w-full py-3 px-4 bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-[0.98] text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs"
+                      className="w-full py-3 px-4 bg-[#33684C] hover:bg-[#1F4331] active:scale-[0.98] text-white font-bold rounded-xl text-sm transition flex items-center justify-center gap-2 shadow-xs cursor-pointer"
                     >
                       <span>Book for {formatDateDayMonth(selectedDate)}</span>
-                      <ArrowRight className="w-4 h-4" />
+                      <ArrowRight className="w-4 h-4 text-[#FFDF70]" />
                     </button>
                     <button
                       type="button"
                       onClick={() => handleOpenSchedule(p)}
-                      className="w-full py-2.5 px-3 text-xs text-[#073B2F] hover:text-[#073B2F] font-bold hover:bg-[#F6F3EC] rounded-xl transition flex items-center justify-center gap-1.5 border border-[#DCE7D4]"
+                      className="w-full py-2.5 px-3 text-xs text-[#12201A] hover:text-[#33684C] font-bold hover:bg-[#F6F3EC] rounded-xl transition flex items-center justify-center gap-1.5 border border-[#E3EEE7] cursor-pointer"
                     >
-                      <CalendarIcon className="w-3.5 h-3.5 text-[#073B2F]" />
+                      <CalendarIcon className="w-3.5 h-3.5 text-[#33684C]" />
                       <span>Schedule of {p.name.split(' ')[0]} for this month</span>
                     </button>
                   </div>
@@ -866,20 +992,20 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
         )}
 
         {/* 4. Social Proof & Brand Partners Section */}
-        <div className="border-t border-[#DCE7D4] pt-8 mt-16 pb-4">
+        <div className="border-t border-[#E3EEE7] pt-8 mt-16 pb-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-8">
             <div>
-              <h3 className="text-base sm:text-lg font-bold text-[#073B2F]">
+              <h3 className="text-xl sm:text-2xl font-normal text-[#12201A] font-headline">
                 Trusted by leading agencies and brands
               </h3>
-              <p className="text-xs sm:text-sm text-[#5C6E5E] mt-0.5">
+              <p className="text-xs sm:text-sm text-[#5C6E5E] mt-0.5 font-sans">
                 Marketing teams, creative agencies and production houses rely on Shoot Lobby for their photography needs.
               </p>
             </div>
             <button
               type="button"
               onClick={onOpenPhotographerSignUp ? onOpenPhotographerSignUp : () => setIsJoinNetworkOpen(true)}
-              className="text-[#073B2F] hover:text-[#0c4e3f] font-bold text-sm inline-flex items-center gap-1 shrink-0 group self-start sm:self-auto hover:underline cursor-pointer"
+              className="text-[#33684C] hover:text-[#1F4331] font-bold text-sm inline-flex items-center gap-1.5 shrink-0 group self-start sm:self-auto hover:underline cursor-pointer"
             >
               <span>Join our network as Photographer</span>
               <ArrowRight className="w-4 h-4 transition-transform group-hover:translate-x-1" />

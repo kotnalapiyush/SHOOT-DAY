@@ -179,14 +179,14 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
         }}
         className={`w-full px-3.5 py-2.5 bg-[#F6F3EC] border rounded-xl flex items-center justify-between cursor-pointer transition shadow-2xs ${
           isOpen
-            ? 'border-[#073B2F] ring-1 ring-[#073B2F]/20 bg-white'
-            : 'border-[#DCE7D4] hover:border-[#073B2F] hover:bg-white'
+            ? 'border-[#33684C] ring-1 ring-[#33684C]/20 bg-white'
+            : 'border-[#E3EEE7] hover:border-[#33684C] hover:bg-white'
         }`}
         title="Click to open photographer availability calendar"
       >
         <div className="flex items-center gap-2.5 min-w-0">
-          <CalendarIcon className="w-4 h-4 text-[#073B2F] shrink-0" />
-          <span className="text-xs font-mono font-bold text-[#073B2F] tracking-wide">
+          <CalendarIcon className="w-4 h-4 text-[#33684C] shrink-0" />
+          <span className="text-xs font-mono font-bold text-[#12201A] tracking-wide">
             {formatDisplayDate(value)}
           </span>
         </div>
@@ -201,7 +201,7 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
           )}
           <ChevronDown
             className={`w-4 h-4 text-[#5C6E5E] transition-transform ${
-              isOpen ? 'rotate-180 text-[#073B2F]' : ''
+              isOpen ? 'rotate-180 text-[#33684C]' : ''
             }`}
           />
         </div>
@@ -211,11 +211,11 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
       {isOpen && (
         <div
           id="photographer-availability-calendar-popover"
-          className="absolute left-0 top-full mt-1.5 z-[150] w-[275px] sm:w-[285px] max-w-[calc(100vw-36px)] bg-white border border-[#DCE7D4] rounded-2xl shadow-[0_16px_40px_-8px_rgba(7,59,47,0.15)] p-3 text-[#073B2F] space-y-2.5 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute left-0 top-full mt-1.5 z-[150] w-[275px] sm:w-[285px] max-w-[calc(100vw-36px)] bg-white border border-[#E3EEE7] rounded-2xl shadow-[0_16px_40px_-8px_rgba(18,32,26,0.15)] p-3 text-[#12201A] space-y-2.5 animate-in fade-in zoom-in-95 duration-150"
           onClick={(e) => e.stopPropagation()}
         >
           {/* Header Row: Month selector & navigation arrows */}
-          <div className="flex items-center justify-between pb-1.5 border-b border-[#DCE7D4]">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#E3EEE7]">
             {/* Month & Year Dropdown */}
             <div className="flex items-center gap-1">
               <select
@@ -224,7 +224,7 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
                   const [y, m] = e.target.value.split('-').map(Number);
                   setDisplayMonth(new Date(y, m, 1));
                 }}
-                className="bg-[#F6F3EC] border border-[#DCE7D4] text-[#073B2F] font-bold text-xs tracking-tight cursor-pointer focus:outline-none py-1 px-2 rounded-lg hover:bg-[#eae5da]"
+                className="bg-[#F6F3EC] border border-[#E3EEE7] text-[#12201A] font-bold text-xs tracking-tight cursor-pointer focus:outline-none py-1 px-2 rounded-lg hover:bg-[#eae5da]"
                 title="Select Month and Year"
               >
                 {[0, 1, 2, 3, 4, 5].map((offset) => {
@@ -235,7 +235,7 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
                     <option
                       key={`${yVal}-${mVal}`}
                       value={`${yVal}-${mVal}`}
-                      className="bg-white text-[#073B2F]"
+                      className="bg-white text-[#12201A]"
                     >
                       {monthNames[mVal]}, {yVal}
                     </option>
@@ -249,7 +249,7 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
               <button
                 type="button"
                 onClick={prevMonth}
-                className="p-1 rounded-md hover:bg-[#F6F3EC] hover:text-[#073B2F] transition"
+                className="p-1 rounded-md hover:bg-[#F6F3EC] hover:text-[#33684C] transition"
                 title="Previous Month"
                 aria-label="Previous Month"
               >
@@ -258,7 +258,7 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
               <button
                 type="button"
                 onClick={nextMonth}
-                className="p-1 rounded-md hover:bg-[#F6F3EC] hover:text-[#073B2F] transition"
+                className="p-1 rounded-md hover:bg-[#F6F3EC] hover:text-[#33684C] transition"
                 title="Next Month"
                 aria-label="Next Month"
               >
@@ -268,8 +268,8 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
           </div>
 
           {/* Photographer Availability Status */}
-          <div className="bg-[#F6F3EC] rounded-xl border border-[#DCE7D4] px-2.5 py-1.5 text-[11px] space-y-0.5">
-            <div className="font-bold text-[#073B2F] truncate">
+          <div className="bg-[#F6F3EC] rounded-xl border border-[#E3EEE7] px-2.5 py-1.5 text-[11px] space-y-0.5">
+            <div className="font-bold text-[#12201A] truncate">
               Schedule of {photographer.name.split(' ')[0]} for this month
             </div>
             <div className="flex items-center justify-between text-[10px] text-[#5C6E5E] font-medium">
@@ -277,8 +277,8 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
                 <span className="w-1.5 h-1.5 rounded-full bg-amber-500 inline-block" />
                 <span>{bookedCountInMonth} Booked</span>
               </span>
-              <span className="text-[#073B2F] font-bold flex items-center gap-1">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 inline-block" />
+              <span className="text-[#33684C] font-bold flex items-center gap-1">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#33684C] inline-block" />
                 <span>{availableCountInMonth} Available</span>
               </span>
             </div>
@@ -333,12 +333,12 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
                     isPast
                       ? 'text-stone-300 bg-stone-50/50 cursor-not-allowed opacity-35 select-none'
                       : isSelected
-                      ? 'bg-[#073B2F] text-white font-black shadow-xs scale-105'
+                      ? 'bg-[#FFDF70] text-[#12201A] font-black shadow-xs scale-105'
                       : isToday
-                      ? 'border border-[#073B2F] text-[#073B2F] bg-[#F0FFDA] hover:bg-[#e4f9c5]'
+                      ? 'border border-[#33684C] text-[#33684C] bg-[#FFF3C4] hover:bg-[#FFDF70]'
                       : booked
                       ? 'bg-amber-50 text-amber-900 border border-amber-300/80 hover:bg-amber-100 font-extrabold'
-                      : 'text-[#073B2F] hover:bg-[#F6F3EC] hover:text-[#073B2F]'
+                      : 'text-[#12201A] hover:bg-[#F6F3EC] hover:text-[#33684C]'
                   }`}
                   title={
                     isPast
@@ -374,32 +374,32 @@ export const PhotographerAvailabilityPicker: React.FC<PhotographerAvailabilityPi
           </div>
 
           {/* Footer: "Clear" on left, "Today" on right */}
-          <div className="flex items-center justify-between pt-1.5 border-t border-[#DCE7D4] text-xs">
+          <div className="flex items-center justify-between pt-1.5 border-t border-[#E3EEE7] text-xs">
             <button
               type="button"
               onClick={handleClear}
-              className="text-[#5C6E5E] hover:text-[#073B2F] font-semibold transition py-0.5 px-1.5 rounded hover:bg-[#F6F3EC] text-[11px]"
+              className="text-[#5C6E5E] hover:text-[#33684C] font-semibold transition py-0.5 px-1.5 rounded hover:bg-[#F6F3EC] text-[11px]"
             >
               Clear
             </button>
             <button
               type="button"
               onClick={handleSelectToday}
-              className="text-[#073B2F] hover:text-[#052d24] font-bold transition py-0.5 px-1.5 rounded hover:bg-[#F0FFDA] text-[11px]"
+              className="text-[#33684C] hover:text-[#1F4331] font-bold transition py-0.5 px-1.5 rounded hover:bg-[#E3EEE7] text-[11px]"
             >
               Today
             </button>
           </div>
 
           {/* Return notice */}
-          <div className="text-[10px] pt-1 text-center font-sans border-t border-[#DCE7D4]">
+          <div className="text-[10px] pt-1 text-center font-sans border-t border-[#E3EEE7]">
             {isSelectedDateBooked ? (
               <p className="text-amber-800 bg-amber-50 rounded-lg py-1 px-2 font-semibold flex items-center justify-center gap-1">
                 <AlertTriangle className="w-3 h-3 text-amber-600 shrink-0" />
                 <span>{photographer.name.split(' ')[0]} is booked on this date</span>
               </p>
             ) : (
-              <p className="text-[#073B2F] bg-[#F0FFDA] rounded-lg py-1 px-2 font-semibold flex items-center justify-center">
+              <p className="text-[#33684C] bg-[#E3EEE7] rounded-lg py-1 px-2 font-semibold flex items-center justify-center">
                 <span>Schedule of {photographer.name.split(' ')[0]} for this month</span>
               </p>
             )}

@@ -175,11 +175,11 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
       onClick={onClose}
     >
       <div
-        className="bg-white w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl shadow-2xl border border-[#DCE7D4] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200 text-[#073B2F] overscroll-contain touch-pan-y"
+        className="bg-white w-full max-w-xl max-h-[92vh] flex flex-col rounded-3xl shadow-2xl border border-[#E3EEE7] overflow-hidden my-auto animate-in fade-in zoom-in-95 duration-200 text-[#12201A] overscroll-contain touch-pan-y"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Modal Top Header */}
-        <div className="shrink-0 p-4 sm:p-6 border-b border-[#DCE7D4] flex items-start justify-between gap-3 bg-[#F6F3EC]">
+        <div className="shrink-0 p-4 sm:p-6 border-b border-[#E3EEE7] flex items-start justify-between gap-3 bg-[#F6F3EC]">
           <div className="flex items-center gap-3.5 min-w-0 flex-1">
             <img
               src={
@@ -188,15 +188,15 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
               }
               alt={photographer.name}
               referrerPolicy="no-referrer"
-              className="w-14 h-14 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+              className="w-14 h-14 rounded-2xl object-cover border border-[#E3EEE7] shrink-0"
             />
             <div className="min-w-0 flex-1">
               <div className="flex flex-wrap items-center gap-2">
-                <h3 className="text-base sm:text-lg font-bold text-[#073B2F] leading-tight truncate font-['Space_Grotesk',sans-serif]">
+                <h3 className="text-base sm:text-lg font-bold text-[#12201A] leading-tight truncate font-sans">
                   {photographer.name}
                 </h3>
-                <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                <span className="bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                   <span>Available</span>
                 </span>
               </div>
@@ -207,7 +207,7 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                 </span>
               </p>
               <div className="mt-0.5">
-                <p className="text-xs font-semibold text-[#FF6A45] truncate">
+                <p className="text-xs font-semibold text-[#33684C] truncate">
                   {photographer.title}
                 </p>
               </div>
@@ -217,7 +217,7 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-[#eae5da] active:scale-95 text-[#5C6E5E] flex items-center justify-center transition shrink-0 border border-[#DCE7D4]"
+            className="w-8 h-8 rounded-full bg-[#F6F3EC] hover:bg-[#eae5da] active:scale-95 text-[#5C6E5E] flex items-center justify-center transition shrink-0 border border-[#E3EEE7] cursor-pointer"
             aria-label="Close"
           >
             <X className="w-4 h-4" />
@@ -227,10 +227,10 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
         {/* Modal Body */}
         <div className="flex-1 overflow-y-auto p-4 sm:p-6 space-y-5 overscroll-contain">
           {/* Headline & Month Navigation */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F6F3EC] border border-[#DCE7D4] p-3.5 rounded-2xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F6F3EC] border border-[#E3EEE7] p-3.5 rounded-2xl">
             <div>
               <div className="flex items-center gap-2">
-                <h4 className="text-sm sm:text-base font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                <h4 className="text-sm sm:text-base font-bold text-[#12201A] font-sans">
                   Schedule of {firstName} for {MONTH_NAMES[currentMonth]}
                 </h4>
               </div>
@@ -239,15 +239,15 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                   <span className="w-2 h-2 rounded-full bg-amber-500 inline-block" />
                   <span>{bookedCount} Booked</span>
                 </span>
-                <span className="text-[#073B2F] flex items-center gap-1">
-                  <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
+                <span className="text-[#33684C] flex items-center gap-1">
+                  <span className="w-2 h-2 rounded-full bg-[#33684C] inline-block" />
                   <span>{availableCount} Available Days</span>
                 </span>
               </div>
             </div>
 
             {/* Prev/Next Month Controls */}
-            <div className="flex items-center gap-1 self-start sm:self-auto bg-white border border-[#DCE7D4] rounded-xl p-1 shadow-2xs">
+            <div className="flex items-center gap-1 self-start sm:self-auto bg-white border border-[#E3EEE7] rounded-xl p-1 shadow-2xs">
               <button
                 type="button"
                 disabled={isCurrentOrPastMonth}
@@ -255,19 +255,19 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                 className={`p-1.5 rounded-lg transition ${
                   isCurrentOrPastMonth
                     ? 'text-stone-300 cursor-not-allowed opacity-30'
-                    : 'hover:bg-[#F6F3EC] text-[#073B2F]'
+                    : 'hover:bg-[#F6F3EC] text-[#12201A]'
                 }`}
                 title={isCurrentOrPastMonth ? 'Cannot navigate to past months' : 'Previous Month'}
               >
                 <ChevronLeft className="w-4 h-4" />
               </button>
-              <span className="text-xs font-bold text-[#073B2F] px-2 min-w-[100px] text-center">
+              <span className="text-xs font-bold text-[#12201A] px-2 min-w-[100px] text-center">
                 {MONTH_NAMES[currentMonth].slice(0, 3)} {currentYear}
               </span>
               <button
                 type="button"
                 onClick={nextMonth}
-                className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#073B2F] transition"
+                className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#12201A] transition"
                 title="Next Month"
               >
                 <ChevronRight className="w-4 h-4" />
@@ -276,7 +276,7 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
           </div>
 
           {/* Calendar Grid */}
-          <div className="bg-white border border-[#DCE7D4] rounded-2xl p-4 shadow-2xs">
+          <div className="bg-white border border-[#E3EEE7] rounded-2xl p-4 shadow-2xs">
             {/* Day labels */}
             <div className="grid grid-cols-7 mb-2 text-center">
               {DAYS_OF_WEEK.map((day) => (
@@ -316,10 +316,10 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                       isPast
                         ? 'bg-stone-50/50 text-stone-300 border border-stone-100 cursor-not-allowed opacity-35 select-none'
                         : isSelected
-                        ? 'bg-[#073B2F] text-white shadow-xs ring-2 ring-[#073B2F]/20'
+                        ? 'bg-[#FFDF70] text-[#12201A] font-extrabold shadow-xs ring-2 ring-[#FFDF70]/50'
                         : booked
                         ? 'bg-amber-50 text-amber-900 border border-amber-200/80 hover:border-amber-400'
-                        : 'bg-[#F6F3EC]/70 text-[#073B2F] border border-[#DCE7D4] hover:border-[#073B2F] hover:bg-[#F0FFDA]'
+                        : 'bg-[#F6F3EC]/70 text-[#12201A] border border-[#E3EEE7] hover:border-[#33684C] hover:bg-[#E3EEE7]'
                     }`}
                     title={isPast ? 'Past date cannot be selected' : undefined}
                   >
@@ -329,10 +329,10 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                         isPast
                           ? 'bg-transparent'
                           : isSelected
-                          ? 'bg-white'
+                          ? 'bg-[#12201A]'
                           : booked
                           ? 'bg-amber-500'
-                          : 'bg-emerald-500'
+                          : 'bg-[#33684C]'
                       }`}
                     />
                   </button>
@@ -341,9 +341,9 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
             </div>
 
             {/* Calendar Legend */}
-            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-[#DCE7D4] text-[11px] text-[#5C6E5E] font-medium">
+            <div className="flex items-center justify-center gap-4 mt-3 pt-3 border-t border-[#E3EEE7] text-[11px] text-[#5C6E5E] font-medium">
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                <span className="w-2 h-2 rounded-full bg-[#33684C]" />
                 <span>Available</span>
               </span>
               <span className="flex items-center gap-1.5">
@@ -351,19 +351,19 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                 <span>Booked / Reserved</span>
               </span>
               <span className="flex items-center gap-1.5">
-                <span className="w-2 h-2 rounded-full bg-[#073B2F]" />
-                <span>Selected</span>
+                <span className="w-2 h-2 rounded-full bg-[#FFDF70]" />
+                <span className="font-bold text-[#12201A]">Selected</span>
               </span>
             </div>
           </div>
 
           {/* Selected Date Action Card */}
-          <div className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <div className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-2xl p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
             <div>
               <div className="text-[11px] font-bold text-[#5C6E5E] uppercase tracking-wider">
                 Selected Date
               </div>
-              <div className="text-sm sm:text-base font-bold text-[#073B2F] mt-0.5">
+              <div className="text-sm sm:text-base font-bold text-[#33684C] mt-0.5">
                 {formatDateDayMonth(selectedDate)}
               </div>
               <div className="mt-1 text-xs">
@@ -373,8 +373,8 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                     <span>Already booked for a shoot on this date</span>
                   </span>
                 ) : (
-                  <span className="text-[#073B2F] font-semibold flex items-center gap-1">
-                    <Clock className="w-3.5 h-3.5 text-emerald-600" />
+                  <span className="text-[#33684C] font-semibold flex items-center gap-1">
+                    <Clock className="w-3.5 h-3.5 text-[#33684C]" />
                     <span>Open & available for booking</span>
                   </span>
                 )}
@@ -386,26 +386,26 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
               type="button"
               disabled={isSelectedBooked}
               onClick={() => onSelectDateAndBook(photographer, selectedDate)}
-              className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition shrink-0 ${
+              className={`px-5 py-2.5 rounded-xl font-bold text-xs sm:text-sm flex items-center justify-center gap-1.5 transition shrink-0 cursor-pointer ${
                 isSelectedBooked
                   ? 'bg-stone-200 text-stone-400 cursor-not-allowed'
-                  : 'bg-[#FF6A45] hover:bg-[#e55835] active:scale-95 text-white shadow-xs'
+                  : 'bg-[#33684C] hover:bg-[#1F4331] active:scale-95 text-white shadow-xs'
               }`}
             >
               <span>Book for {formatDateDayMonth(selectedDate)}</span>
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="w-4 h-4 text-[#FFDF70]" />
             </button>
           </div>
 
           {/* Scheduled Shoots & Bookings list for this month */}
           <div>
-            <h5 className="text-xs font-bold text-[#073B2F] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
-              <Camera className="w-3.5 h-3.5 text-[#073B2F]" />
+            <h5 className="text-xs font-bold text-[#12201A] uppercase tracking-wider mb-2.5 flex items-center gap-1.5">
+              <Camera className="w-3.5 h-3.5 text-[#33684C]" />
               <span>Bookings & Scheduled Shoots in {MONTH_NAMES[currentMonth]}</span>
             </h5>
 
             {currentMonthShoots.length === 0 ? (
-              <div className="p-3.5 bg-[#F0FFDA] border border-[#DCE7D4] rounded-2xl text-xs text-[#073B2F] font-medium">
+              <div className="p-3.5 bg-[#E3EEE7] border border-[#E3EEE7] rounded-2xl text-xs text-[#12201A] font-medium">
                 {firstName} has no active shoots booked in {MONTH_NAMES[currentMonth]}. All available dates are wide open for booking!
               </div>
             ) : (
@@ -413,14 +413,14 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
                 {currentMonthShoots.map((shoot) => (
                   <div
                     key={shoot.id}
-                    className="p-3 bg-white border border-[#DCE7D4] rounded-xl flex items-center justify-between text-xs shadow-2xs"
+                    className="p-3 bg-white border border-[#E3EEE7] rounded-xl flex items-center justify-between text-xs shadow-2xs"
                   >
                     <div className="flex items-center gap-2.5">
-                      <div className="w-8 h-8 rounded-lg bg-[#F0FFDA] text-[#073B2F] flex items-center justify-center font-bold text-[11px] shrink-0">
+                      <div className="w-8 h-8 rounded-lg bg-[#E3EEE7] text-[#33684C] flex items-center justify-center font-bold text-[11px] shrink-0">
                         {shoot.date.split('-')[2]}
                       </div>
                       <div>
-                        <div className="font-bold text-[#073B2F]">{shoot.shootType}</div>
+                        <div className="font-bold text-[#12201A]">{shoot.shootType}</div>
                         <div className="text-[11px] text-[#5C6E5E]">
                           {formatDateDayMonth(shoot.date)} • {shoot.clientName || 'Reserved'}
                         </div>
@@ -437,11 +437,11 @@ export const PhotographerScheduleModal: React.FC<PhotographerScheduleModalProps>
         </div>
 
         {/* Modal Footer */}
-        <div className="p-4 border-t border-[#DCE7D4] bg-[#F6F3EC] flex items-center justify-end">
+        <div className="p-4 border-t border-[#E3EEE7] bg-[#F6F3EC] flex items-center justify-end">
           <button
             type="button"
             onClick={onClose}
-            className="px-5 py-2 rounded-xl text-xs font-bold text-[#073B2F] hover:bg-[#eae5da] transition"
+            className="px-5 py-2 rounded-xl text-xs font-bold text-[#12201A] hover:bg-[#eae5da] transition cursor-pointer"
           >
             Close
           </button>

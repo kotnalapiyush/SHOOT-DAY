@@ -79,21 +79,21 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white border border-[#DCE7D4] rounded-3xl max-w-5xl w-full text-[#073B2F] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white border border-[#E3EEE7] rounded-3xl max-w-5xl w-full text-[#12201A] shadow-2xl overflow-hidden flex flex-col max-h-[94vh] my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Header Strip */}
-        <div className="px-5 sm:px-7 py-4 border-b border-[#DCE7D4] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-7 py-4 border-b border-[#E3EEE7] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3 min-w-0">
             {photographer.avatarUrl ? (
               <img
                 src={photographer.avatarUrl}
                 alt={photographer.name}
                 referrerPolicy="no-referrer"
-                className="w-12 h-12 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+                className="w-12 h-12 rounded-2xl object-cover border border-[#E3EEE7] shrink-0"
               />
             ) : (
               <div
                 className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${
-                  photographer.avatarColor || 'from-[#073B2F] to-[#04241d]'
+                  photographer.avatarColor || 'from-[#33684C] to-[#1F4331]'
                 } text-white flex items-center justify-center font-bold text-sm shadow-xs shrink-0`}
               >
                 {photographer.name[0]}
@@ -101,11 +101,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
             )}
             <div className="min-w-0">
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-[#073B2F] truncate font-['Space_Grotesk',sans-serif]">
+                <h2 className="text-base sm:text-lg font-bold text-[#12201A] truncate font-sans">
                   {photographer.name}
                 </h2>
-                <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1">
-                  <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                <span className="bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] text-[10px] sm:text-[11px] font-bold px-2 py-0.5 rounded-full shrink-0 flex items-center gap-1">
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                   <span>Available</span>
                 </span>
               </div>
@@ -120,7 +120,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
               type="button"
               id="btn-close-portfolio-showcase"
               onClick={onClose}
-              className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition cursor-pointer"
+              className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition cursor-pointer"
               aria-label="Close modal"
             >
               <X className="w-5 h-5" />
@@ -132,7 +132,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
         <div className="overflow-y-auto p-5 sm:p-7 space-y-6 flex-1">
           {/* Photographer Bio */}
           <div>
-            <h3 className="text-sm font-bold text-[#073B2F] mb-1">
+            <h3 className="text-sm font-bold text-[#12201A] mb-1">
               {photographer.title}
             </h3>
             <p className="text-xs sm:text-sm text-[#5C6E5E] leading-relaxed">
@@ -144,8 +144,8 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <Layers className="w-4 h-4 text-[#FF6A45]" />
-                <h4 className="text-xs sm:text-sm font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                <Layers className="w-4 h-4 text-[#33684C]" />
+                <h4 className="text-xs sm:text-sm font-bold text-[#12201A]">
                   Select Specialization Category
                 </h4>
               </div>
@@ -165,8 +165,8 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                     }}
                     className={`group px-3.5 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer active:scale-95 ${
                       isSelected
-                        ? 'bg-[#073B2F] text-white shadow-xs'
-                        : 'bg-[#F6F3EC] text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                        ? 'bg-[#33684C] text-white shadow-xs'
+                        : 'bg-[#F6F3EC] text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                     }`}
                   >
                     <span>{cat}</span>
@@ -177,15 +177,15 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
           </div>
 
           {/* Media Type Switcher: Photos vs Reels & Videos */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-2 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
             <div className="flex items-center gap-1.5">
               <button
                 type="button"
                 onClick={() => setActiveMediaTab('photos')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                   activeMediaTab === 'photos'
-                    ? 'bg-[#073B2F] text-white shadow-xs'
-                    : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                    ? 'bg-[#33684C] text-white shadow-xs'
+                    : 'bg-white text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                 }`}
               >
                 <Camera className="w-3.5 h-3.5" />
@@ -196,11 +196,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                 onClick={() => setActiveMediaTab('videos')}
                 className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1.5 cursor-pointer ${
                   activeMediaTab === 'videos'
-                    ? 'bg-[#073B2F] text-white shadow-xs'
-                    : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                    ? 'bg-[#33684C] text-white shadow-xs'
+                    : 'bg-white text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                 }`}
               >
-                <Film className="w-3.5 h-3.5 text-[#FF6A45]" />
+                <Film className="w-3.5 h-3.5 text-[#FFDF70]" />
                 <span>Videos</span>
               </button>
             </div>
@@ -212,11 +212,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                   onClick={() => setVideoFilter('reel')}
                   className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
                     videoFilter === 'reel'
-                      ? 'bg-[#073B2F] text-white shadow-xs'
-                      : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                      ? 'bg-[#33684C] text-white shadow-xs'
+                      : 'bg-white text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                   }`}
                 >
-                  <Smartphone className="w-3.5 h-3.5 text-[#FF6A45]" />
+                  <Smartphone className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Reel</span>
                 </button>
                 <button
@@ -224,11 +224,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                   onClick={() => setVideoFilter('youtube')}
                   className={`px-3 py-1.5 rounded-xl font-bold transition flex items-center gap-1.5 cursor-pointer ${
                     videoFilter === 'youtube'
-                      ? 'bg-[#073B2F] text-white shadow-xs'
-                      : 'bg-white text-[#073B2F] hover:bg-[#ECE7DC] border border-[#DCE7D4]'
+                      ? 'bg-[#33684C] text-white shadow-xs'
+                      : 'bg-white text-[#12201A] hover:bg-[#E3EEE7] border border-[#E3EEE7]'
                   }`}
                 >
-                  <Tv className="w-3.5 h-3.5 text-amber-500" />
+                  <Tv className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>YouTube</span>
                 </button>
               </div>
@@ -249,7 +249,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                     <div
                       key={`${imgUrl}-${idx}`}
                       onClick={() => setSelectedPhotoIndex(idx)}
-                      className={`group relative rounded-2xl overflow-hidden bg-stone-100 border border-[#DCE7D4] cursor-pointer hover:border-[#073B2F] transition-all shadow-2xs hover:shadow-md active:scale-[0.98] ${
+                      className={`group relative rounded-2xl overflow-hidden bg-stone-100 border border-[#E3EEE7] cursor-pointer hover:border-[#33684C] transition-all shadow-2xs hover:shadow-md active:scale-[0.98] ${
                         isOddOnMobile ? 'col-span-2 aspect-16/9' : 'aspect-4/3'
                       } ${
                         isSingleRemainderOnDesktop
@@ -264,7 +264,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                         className="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-black/35 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-                        <span className="p-2 rounded-xl bg-white/95 text-[#073B2F] text-xs font-bold flex items-center gap-1 shadow-md">
+                        <span className="p-2 rounded-xl bg-white/95 text-[#12201A] text-xs font-bold flex items-center gap-1 shadow-md">
                           <Maximize2 className="w-3.5 h-3.5" />
                           <span>View</span>
                         </span>
@@ -280,13 +280,13 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
           {activeMediaTab === 'videos' && (
             <div className="space-y-3">
               {filteredVideos.length === 0 ? (
-                <div className="p-8 text-center bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
-                  <Film className="w-8 h-8 text-[#FF6A45] mx-auto mb-2" />
-                  <p className="text-xs font-bold text-[#073B2F]">No {videoFilter === 'reel' ? 'Reel' : 'YouTube'} videos in this category.</p>
+                <div className="p-8 text-center bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
+                  <Film className="w-8 h-8 text-[#33684C] mx-auto mb-2" />
+                  <p className="text-xs font-bold text-[#12201A]">No {videoFilter === 'reel' ? 'Reel' : 'YouTube'} videos in this category.</p>
                   <button
                     type="button"
                     onClick={() => setVideoFilter(videoFilter === 'reel' ? 'youtube' : 'reel')}
-                    className="text-xs text-[#FF6A45] font-bold mt-2 hover:underline cursor-pointer"
+                    className="text-xs text-[#33684C] font-bold mt-2 hover:underline cursor-pointer"
                   >
                     Switch to {videoFilter === 'reel' ? 'YouTube' : 'Reel'} videos
                   </button>
@@ -304,7 +304,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                             index: vIdx,
                           });
                         }}
-                        className="group relative rounded-2xl overflow-hidden bg-white border border-[#DCE7D4] hover:border-[#073B2F] transition-all shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
+                        className="group relative rounded-2xl overflow-hidden bg-white border border-[#E3EEE7] hover:border-[#33684C] transition-all shadow-xs hover:shadow-md cursor-pointer flex flex-col justify-between"
                       >
                         {/* Video Thumbnail */}
                         <div
@@ -322,12 +322,12 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                           {/* Top Badges */}
                           <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5">
                             {isReel ? (
-                              <span className="px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
+                              <span className="px-2.5 py-1 rounded-md bg-[#33684C] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Smartphone className="w-3 h-3" />
                                 <span>Reel</span>
                               </span>
                             ) : (
-                              <span className="px-2.5 py-1 rounded-md bg-amber-600 text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
+                              <span className="px-2.5 py-1 rounded-md bg-[#33684C] text-white text-[10px] font-bold flex items-center gap-1 shadow-md">
                                 <Tv className="w-3 h-3" />
                                 <span>YouTube</span>
                               </span>
@@ -347,12 +347,12 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
 
                         {/* Video Details */}
                         <div className="p-3.5 bg-white space-y-1">
-                          <h4 className="text-xs font-bold text-[#073B2F] truncate">
+                          <h4 className="text-xs font-bold text-[#12201A] truncate">
                             {video.title || `${activeCategory} Video`}
                           </h4>
                           <div className="flex items-center justify-between text-[11px] text-[#5C6E5E]">
                             <span>{activeCategory}</span>
-                            <span className="text-[#FF6A45] font-bold group-hover:underline">
+                            <span className="text-[#33684C] font-bold group-hover:underline">
                               Watch Now →
                             </span>
                           </div>
@@ -367,17 +367,17 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
         </div>
 
         {/* Footer Action Strip */}
-        <div className="px-5 sm:px-7 py-3.5 bg-[#F6F3EC] border-t border-[#DCE7D4] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-7 py-3.5 bg-[#F6F3EC] border-t border-[#E3EEE7] flex flex-col sm:flex-row sm:items-center justify-between gap-3 shrink-0">
           <div className="text-xs text-[#5C6E5E]">
             Selected Category:{' '}
-            <strong className="text-[#073B2F]">{activeCategory}</strong>
+            <strong className="text-[#12201A]">{activeCategory}</strong>
           </div>
 
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:bg-stone-200/60 transition"
+              className="px-4 py-2 rounded-xl text-xs font-bold text-[#5C6E5E] hover:bg-stone-200/60 transition cursor-pointer"
             >
               Close
             </button>
@@ -388,11 +388,11 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                 onClose();
                 onBookPhotographer(photographer);
               }}
-              className="px-5 py-2.5 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-95 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs"
+              className="px-5 py-2.5 rounded-xl bg-[#33684C] hover:bg-[#1F4331] active:scale-95 text-white text-xs font-bold transition flex items-center gap-1.5 shadow-xs cursor-pointer"
             >
-              <CalendarIcon className="w-3.5 h-3.5 text-[#FF6A45]" />
+              <CalendarIcon className="w-3.5 h-3.5 text-[#FFDF70]" />
               <span>Book {photographer.name.split(' ')[0]}</span>
-              <ArrowRight className="w-3.5 h-3.5" />
+              <ArrowRight className="w-3.5 h-3.5 text-[#FFDF70]" />
             </button>
           </div>
         </div>
@@ -471,7 +471,7 @@ export const PortfolioShowcaseModal: React.FC<PortfolioShowcaseModalProps> = ({
                   onClick={() => setSelectedPhotoIndex(tIdx)}
                   className={`w-14 h-11 rounded-lg overflow-hidden border-2 transition shrink-0 ${
                     tIdx === selectedPhotoIndex
-                      ? 'border-[#FF6A45] scale-105'
+                      ? 'border-[#FFDF70] scale-105'
                       : 'border-white/30 opacity-60 hover:opacity-100'
                   }`}
                 >

@@ -133,7 +133,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             className="w-10 h-10 rounded-full bg-black/70 hover:bg-black text-white flex items-center justify-center transition border border-white/20 shadow-lg cursor-pointer hover:scale-105 active:scale-95"
             title="Open video in new tab"
           >
-            <ExternalLink className="w-4 h-4 text-amber-300" />
+            <ExternalLink className="w-4 h-4 text-[#FFDF70]" />
           </a>
         )}
 
@@ -156,7 +156,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             <div className="absolute top-0 left-0 right-0 z-20 p-2.5 flex items-center gap-1">
               <div className="w-full bg-white/30 h-1 rounded-full overflow-hidden">
                 <div
-                  className="bg-white h-full transition-all duration-100 ease-linear rounded-full"
+                  className="bg-[#FFDF70] h-full transition-all duration-100 ease-linear rounded-full"
                   style={{ width: `${progress}%` }}
                 />
               </div>
@@ -302,7 +302,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                       className="w-9 h-9 rounded-full object-cover border border-white/30"
                     />
                   ) : (
-                    <div className="w-9 h-9 rounded-full bg-[#073B2F] text-white flex items-center justify-center font-bold text-xs border border-white/20">
+                    <div className="w-9 h-9 rounded-full bg-[#33684C] text-white flex items-center justify-center font-bold text-xs border border-white/20">
                       {photographer.name[0]}
                     </div>
                   )}
@@ -319,7 +319,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
 
               {/* Category */}
               <div>
-                <span className="inline-block px-2.5 py-1 rounded-md bg-[#FF6A45] text-white text-[11px] font-bold tracking-wide uppercase shadow-sm">
+                <span className="inline-block px-2.5 py-1 rounded-md bg-[#33684C] text-[#FFDF70] text-[11px] font-bold tracking-wide uppercase shadow-sm">
                   {currentVideo.category}
                 </span>
               </div>
@@ -360,9 +360,9 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                       onClose();
                       onBookPhotographer(photographer);
                     }}
-                    className="ml-auto px-3.5 py-1.5 rounded-full bg-[#FF6A45] hover:bg-[#e05835] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
+                    className="ml-auto px-4 py-2 rounded-full bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold transition flex items-center gap-1.5 shadow-md active:scale-95 cursor-pointer"
                   >
-                    <Calendar className="w-3.5 h-3.5" />
+                    <Calendar className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>Book Shoot</span>
                   </button>
                 )}
@@ -463,7 +463,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
             <div className="p-4 sm:p-5 bg-[#141A17] border-t border-white/10 text-white flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="space-y-1 min-w-0">
                 <div className="flex items-center gap-2">
-                  <span className="px-2 py-0.5 rounded-md bg-amber-500/20 text-amber-400 border border-amber-500/30 text-[10px] font-bold tracking-wide uppercase">
+                  <span className="px-2 py-0.5 rounded-md bg-[#33684C]/40 text-[#FFDF70] border border-[#33684C]/60 text-[10px] font-bold tracking-wide uppercase">
                     YouTube
                   </span>
                   <span className="text-xs text-white/60">
@@ -485,7 +485,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                     rel="noopener noreferrer"
                     className="px-3.5 py-2 rounded-xl bg-white/10 hover:bg-white/20 text-white text-xs font-bold transition flex items-center gap-1.5 border border-white/20 cursor-pointer"
                   >
-                    <ExternalLink className="w-3.5 h-3.5 text-amber-400" />
+                    <ExternalLink className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>Watch Source</span>
                   </a>
                 )}
@@ -497,9 +497,9 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
                       onClose();
                       onBookPhotographer(photographer);
                     }}
-                    className="px-5 py-2 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-white/20 shadow-md active:scale-95 cursor-pointer shrink-0"
+                    className="px-5 py-2 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white text-xs sm:text-sm font-bold transition flex items-center gap-2 border border-white/20 shadow-md active:scale-95 cursor-pointer shrink-0"
                   >
-                    <Calendar className="w-4 h-4 text-[#FF6A45]" />
+                    <Calendar className="w-4 h-4 text-[#FFDF70]" />
                     <span>Book {photographer.name}</span>
                   </button>
                 )}
@@ -515,7 +515,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
           <button
             type="button"
             onClick={handlePrev}
-            className="hover:text-[#FF6A45] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
+            className="hover:text-[#FFDF70] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
           >
             <ChevronLeft className="w-4 h-4" />
             <span>Prev</span>
@@ -528,7 +528,7 @@ export const VideoReelPlayerModal: React.FC<VideoReelPlayerModalProps> = ({
           <button
             type="button"
             onClick={handleNext}
-            className="hover:text-[#FF6A45] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
+            className="hover:text-[#FFDF70] active:scale-90 transition cursor-pointer flex items-center gap-1 font-bold px-1"
           >
             <span>Next</span>
             <ChevronRight className="w-4 h-4" />

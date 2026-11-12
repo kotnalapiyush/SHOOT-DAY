@@ -243,7 +243,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
       }}
     >
       <div
-        className="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[#DCE7D4] relative overflow-hidden text-[#073B2F] overscroll-contain touch-pan-y animate-in fade-in zoom-in-95 duration-150"
+        className="bg-white rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl border border-[#E3EEE7] relative overflow-hidden text-[#12201A] overscroll-contain touch-pan-y animate-in fade-in zoom-in-95 duration-150"
         onClick={(e) => e.stopPropagation()}
       >
         {confirmedBooking ? (
@@ -251,15 +251,15 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="absolute top-4 right-4 text-[#5C6E5E] hover:text-[#073B2F] p-2 rounded-xl hover:bg-[#F6F3EC] transition"
+              className="absolute top-4 right-4 text-[#5C6E5E] hover:text-[#12201A] p-2 rounded-xl hover:bg-[#F6F3EC] transition cursor-pointer"
               aria-label="Close"
             >
               <X className="w-5 h-5" />
             </button>
 
-            {/* Circular Shoot Lobby Aperture Ring with Tick inside */}
+            {/* Circular Shoot Lobby Camera Aperture with Tick inside */}
             <div className="relative w-20 h-20 mx-auto flex items-center justify-center">
-              <div className="absolute inset-0 rounded-full bg-[#F0FFDA] border border-[#DCE7D4]" />
+              <div className="absolute inset-0 rounded-full bg-[#E3EEE7] border border-[#E3EEE7]" />
               <svg
                 viewBox="0 0 32 32"
                 xmlns="http://www.w3.org/2000/svg"
@@ -271,52 +271,52 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                   cy="16"
                   r="13"
                   fill="none"
-                  stroke="#073B2F"
+                  stroke="#33684C"
                   strokeWidth="2.8"
                   strokeDasharray="1.2 3.6"
                   strokeLinecap="round"
                 />
               </svg>
-              <Check className="w-8 h-8 text-[#073B2F] stroke-3 relative z-10" />
+              <Check className="w-8 h-8 text-[#33684C] stroke-3 relative z-10" />
             </div>
 
-            {/* Big Headline & Reservation Line */}
+            {/* Big Headline & Reservation Line in Baskervville */}
             <div className="space-y-2 pt-1">
-              <h3 className="text-2xl sm:text-3xl font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif] tracking-tight">
+              <h3 className="text-2xl sm:text-3xl font-normal text-[#12201A] font-headline tracking-tight">
                 Your shoot is confirmed!
               </h3>
-              <p className="text-base sm:text-lg text-[#073B2F] max-w-md mx-auto leading-relaxed">
+              <p className="text-base sm:text-lg text-[#12201A] max-w-md mx-auto leading-relaxed">
                 <strong className="font-bold">{photographer.name}</strong> is reserved for you for{' '}
-                <strong className="font-bold text-[#FF6A45]">{formatDateDayMonth(confirmedBooking.date)}</strong>.
+                <strong className="font-bold text-[#33684C]">{formatDateDayMonth(confirmedBooking.date)}</strong>.
               </p>
             </div>
 
-            <div className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl p-4 text-left text-xs space-y-2 max-w-md mx-auto">
-              <div className="flex justify-between pb-1.5 border-b border-[#DCE7D4]">
+            <div className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-2xl p-4 text-left text-xs space-y-2 max-w-md mx-auto">
+              <div className="flex justify-between pb-1.5 border-b border-[#E3EEE7]">
                 <span className="text-[#5C6E5E] font-medium">Photographer</span>
-                <span className="font-bold text-[#073B2F]">{photographer.name}</span>
+                <span className="font-bold text-[#12201A]">{photographer.name}</span>
               </div>
-              <div className="flex justify-between pb-1.5 border-b border-[#DCE7D4]">
+              <div className="flex justify-between pb-1.5 border-b border-[#E3EEE7]">
                 <span className="text-[#5C6E5E] font-medium">Date</span>
-                <span className="font-bold text-[#FF6A45]">{formatDateDayMonth(confirmedBooking.date)}</span>
+                <span className="font-bold text-[#33684C]">{formatDateDayMonth(confirmedBooking.date)}</span>
               </div>
-              <div className="flex justify-between pb-1.5 border-b border-[#DCE7D4]">
+              <div className="flex justify-between pb-1.5 border-b border-[#E3EEE7]">
                 <span className="text-[#5C6E5E] font-medium">Timing</span>
-                <span className="font-semibold text-[#073B2F]">
+                <span className="font-semibold text-[#12201A]">
                   {confirmedBooking.timingStart} - {confirmedBooking.timingEnd}
                 </span>
               </div>
-              <div className="flex justify-between pb-1.5 border-b border-[#DCE7D4]">
+              <div className="flex justify-between pb-1.5 border-b border-[#E3EEE7]">
                 <span className="text-[#5C6E5E] font-medium">Type of Shoot</span>
-                <span className="font-bold text-[#073B2F] text-right">{confirmedBooking.shootType}</span>
+                <span className="font-bold text-[#12201A] text-right">{confirmedBooking.shootType}</span>
               </div>
-              <div className="flex justify-between pb-1.5 border-b border-[#DCE7D4]">
+              <div className="flex justify-between pb-1.5 border-b border-[#E3EEE7]">
                 <span className="text-[#5C6E5E] font-medium">Client</span>
-                <span className="font-semibold text-[#073B2F]">{confirmedBooking.clientName}</span>
+                <span className="font-semibold text-[#12201A]">{confirmedBooking.clientName}</span>
               </div>
               <div className="flex justify-between">
                 <span className="text-[#5C6E5E] font-medium">Location</span>
-                <span className="font-semibold text-[#073B2F]">{confirmedBooking.cityVenue}</span>
+                <span className="font-semibold text-[#12201A]">{confirmedBooking.cityVenue}</span>
               </div>
             </div>
 
@@ -326,9 +326,9 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                 type="button"
                 id="btn-add-google-calendar"
                 onClick={handleAddToGoogleCalendar}
-                className="w-full py-3.5 px-6 bg-[#073B2F] hover:bg-[#052d24] active:scale-[0.98] text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2.5 transition shadow-sm"
+                className="w-full py-3.5 px-6 bg-[#33684C] hover:bg-[#1F4331] active:scale-[0.98] text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2.5 transition shadow-sm cursor-pointer"
               >
-                <CalendarIcon className="w-4 h-4 text-[#F0FFDA]" />
+                <CalendarIcon className="w-4 h-4 text-[#FFDF70]" />
                 <span>Add to Google Calendar</span>
               </button>
 
@@ -336,7 +336,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                 <button
                   type="button"
                   onClick={handleDownloadICS}
-                  className="flex-1 py-2.5 px-3 bg-white hover:bg-[#F6F3EC] text-[#073B2F] border border-[#DCE7D4] font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition"
+                  className="flex-1 py-2.5 px-3 bg-white hover:bg-[#F6F3EC] text-[#12201A] border border-[#E3EEE7] font-semibold rounded-xl text-xs flex items-center justify-center gap-1.5 transition cursor-pointer"
                 >
                   <Download className="w-3.5 h-3.5 text-[#5C6E5E]" />
                   <span>Download .ics file</span>
@@ -344,7 +344,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                 <button
                   type="button"
                   onClick={onClose}
-                  className="py-2.5 px-5 bg-[#F6F3EC] hover:bg-[#ece8df] text-[#073B2F] border border-[#DCE7D4] font-bold rounded-xl text-xs transition"
+                  className="py-2.5 px-5 bg-[#F6F3EC] hover:bg-[#ece8df] text-[#12201A] border border-[#E3EEE7] font-bold rounded-xl text-xs transition cursor-pointer"
                 >
                   Done
                 </button>
@@ -354,21 +354,21 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col h-full max-h-[92vh] overflow-hidden">
             {/* Fixed Header with Photographer Card Summary & Dedicated Close Button */}
-            <div className="shrink-0 p-4 sm:p-5 pb-3.5 border-b border-[#DCE7D4] flex items-start justify-between gap-3 bg-white">
+            <div className="shrink-0 p-4 sm:p-5 pb-3.5 border-b border-[#E3EEE7] flex items-start justify-between gap-3 bg-white">
               <div className="flex items-center gap-3 min-w-0 flex-1">
                 <img
                   src={photographer.avatarUrl || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80'}
                   alt={photographer.name}
                   referrerPolicy="no-referrer"
-                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+                  className="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl object-cover border border-[#E3EEE7] shrink-0"
                 />
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-base sm:text-lg font-bold text-[#073B2F] leading-tight truncate font-['Space_Grotesk',sans-serif]">
+                    <h3 className="text-base sm:text-lg font-bold text-[#12201A] leading-tight truncate font-sans">
                       {photographer.name}
                     </h3>
-                    <span className="bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                    <span className="bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] text-[11px] font-bold px-2.5 py-0.5 rounded-full shrink-0 flex items-center gap-1.5">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                       <span>Available</span>
                     </span>
                   </div>
@@ -376,7 +376,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                     <MapPin className="w-3 h-3 text-[#5C6E5E] shrink-0" />
                     <span>{photographer.city} • {photographer.experienceYears}+ yrs exp</span>
                   </p>
-                  <p className="text-[11px] font-semibold text-[#FF6A45] truncate mt-0.5">
+                  <p className="text-[11px] font-semibold text-[#33684C] truncate mt-0.5">
                     {photographer.title}
                   </p>
                 </div>
@@ -386,7 +386,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="text-[#5C6E5E] hover:text-[#073B2F] p-2 rounded-xl hover:bg-[#F6F3EC] transition shrink-0 -mr-1 -mt-1"
+                className="text-[#5C6E5E] hover:text-[#12201A] p-2 rounded-xl hover:bg-[#F6F3EC] transition shrink-0 -mr-1 -mt-1 cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -403,9 +403,9 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
               >
                 {/* Column 1: Shoot Date */}
                 <div>
-                  <label className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center justify-between">
+                  <label className="block text-xs font-bold text-[#12201A] mb-1 flex items-center justify-between">
                     <span className="flex items-center gap-1.5">
-                      <CalendarIcon className="w-3.5 h-3.5 text-[#073B2F]" />
+                      <CalendarIcon className="w-3.5 h-3.5 text-[#33684C]" />
                       <span>Shoot Date</span>
                     </span>
                     <span className="text-[10px] text-[#5C6E5E] font-semibold">Open Calendar</span>
@@ -421,15 +421,15 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
 
                 {/* Column 2: Type of Shoot */}
                 <div>
-                  <label htmlFor="field-shoottype" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
-                    <Camera className="w-3.5 h-3.5 text-[#073B2F]" />
+                  <label htmlFor="field-shoottype" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
+                    <Camera className="w-3.5 h-3.5 text-[#33684C]" />
                     <span>Type of Shoot</span>
                   </label>
                   <select
                     id="field-shoottype"
                     value={selectedType}
                     onChange={(e) => setSelectedType(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-semibold text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white cursor-pointer"
+                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-semibold text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white cursor-pointer"
                   >
                     <option value="Commercial Shoot">Commercial Shoot</option>
                     <option value="Fashion Shoot">Fashion Shoot</option>
@@ -447,8 +447,8 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                 {/* Column 3: Dedicated column for Other Shoot */}
                 {selectedType === 'Other Shoot' && (
                   <div className="animate-in fade-in zoom-in-95 duration-150">
-                    <label htmlFor="field-customrequirement" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
-                      <FileText className="w-3.5 h-3.5 text-[#FF6A45]" />
+                    <label htmlFor="field-customrequirement" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
+                      <FileText className="w-3.5 h-3.5 text-[#33684C]" />
                       <span>What type of shoot is it? <span className="text-red-500">*</span></span>
                     </label>
                     <input
@@ -459,7 +459,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                       placeholder="e.g. Drone, Maternity, Lookbook..."
                       value={customRequirement}
                       onChange={(e) => setCustomRequirement(e.target.value)}
-                      className="w-full px-3.5 py-2.5 bg-[#FFF4EE] border border-[#FF6A45]/30 rounded-xl text-[16px] sm:text-xs font-bold text-[#073B2F] focus:outline-none focus:border-[#FF6A45] focus:bg-white transition"
+                      className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#33684C]/30 rounded-xl text-[16px] sm:text-xs font-bold text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white transition"
                     />
                   </div>
                 )}
@@ -483,7 +483,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
               {/* Field 2: Client Info */}
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
-                  <label htmlFor="field-clientname" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                  <label htmlFor="field-clientname" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                     <User className="w-3.5 h-3.5 text-[#5C6E5E]" />
                     <span>Your Name</span>
                   </label>
@@ -495,11 +495,11 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                     placeholder="e.g. Priya Shah"
                     value={clientName}
                     onChange={(e) => setClientName(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label htmlFor="field-clientphone" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                  <label htmlFor="field-clientphone" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-[#5C6E5E]" />
                     <span>Phone Number</span>
                   </label>
@@ -511,11 +511,11 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                     placeholder="+91 98100 00000"
                     value={clientPhone}
                     onChange={(e) => setClientPhone(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
                 <div>
-                  <label htmlFor="field-clientemail" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                  <label htmlFor="field-clientemail" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                     <Mail className="w-3.5 h-3.5 text-[#5C6E5E]" />
                     <span>Email ID</span>
                   </label>
@@ -526,22 +526,22 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                     placeholder="priya@agency.com"
                     value={clientEmail}
                     onChange={(e) => setClientEmail(e.target.value)}
-                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
               </div>
 
               {/* Field 3: Timing */}
               <div>
-                <label className="block text-xs font-bold text-[#073B2F] mb-1.5 flex items-center gap-1.5">
-                  <Clock className="w-3.5 h-3.5 text-[#073B2F]" />
+                <label className="block text-xs font-bold text-[#12201A] mb-1.5 flex items-center gap-1.5">
+                  <Clock className="w-3.5 h-3.5 text-[#33684C]" />
                   <span>Shoot Timing</span>
                 </label>
 
                 {/* Two Distinct Time Select Cards with Clear Gap */}
                 <div className="grid grid-cols-2 gap-3 sm:gap-4">
                   {/* Start Time Box */}
-                  <div className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl p-2.5 focus-within:border-[#073B2F] focus-within:bg-white transition">
+                  <div className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl p-2.5 focus-within:border-[#33684C] focus-within:bg-white transition">
                     <label htmlFor="field-timingstart" className="block text-[11px] font-bold text-[#5C6E5E] mb-1">
                       Start Time
                     </label>
@@ -550,7 +550,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                         id="field-timingstart"
                         value={timingStart}
                         onChange={(e) => setTimingStart(e.target.value)}
-                        className="w-full bg-transparent font-bold text-[#073B2F] text-[16px] sm:text-xs appearance-none pr-6 cursor-pointer focus:outline-none"
+                        className="w-full bg-transparent font-bold text-[#12201A] text-[16px] sm:text-xs appearance-none pr-6 cursor-pointer focus:outline-none"
                       >
                         {TIME_OPTIONS.map((opt) => (
                           <option key={`start-${opt.value}`} value={opt.value}>
@@ -563,7 +563,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                   </div>
 
                   {/* End Time Box */}
-                  <div className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl p-2.5 focus-within:border-[#073B2F] focus-within:bg-white transition">
+                  <div className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl p-2.5 focus-within:border-[#33684C] focus-within:bg-white transition">
                     <label htmlFor="field-timingend" className="block text-[11px] font-bold text-[#5C6E5E] mb-1">
                       End Time
                     </label>
@@ -572,7 +572,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                         id="field-timingend"
                         value={timingEnd}
                         onChange={(e) => setTimingEnd(e.target.value)}
-                        className="w-full bg-transparent font-bold text-[#073B2F] text-[16px] sm:text-xs appearance-none pr-6 cursor-pointer focus:outline-none"
+                        className="w-full bg-transparent font-bold text-[#12201A] text-[16px] sm:text-xs appearance-none pr-6 cursor-pointer focus:outline-none"
                       >
                         {TIME_OPTIONS.map((opt) => (
                           <option key={`end-${opt.value}`} value={opt.value}>
@@ -588,7 +588,7 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
 
               {/* Field 4: Mood Board Link */}
               <div>
-                <label htmlFor="field-moodboard" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                <label htmlFor="field-moodboard" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                   <LinkIcon className="w-3.5 h-3.5 text-[#5C6E5E]" />
                   <span>Mood Board Link (Optional)</span>
                 </label>
@@ -599,13 +599,13 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                   placeholder="https://pinterest.com/... or Google Drive link"
                   value={moodBoardLink}
                   onChange={(e) => setMoodBoardLink(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                  className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                 />
               </div>
 
               {/* Field 5: Briefs */}
               <div>
-                <label htmlFor="field-shootbrief" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                <label htmlFor="field-shootbrief" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                   <FileText className="w-3.5 h-3.5 text-[#5C6E5E]" />
                   <span>Brief / Specific Requirements</span>
                 </label>
@@ -615,13 +615,13 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                   placeholder="Number of looks, brand guidelines, lighting requirements, etc."
                   value={shootBrief}
                   onChange={(e) => setShootBrief(e.target.value)}
-                  className="w-full px-3.5 py-2 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                  className="w-full px-3.5 py-2 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                 />
               </div>
 
               {/* Field 6: Shoot Location / Venue */}
               <div>
-                <label htmlFor="field-shootlocation" className="block text-xs font-bold text-[#073B2F] mb-1 flex items-center gap-1.5">
+                <label htmlFor="field-shootlocation" className="block text-xs font-bold text-[#12201A] mb-1 flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#5C6E5E]" />
                   <span>Shoot Location / Venue</span>
                 </label>
@@ -633,21 +633,21 @@ export const ClientBookingModal: React.FC<ClientBookingModalProps> = ({
                   placeholder="e.g. Studio 44, Bandra West, Mumbai"
                   value={shootLocation}
                   onChange={(e) => setShootLocation(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-[16px] sm:text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                  className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-[16px] sm:text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                 />
               </div>
             </div>
 
             {/* Fixed Bottom Action Footer */}
-            <div className="shrink-0 p-3.5 sm:p-4 border-t border-[#DCE7D4] bg-[#FDFBF7]">
+            <div className="shrink-0 p-3.5 sm:p-4 border-t border-[#E3EEE7] bg-[#FDFBF7]">
               <button
                 type="submit"
                 id="btn-confirm-lock-booking"
                 disabled={isSubmitting || isCurrentDateBooked}
-                className={`w-full py-3.5 px-4 font-bold rounded-xl text-sm transition shadow-xs flex items-center justify-center gap-2 ${
+                className={`w-full py-3.5 px-4 font-bold rounded-xl text-sm transition shadow-xs flex items-center justify-center gap-2 cursor-pointer ${
                   isCurrentDateBooked
                     ? 'bg-stone-200 text-stone-500 cursor-not-allowed border border-stone-300'
-                    : 'bg-[#FF6A45] hover:bg-[#e55835] text-white active:scale-[0.99]'
+                    : 'bg-[#33684C] hover:bg-[#1F4331] text-white active:scale-[0.99]'
                 }`}
               >
                 {isCurrentDateBooked ? (

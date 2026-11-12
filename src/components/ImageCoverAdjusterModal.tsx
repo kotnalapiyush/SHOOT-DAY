@@ -224,14 +224,14 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
         {/* Header */}
         <div className="px-5 py-4 border-b border-[#2D4537] flex items-center justify-between bg-[#151E1A]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#073B2F] border border-[#2D4537] flex items-center justify-center text-[#FF6A45]">
+            <div className="w-8 h-8 rounded-xl bg-[#33684C] border border-[#2D4537] flex items-center justify-center text-[#FFDF70]">
               <Crop className="w-4 h-4" />
             </div>
             <div>
               <h3 className="text-sm font-bold text-white flex items-center gap-2">
                 <span>{title}</span>
                 {photoSlotNumber && (
-                  <span className="text-[10px] bg-[#FF6A45] text-white px-2 py-0.5 rounded-full font-bold">
+                  <span className="text-[10px] bg-[#33684C] text-[#FFDF70] px-2 py-0.5 rounded-full font-bold">
                     Photo {photoSlotNumber}
                   </span>
                 )}
@@ -255,7 +255,7 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
         {/* Framing Canvas & Viewport Area */}
         <div className="p-4 sm:p-6 space-y-4">
           {/* Main 4:3 Interactive Framing Box */}
-          <div className="relative mx-auto max-w-lg aspect-4/3 rounded-2xl overflow-hidden bg-black/90 border-2 border-[#073B2F] shadow-inner select-none">
+          <div className="relative mx-auto max-w-lg aspect-4/3 rounded-2xl overflow-hidden bg-black/90 border-2 border-[#33684C] shadow-inner select-none">
             <div
               ref={containerRef}
               onPointerDown={handlePointerDown}
@@ -300,7 +300,7 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
 
               {/* Drag indicator overlay */}
               <div className="absolute top-2.5 left-2.5 bg-black/60 backdrop-blur-xs text-white/90 text-[10px] font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 border border-white/10 pointer-events-none">
-                <Move className="w-3 h-3 text-[#FF6A45]" />
+                <Move className="w-3 h-3 text-[#FFDF70]" />
                 <span>Drag to align cover</span>
               </div>
 
@@ -332,7 +332,7 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
                   step="0.05"
                   value={scale}
                   onChange={(e) => setScale(parseFloat(e.target.value))}
-                  className="w-full accent-[#FF6A45] cursor-pointer h-1.5 bg-stone-700 rounded-lg"
+                  className="w-full accent-[#33684C] cursor-pointer h-1.5 bg-stone-700 rounded-lg"
                 />
                 <span className="text-[11px] font-mono text-stone-300 w-12 text-right">
                   {Math.round(scale * 100)}%
@@ -381,7 +381,7 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
                   className="px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/5 hover:bg-white/10 text-stone-200 border border-white/10 transition flex items-center gap-1 cursor-pointer"
                   title="Rotate 90 degrees"
                 >
-                  <RotateCw className="w-3 h-3 text-[#FF6A45]" />
+                  <RotateCw className="w-3 h-3 text-[#FFDF70]" />
                   <span>Rotate</span>
                 </button>
               </div>
@@ -425,9 +425,9 @@ export const ImageCoverAdjusterModal: React.FC<ImageCoverAdjusterModalProps> = (
             <button
               type="button"
               onClick={handleExport}
-              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#FF6A45] hover:bg-[#ff7b5a] active:scale-95 text-white transition flex items-center gap-1.5 shadow-md cursor-pointer"
+              className="px-5 py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] active:scale-95 text-white transition flex items-center gap-1.5 shadow-md cursor-pointer"
             >
-              <Check className="w-3.5 h-3.5" />
+              <Check className="w-3.5 h-3.5 text-[#FFDF70]" />
               <span>Use As Photo Cover</span>
             </button>
           </div>

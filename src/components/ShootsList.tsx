@@ -110,42 +110,42 @@ export const ShootsList: React.FC<ShootsListProps> = ({
         {/* Metric 1: Booked Shoots This Month */}
         <div
           id="stat-booked-this-month"
-          className="bg-white border border-[#DCE7D4] hover:border-[#073B2F]/40 rounded-3xl p-5 text-[#073B2F] transition shadow-xs flex flex-col justify-between"
+          className="bg-white border border-[#E3EEE7] hover:border-[#33684C]/40 rounded-3xl p-5 text-[#12201A] transition shadow-xs flex flex-col justify-between"
         >
           <div className="flex items-center justify-between text-[#5C6E5E] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#5C6E5E]">
               Booked This Month
             </span>
-            <div className="w-8 h-8 rounded-xl bg-[#F0FFDA] flex items-center justify-center text-[#073B2F]">
+            <div className="w-8 h-8 rounded-xl bg-[#E3EEE7] flex items-center justify-center text-[#33684C]">
               <Calendar className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#073B2F]">
+            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#33684C]">
               {bookedThisMonthCount}
             </span>
             <span className="text-xs text-[#5C6E5E]">shoots booked</span>
           </div>
           <p className="text-[11px] text-[#5C6E5E] mt-2">
-            {currentMonthName} • <span className="text-[#073B2F] font-semibold">{currentPhotographerName}</span>
+            {currentMonthName} • <span className="text-[#33684C] font-semibold">{currentPhotographerName}</span>
           </p>
         </div>
 
         {/* Metric 2: Active Shoots */}
         <div
           id="stat-active-shoots"
-          className="bg-white border border-[#DCE7D4] hover:border-[#FF6A45]/40 rounded-3xl p-5 text-[#073B2F] transition shadow-xs flex flex-col justify-between"
+          className="bg-white border border-[#E3EEE7] hover:border-[#33684C]/40 rounded-3xl p-5 text-[#12201A] transition shadow-xs flex flex-col justify-between"
         >
           <div className="flex items-center justify-between text-[#5C6E5E] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#5C6E5E]">
               Active Shoots
             </span>
-            <div className="w-8 h-8 rounded-xl bg-[#FFF4EE] flex items-center justify-center text-[#FF6A45]">
+            <div className="w-8 h-8 rounded-xl bg-[#FFF3C4] flex items-center justify-center text-[#12201A]">
               <Clock className="w-4 h-4" />
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#FF6A45]">
+            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#12201A]">
               {activeShootsCount}
             </span>
             <span className="text-xs text-[#5C6E5E]">upcoming / in prep</span>
@@ -158,7 +158,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
         {/* Metric 3: Shoots Done / Completed */}
         <div
           id="stat-shoots-completed"
-          className="bg-white border border-[#DCE7D4] hover:border-[#073B2F]/40 rounded-3xl p-5 text-[#073B2F] transition shadow-xs flex flex-col justify-between"
+          className="bg-white border border-[#E3EEE7] hover:border-[#33684C]/40 rounded-3xl p-5 text-[#12201A] transition shadow-xs flex flex-col justify-between"
         >
           <div className="flex items-center justify-between text-[#5C6E5E] mb-2">
             <span className="text-[11px] font-bold uppercase tracking-wider text-[#5C6E5E]">
@@ -169,7 +169,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
             </div>
           </div>
           <div className="flex items-baseline gap-2">
-            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#073B2F]">
+            <span className="text-3xl sm:text-4xl font-extrabold font-mono text-[#33684C]">
               {shootsCompletedCount}
             </span>
             <span className="text-xs text-[#5C6E5E]">completed</span>
@@ -190,17 +190,17 @@ export const ShootsList: React.FC<ShootsListProps> = ({
             placeholder="Search by client name, ceremony, venue, or date..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full bg-white border border-[#DCE7D4] rounded-2xl pl-10 pr-3 py-2.5 text-xs text-[#073B2F] placeholder-[#5C6E5E]/60 focus:outline-none focus:border-[#073B2F]"
+            className="w-full bg-white border border-[#E3EEE7] rounded-2xl pl-10 pr-3 py-2.5 text-xs text-[#12201A] placeholder-[#5C6E5E]/60 focus:outline-none focus:border-[#33684C]"
           />
         </div>
 
         {/* Status Filter */}
-        <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-[#DCE7D4] shrink-0">
+        <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-[#E3EEE7] shrink-0">
           <span className="text-xs text-[#5C6E5E] pl-3 font-medium">Status:</span>
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value)}
-            className="bg-transparent border-none text-xs text-[#073B2F] py-1.5 px-2 focus:outline-none cursor-pointer font-bold"
+            className="bg-transparent border-none text-xs text-[#12201A] py-1.5 px-2 focus:outline-none cursor-pointer font-bold"
           >
             <option value="all">All Statuses</option>
             <option value="confirmed">Confirmed</option>
@@ -212,12 +212,12 @@ export const ShootsList: React.FC<ShootsListProps> = ({
 
         {/* Photographer Filter - Only visible to admin */}
         {isAdmin && (
-          <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-[#DCE7D4] shrink-0">
+          <div className="flex items-center gap-1.5 bg-white p-1 rounded-2xl border border-[#E3EEE7] shrink-0">
             <Filter className="w-3.5 h-3.5 text-[#5C6E5E] ml-3" />
             <select
               value={selectedPhotographerFilter}
               onChange={(e) => setSelectedPhotographerFilter(e.target.value)}
-              className="bg-transparent border-none text-xs text-[#073B2F] py-1.5 px-2 focus:outline-none cursor-pointer font-bold"
+              className="bg-transparent border-none text-xs text-[#12201A] py-1.5 px-2 focus:outline-none cursor-pointer font-bold"
             >
               <option value="all">All Photographers ({shoots.length})</option>
               {photographers.map((p) => (
@@ -232,9 +232,9 @@ export const ShootsList: React.FC<ShootsListProps> = ({
 
       {/* Shoots Grid */}
       {filteredShoots.length === 0 ? (
-        <div className="bg-white border border-[#DCE7D4] rounded-3xl p-12 text-center text-[#5C6E5E]">
+        <div className="bg-white border border-[#E3EEE7] rounded-3xl p-12 text-center text-[#5C6E5E]">
           <Calendar className="w-10 h-10 text-[#5C6E5E] mx-auto mb-3 stroke-1" />
-          <h3 className="text-sm font-semibold text-[#073B2F]">No shoot records found</h3>
+          <h3 className="text-sm font-semibold text-[#12201A]">No shoot records found</h3>
           <p className="text-xs text-[#5C6E5E] mt-1 max-w-sm mx-auto">
             {searchTerm
               ? 'Try different search keywords or adjust the photographer/status filter.'
@@ -250,12 +250,12 @@ export const ShootsList: React.FC<ShootsListProps> = ({
               <div
                 key={shoot.id}
                 id={`shoot-card-${shoot.id}`}
-                className="bg-white border border-[#DCE7D4] hover:border-[#073B2F]/40 rounded-3xl p-5 text-[#073B2F] transition shadow-xs flex flex-col justify-between group"
+                className="bg-white border border-[#E3EEE7] hover:border-[#33684C]/40 rounded-3xl p-5 text-[#12201A] transition shadow-xs flex flex-col justify-between group"
               >
                 <div className="space-y-2.5">
                   {/* Top Bar: Date & Status */}
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-xs font-bold text-[#FF6A45] font-mono flex items-center gap-1.5">
+                    <span className="text-xs font-bold text-[#33684C] font-mono flex items-center gap-1.5">
                       <Calendar className="w-3.5 h-3.5" />
                       {formatDateDayMonth(shoot.date)}
                     </span>
@@ -274,7 +274,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                               ? 'bg-blue-50 text-blue-800 border-blue-300'
                               : shoot.status === 'cancelled'
                               ? 'bg-stone-100 text-stone-600 border-stone-300'
-                              : 'bg-[#F0FFDA] text-[#073B2F] border-[#DCE7D4]'
+                              : 'bg-[#E3EEE7] text-[#33684C] border-[#33684C]/20'
                           }`}
                         >
                           <option value="confirmed">Confirmed</option>
@@ -287,7 +287,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                           className={`text-[10px] px-2.5 py-1 rounded-full font-bold border ${
                             shoot.status === 'completed'
                               ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                              : 'bg-[#F0FFDA] text-[#073B2F] border-[#DCE7D4]'
+                              : 'bg-[#E3EEE7] text-[#33684C] border-[#33684C]/20'
                           }`}
                         >
                           {shoot.status === 'completed' ? 'Completed' : 'Booked'}
@@ -298,11 +298,11 @@ export const ShootsList: React.FC<ShootsListProps> = ({
 
                   {/* Client & Shoot Type */}
                   <div>
-                    <h3 className="text-base font-bold text-[#073B2F] line-clamp-1 group-hover:text-[#FF6A45] transition-colors font-['Space_Grotesk',sans-serif]">
+                    <h3 className="text-base font-bold text-[#12201A] line-clamp-1 group-hover:text-[#33684C] transition-colors font-headline">
                       {shoot.clientName || 'Direct Booking'}
                     </h3>
                     {shoot.shootType && (
-                      <div className="text-xs text-[#FF6A45] font-semibold mt-0.5">
+                      <div className="text-xs text-[#33684C] font-semibold mt-0.5">
                         {shoot.shootType}
                       </div>
                     )}
@@ -311,9 +311,9 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                   {/* Photographer Assigned */}
                   {photog && (
                     <div className="text-xs text-[#5C6E5E] flex items-center gap-1.5">
-                      <User className="w-3.5 h-3.5 text-[#073B2F] shrink-0" />
+                      <User className="w-3.5 h-3.5 text-[#33684C] shrink-0" />
                       <span className="truncate">
-                        Photographer: <strong className="text-[#073B2F]">{photog.name}</strong>
+                        Photographer: <strong className="text-[#12201A]">{photog.name}</strong>
                       </span>
                     </div>
                   )}
@@ -321,7 +321,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                   {/* Timing */}
                   {(shoot.timingStart || shoot.timingEnd) && (
                     <div className="text-xs text-[#5C6E5E] flex items-center gap-1.5">
-                      <Clock className="w-3.5 h-3.5 text-[#073B2F] shrink-0" />
+                      <Clock className="w-3.5 h-3.5 text-[#33684C] shrink-0" />
                       <span className="font-mono">
                         {shoot.timingStart && shoot.timingEnd
                           ? `${shoot.timingStart} - ${shoot.timingEnd}`
@@ -340,7 +340,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
 
                   {/* Mood Board Link */}
                   {shoot.moodBoardUrl && (
-                    <div className="text-xs text-[#073B2F] flex items-center gap-1.5">
+                    <div className="text-xs text-[#33684C] flex items-center gap-1.5">
                       <LinkIcon className="w-3.5 h-3.5 shrink-0" />
                       <a
                         href={shoot.moodBoardUrl}
@@ -355,15 +355,15 @@ export const ShootsList: React.FC<ShootsListProps> = ({
 
                   {/* Shoot Brief */}
                   {shoot.shootBrief && (
-                    <div className="text-[11px] text-[#073B2F] bg-[#F6F3EC] p-2.5 rounded-xl border border-[#DCE7D4]">
+                    <div className="text-[11px] text-[#12201A] bg-[#F6F3EC] p-2.5 rounded-xl border border-[#E3EEE7]">
                       <span className="text-[#5C6E5E] block text-[10px] uppercase font-bold tracking-wider">Brief:</span>
-                      <p className="line-clamp-2 italic text-[#073B2F]">"{shoot.shootBrief}"</p>
+                      <p className="line-clamp-2 italic text-[#12201A]">"{shoot.shootBrief}"</p>
                     </div>
                   )}
                 </div>
 
                 {/* Footer Connect Actions */}
-                <div className="mt-4 pt-3.5 border-t border-[#DCE7D4] flex items-center justify-between">
+                <div className="mt-4 pt-3.5 border-t border-[#E3EEE7] flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     {shoot.clientPhone && (
                       <>
@@ -373,16 +373,16 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                           )}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="px-3 py-1.5 rounded-xl bg-[#F0FFDA] hover:bg-[#e4fabc] text-[#073B2F] border border-[#DCE7D4] text-[11px] font-bold inline-flex items-center gap-1.5 transition"
+                          className="px-3 py-1.5 rounded-xl bg-[#E3EEE7] hover:bg-[#d6e5dc] text-[#33684C] border border-[#33684C]/20 text-[11px] font-bold inline-flex items-center gap-1.5 transition"
                           title="Chat on WhatsApp"
                         >
-                          <MessageCircle className="w-3.5 h-3.5 text-[#073B2F]" />
+                          <MessageCircle className="w-3.5 h-3.5 text-[#33684C]" />
                           <span>WhatsApp</span>
                         </a>
 
                         <a
                           href={`tel:${shoot.clientPhone}`}
-                          className="p-2 rounded-xl bg-[#F6F3EC] hover:bg-stone-200 text-[#073B2F] border border-[#DCE7D4] transition"
+                          className="p-2 rounded-xl bg-[#F6F3EC] hover:bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] transition"
                           title={`Call ${shoot.clientPhone}`}
                         >
                           <Phone className="w-3.5 h-3.5" />
@@ -394,7 +394,7 @@ export const ShootsList: React.FC<ShootsListProps> = ({
                   <button
                     type="button"
                     onClick={() => onSelectShootDate(shoot.photographerId, shoot.date)}
-                    className="text-xs text-[#073B2F] hover:text-[#FF6A45] font-bold inline-flex items-center gap-1 transition"
+                    className="text-xs text-[#33684C] hover:text-[#1F4331] font-bold inline-flex items-center gap-1 transition"
                   >
                     <span>View Calendar</span>
                     <ExternalLink className="w-3 h-3" />

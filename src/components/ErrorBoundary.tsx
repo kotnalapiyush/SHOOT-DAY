@@ -35,12 +35,12 @@ export class ErrorBoundary extends React.Component<Props, State> {
   public render() {
     if (this.state.hasError) {
       return (
-        <div className="min-h-screen bg-[#FAF8F5] flex items-center justify-center p-4">
-          <div className="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 border border-[#DCE7D4] shadow-2xl text-center space-y-4">
+        <div className="min-h-screen bg-[#F6F3EC] flex items-center justify-center p-4">
+          <div className="max-w-md w-full bg-white rounded-3xl p-6 sm:p-8 border border-[#E3EEE7] shadow-2xl text-center space-y-4">
             <div className="w-14 h-14 mx-auto rounded-2xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center">
               <AlertTriangle className="w-7 h-7" />
             </div>
-            <h2 className="text-lg font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+            <h2 className="text-lg font-bold text-[#12201A] font-headline">
               Something went wrong loading this view
             </h2>
             <p className="text-xs text-[#5C6E5E] leading-relaxed">
@@ -49,9 +49,9 @@ export class ErrorBoundary extends React.Component<Props, State> {
             <button
               type="button"
               onClick={this.handleReload}
-              className="w-full py-3 rounded-xl bg-[#073B2F] hover:bg-[#052920] text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs"
+              className="w-full py-3 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white font-bold text-xs flex items-center justify-center gap-2 transition cursor-pointer shadow-xs active:scale-95"
             >
-              <RefreshCw className="w-4 h-4" />
+              <RefreshCw className="w-4 h-4 text-[#FFDF70]" />
               <span>Reload Application</span>
             </button>
           </div>

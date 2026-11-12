@@ -65,19 +65,19 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-3xl w-full my-auto shadow-2xl border border-[#DCE7D4] relative text-[#073B2F] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-3xl max-w-3xl w-full my-auto shadow-2xl border border-[#E3EEE7] relative text-[#12201A] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header Strip */}
-        <div className="p-5 sm:p-6 border-b border-[#DCE7D4] flex items-center justify-between bg-[#F6F3EC]">
+        <div className="p-5 sm:p-6 border-b border-[#E3EEE7] flex items-center justify-between bg-[#F6F3EC]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shadow-2xs">
-              <Users className="w-5 h-5" />
+            <div className="w-10 h-10 rounded-2xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shadow-2xs">
+              <Users className="w-5 h-5 text-[#33684C]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-lg font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                <h3 className="text-base sm:text-lg font-bold text-[#12201A] font-headline">
                   Photographer Network Management
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#073B2F] text-[#F0FFDA] font-bold font-mono">
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#33684C] text-[#FFDF70] font-bold font-mono">
                   Admin Only
                 </span>
               </div>
@@ -89,14 +89,14 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition border border-[#DCE7D4]"
+            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition border border-[#E3EEE7] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Big Dashboard Metrics & Filters */}
-        <div className="p-4 sm:p-6 bg-white border-b border-[#DCE7D4] space-y-4">
+        <div className="p-4 sm:p-6 bg-white border-b border-[#E3EEE7] space-y-4">
           {/* 3 Big Metric Dashboard Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
             {/* 1. Total Registered Photographers */}
@@ -105,28 +105,28 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
               onClick={() => setStatusFilter('all')}
               className={`p-4 rounded-2xl border text-left transition relative cursor-pointer group active:scale-[0.99] ${
                 statusFilter === 'all'
-                  ? 'bg-[#073B2F] text-white border-[#073B2F] shadow-md ring-2 ring-[#073B2F]/30'
-                  : 'bg-[#F6F3EC] text-[#073B2F] border-[#DCE7D4] hover:border-[#073B2F]/40 hover:bg-[#efece4]'
+                  ? 'bg-[#33684C] text-white border-[#33684C] shadow-md ring-2 ring-[#33684C]/30'
+                  : 'bg-[#F6F3EC] text-[#12201A] border-[#E3EEE7] hover:border-[#33684C]/40 hover:bg-[#efece4]'
               }`}
             >
               <div className="flex items-center justify-between">
                 <span
                   className={`text-[11px] font-extrabold uppercase tracking-wider ${
-                    statusFilter === 'all' ? 'text-[#F0FFDA]' : 'text-[#5C6E5E]'
+                    statusFilter === 'all' ? 'text-[#FFDF70]' : 'text-[#5C6E5E]'
                   }`}
                 >
                   Total Photographers
                 </span>
                 <Users
                   className={`w-4 h-4 ${
-                    statusFilter === 'all' ? 'text-[#F0FFDA]' : 'text-[#5C6E5E]'
+                    statusFilter === 'all' ? 'text-[#FFDF70]' : 'text-[#5C6E5E]'
                   }`}
                 />
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span
-                  className={`text-3xl sm:text-4xl font-black font-['Space_Grotesk',sans-serif] tracking-tight ${
-                    statusFilter === 'all' ? 'text-white' : 'text-[#073B2F]'
+                  className={`text-3xl sm:text-4xl font-black font-sans tracking-tight ${
+                    statusFilter === 'all' ? 'text-white' : 'text-[#12201A]'
                   }`}
                 >
                   {totalCount}
@@ -141,7 +141,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
               </div>
               <div
                 className={`mt-1 text-[11px] font-medium ${
-                  statusFilter === 'all' ? 'text-[#DCE7D4]/90' : 'text-[#5C6E5E]'
+                  statusFilter === 'all' ? 'text-[#E3EEE7]/90' : 'text-[#5C6E5E]'
                 }`}
               >
                 All partner profiles created
@@ -170,7 +170,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span
-                  className={`text-3xl sm:text-4xl font-black font-['Space_Grotesk',sans-serif] tracking-tight ${
+                  className={`text-3xl sm:text-4xl font-black font-sans tracking-tight ${
                     statusFilter === 'active' ? 'text-white' : 'text-emerald-800'
                   }`}
                 >
@@ -215,7 +215,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
               </div>
               <div className="mt-2 flex items-baseline gap-2">
                 <span
-                  className={`text-3xl sm:text-4xl font-black font-['Space_Grotesk',sans-serif] tracking-tight ${
+                  className={`text-3xl sm:text-4xl font-black font-sans tracking-tight ${
                     statusFilter === 'on_hold' ? 'text-white' : 'text-amber-800'
                   }`}
                 >
@@ -243,7 +243,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-1">
             <div className="text-xs font-semibold text-[#5C6E5E] flex items-center gap-1.5">
               <span>Showing:</span>
-              <span className="font-bold text-[#073B2F] capitalize">
+              <span className="font-bold text-[#12201A] capitalize">
                 {statusFilter === 'all'
                   ? `All Registered (${filteredPhotographers.length})`
                   : statusFilter === 'active'
@@ -260,7 +260,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                 placeholder="Search by name, city, email..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                className="w-full pl-9 pr-3.5 py-2 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
               />
             </div>
           </div>
@@ -269,9 +269,9 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
         {/* Photographers List */}
         <div className="p-4 sm:p-6 space-y-3 max-h-[58vh] overflow-y-auto">
           {filteredPhotographers.length === 0 ? (
-            <div className="text-center py-12 px-4 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+            <div className="text-center py-12 px-4 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
               <Users className="w-10 h-10 text-[#5C6E5E]/40 mx-auto mb-2" />
-              <h4 className="text-sm font-bold text-[#073B2F]">No photographers match your filter</h4>
+              <h4 className="text-sm font-bold text-[#12201A]">No photographers match your filter</h4>
               <p className="text-xs text-[#5C6E5E] mt-0.5">
                 Try clearing your search query or selecting a different status filter.
               </p>
@@ -285,7 +285,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                   className={`p-4 rounded-2xl border transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${
                     !isActive
                       ? 'bg-amber-50/60 border-amber-200'
-                      : 'bg-white border-[#DCE7D4] hover:border-[#073B2F]/40'
+                      : 'bg-white border-[#E3EEE7] hover:border-[#33684C]/40'
                   }`}
                 >
                   {/* Left: Info */}
@@ -295,12 +295,12 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                         src={p.avatarUrl}
                         alt={p.name}
                         referrerPolicy="no-referrer"
-                        className="w-13 h-13 rounded-2xl object-cover border border-[#DCE7D4] shrink-0"
+                        className="w-13 h-13 rounded-2xl object-cover border border-[#E3EEE7] shrink-0"
                       />
                     ) : (
                       <div
                         className={`w-13 h-13 rounded-2xl bg-gradient-to-br ${
-                          p.avatarColor || 'from-[#073B2F] to-[#125847]'
+                          p.avatarColor || 'from-[#33684C] to-[#1F4331]'
                         } text-white flex items-center justify-center font-bold text-base shadow-xs shrink-0`}
                       >
                         {p.name[0]}
@@ -309,10 +309,10 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
 
                     <div className="min-w-0 flex-1">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-sm font-bold text-[#073B2F] truncate">{p.name}</h4>
+                        <h4 className="text-sm font-bold text-[#12201A] truncate">{p.name}</h4>
                         {isActive ? (
-                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold flex items-center gap-1">
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                          <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold flex items-center gap-1">
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                             <span>Active</span>
                           </span>
                         ) : (
@@ -328,7 +328,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                         )}
                       </div>
 
-                      <p className="text-xs text-[#073B2F] font-medium truncate mt-0.5">
+                      <p className="text-xs text-[#12201A] font-medium truncate mt-0.5">
                         {p.title}
                       </p>
 
@@ -351,10 +351,10 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                     <button
                       type="button"
                       onClick={() => onViewDetails(p)}
-                      className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#F6F3EC] border border-[#DCE7D4] text-[#073B2F] text-xs font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95"
+                      className="px-3 py-1.5 rounded-xl bg-white hover:bg-[#F6F3EC] border border-[#E3EEE7] text-[#12201A] text-xs font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95"
                       title="View all details entered by photographer"
                     >
-                      <Eye className="w-3.5 h-3.5 text-[#073B2F]" />
+                      <Eye className="w-3.5 h-3.5 text-[#33684C]" />
                       <span>Details</span>
                     </button>
 
@@ -365,7 +365,7 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                       className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 ${
                         isActive
                           ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300'
-                          : 'bg-[#073B2F] hover:bg-[#0c4e3f] text-white'
+                          : 'bg-[#33684C] hover:bg-[#1F4331] text-white'
                       }`}
                       title={isActive ? 'Pause / Hold this photographer' : 'Set active for client bookings'}
                     >
@@ -389,10 +389,10 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
                         onSelectInCalendar(p.id);
                         onClose();
                       }}
-                      className="p-1.5 rounded-xl bg-[#F6F3EC] hover:bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] transition cursor-pointer"
+                      className="p-1.5 rounded-xl bg-[#F6F3EC] hover:bg-[#E3EEE7] text-[#12201A] border border-[#E3EEE7] transition cursor-pointer"
                       title="Open schedule in calendar"
                     >
-                      <Calendar className="w-3.5 h-3.5" />
+                      <Calendar className="w-3.5 h-3.5 text-[#33684C]" />
                     </button>
 
                     {/* Delete Profile */}
@@ -412,14 +412,14 @@ export const AdminPhotographersModal: React.FC<AdminPhotographersModalProps> = (
         </div>
 
         {/* Footer */}
-        <div className="p-4 bg-[#F6F3EC] border-t border-[#DCE7D4] flex items-center justify-between text-xs text-[#5C6E5E]">
+        <div className="p-4 bg-[#F6F3EC] border-t border-[#E3EEE7] flex items-center justify-between text-xs text-[#5C6E5E]">
           <span>
             {totalCount} total registered photographer{totalCount > 1 ? 's' : ''} ({onHoldCount} on hold/paused)
           </span>
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 bg-white hover:bg-stone-50 border border-[#DCE7D4] text-[#073B2F] font-bold rounded-xl text-xs transition cursor-pointer"
+            className="px-4 py-2 bg-white hover:bg-stone-50 border border-[#E3EEE7] text-[#12201A] font-bold rounded-xl text-xs transition cursor-pointer"
           >
             Close
           </button>

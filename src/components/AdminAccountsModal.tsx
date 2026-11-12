@@ -104,19 +104,19 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
         if (e.target === e.currentTarget) onClose();
       }}
     >
-      <div className="bg-white border border-[#DCE7D4] rounded-3xl max-w-3xl w-full text-[#073B2F] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] my-auto animate-in fade-in zoom-in-95 duration-200">
+      <div className="bg-white border border-[#E3EEE7] rounded-3xl max-w-3xl w-full text-[#12201A] shadow-2xl overflow-hidden flex flex-col max-h-[92vh] my-auto animate-in fade-in zoom-in-95 duration-200">
         {/* Header */}
-        <div className="px-5 sm:px-7 py-4 border-b border-[#DCE7D4] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
+        <div className="px-5 sm:px-7 py-4 border-b border-[#E3EEE7] bg-[#F6F3EC] flex items-center justify-between gap-3 shrink-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#073B2F] text-white flex items-center justify-center font-bold text-sm shadow-xs">
-              <Shield className="w-5 h-5 text-[#FF6A45]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#33684C] text-white flex items-center justify-center font-bold text-sm shadow-xs">
+              <Shield className="w-5 h-5 text-[#FFDF70]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h2 className="text-base sm:text-lg font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                <h2 className="text-base sm:text-lg font-bold text-[#12201A] font-headline">
                   Photographer Accounts & Passwords
                 </h2>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold">
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold">
                   Admin Master Access
                 </span>
               </div>
@@ -145,7 +145,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition cursor-pointer"
+              className="w-9 h-9 rounded-xl hover:bg-stone-200/60 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition cursor-pointer"
             >
               <X className="w-5 h-5" />
             </button>
@@ -153,7 +153,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
         </div>
 
         {/* Filter Search Strip */}
-        <div className="p-4 border-b border-[#DCE7D4] bg-[#FAF8F5] flex items-center gap-3 shrink-0">
+        <div className="p-4 border-b border-[#E3EEE7] bg-[#FAF8F5] flex items-center gap-3 shrink-0">
           <div className="relative flex-1">
             <Search className="w-3.5 h-3.5 text-[#5C6E5E] absolute left-3 top-1/2 -translate-y-1/2" />
             <input
@@ -161,7 +161,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder="Search by photographer name, city, or email..."
-              className="w-full bg-white border border-[#DCE7D4] rounded-xl pl-9 pr-3 py-2 text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+              className="w-full bg-white border border-[#E3EEE7] rounded-xl pl-9 pr-3 py-2 text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C]"
             />
           </div>
           <div className="text-xs text-[#5C6E5E] font-medium whitespace-nowrap">
@@ -180,7 +180,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
             return (
               <div
                 key={p.id}
-                className="p-4 rounded-2xl bg-white border border-[#DCE7D4] hover:border-[#073B2F]/40 transition space-y-3 shadow-2xs"
+                className="p-4 rounded-2xl bg-white border border-[#E3EEE7] hover:border-[#33684C]/40 transition space-y-3 shadow-2xs"
               >
                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
                   <div className="flex items-center gap-3 min-w-0">
@@ -188,11 +188,11 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                       src={p.avatarUrl || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&auto=format&fit=crop&q=80'}
                       alt={p.name}
                       referrerPolicy="no-referrer"
-                      className="w-11 h-11 rounded-xl object-cover border border-[#DCE7D4] shrink-0"
+                      className="w-11 h-11 rounded-xl object-cover border border-[#E3EEE7] shrink-0"
                     />
                     <div className="min-w-0">
                       <div className="flex items-center gap-2">
-                        <h3 className="text-sm font-bold text-[#073B2F] truncate">
+                        <h3 className="text-sm font-bold text-[#12201A] truncate">
                           {p.name}
                         </h3>
                         {p.status === 'on_hold' ? (
@@ -201,13 +201,13 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                             <span>On Hold</span>
                           </span>
                         ) : (
-                          <span className="text-[10px] px-2 py-0.2 rounded-md bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold">
+                          <span className="text-[10px] px-2 py-0.2 rounded-md bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold">
                             Active
                           </span>
                         )}
                       </div>
                       <p className="text-xs text-[#5C6E5E] truncate">
-                        {p.city} • <span className="font-mono text-[#073B2F]">{p.loginEmail || p.email}</span>
+                        {p.city} • <span className="font-mono text-[#12201A]">{p.loginEmail || p.email}</span>
                       </p>
                     </div>
                   </div>
@@ -217,7 +217,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                     <button
                       type="button"
                       onClick={() => handleCopyCredentials(p)}
-                      className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#F6F3EC] hover:bg-[#DCE7D4] text-[#073B2F] transition border border-[#DCE7D4] flex items-center gap-1"
+                      className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-[#F6F3EC] hover:bg-[#E3EEE7] text-[#12201A] transition border border-[#E3EEE7] flex items-center gap-1 cursor-pointer"
                       title="Copy login details"
                     >
                       {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
@@ -229,7 +229,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                         onClose();
                         onEditPhotographerProfile(p);
                       }}
-                      className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-stone-50 text-[#073B2F] transition border border-[#DCE7D4] flex items-center gap-1"
+                      className="px-2.5 py-1.5 rounded-xl text-xs font-bold bg-white hover:bg-stone-50 text-[#12201A] transition border border-[#E3EEE7] flex items-center gap-1 cursor-pointer"
                     >
                       <Edit2 className="w-3.5 h-3.5" />
                       <span>Full Profile</span>
@@ -238,7 +238,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                 </div>
 
                 {/* Password Bar */}
-                <div className="p-2.5 rounded-xl bg-[#F6F3EC] border border-[#DCE7D4] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+                <div className="p-2.5 rounded-xl bg-[#F6F3EC] border border-[#E3EEE7] flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="text-[#5C6E5E] font-medium shrink-0">Password:</span>
                     {isEditingThisPass ? (
@@ -247,31 +247,31 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                           type="text"
                           value={editPasswordInput}
                           onChange={(e) => setEditPasswordInput(e.target.value)}
-                          className="bg-white border border-[#073B2F] rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-[#073B2F] focus:outline-none"
+                          className="bg-white border border-[#33684C] rounded-lg px-2.5 py-1 text-xs font-mono font-bold text-[#12201A] focus:outline-none"
                           autoFocus
                         />
                         <button
                           type="button"
                           onClick={() => saveEditedPassword(p.id)}
-                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#073B2F] text-white hover:bg-[#0c4e3f]"
+                          className="px-2.5 py-1 rounded-lg text-xs font-bold bg-[#33684C] text-white hover:bg-[#1F4331] cursor-pointer"
                         >
                           Save
                         </button>
                         <button
                           type="button"
                           onClick={() => setEditingPasswordId(null)}
-                          className="px-2 py-1 text-xs text-[#5C6E5E] hover:text-[#073B2F]"
+                          className="px-2 py-1 text-xs text-[#5C6E5E] hover:text-[#12201A] cursor-pointer"
                         >
                           Cancel
                         </button>
                       </div>
                     ) : (
-                      <div className="flex items-center gap-2 font-mono font-bold text-[#073B2F]">
+                      <div className="flex items-center gap-2 font-mono font-bold text-[#12201A]">
                         <span>{isRevealed ? currentPass : '••••••••••••'}</span>
                         <button
                           type="button"
                           onClick={() => toggleReveal(p.id)}
-                          className="text-[#5C6E5E] hover:text-[#073B2F]"
+                          className="text-[#5C6E5E] hover:text-[#12201A] cursor-pointer"
                           title={isRevealed ? 'Hide' : 'Reveal'}
                         >
                           {isRevealed ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
@@ -285,7 +285,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                       <button
                         type="button"
                         onClick={() => startEditPassword(p)}
-                        className="text-[11px] font-bold text-[#073B2F] hover:underline"
+                        className="text-[11px] font-bold text-[#33684C] hover:underline cursor-pointer"
                       >
                         Change Password
                       </button>
@@ -293,7 +293,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
                       <button
                         type="button"
                         onClick={() => resetToDefault(p)}
-                        className="text-[11px] text-[#5C6E5E] hover:text-rose-600 flex items-center gap-0.5"
+                        className="text-[11px] text-[#5C6E5E] hover:text-rose-600 flex items-center gap-0.5 cursor-pointer"
                         title="Reset to firstname123"
                       >
                         <RotateCcw className="w-3 h-3" />
@@ -308,7 +308,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="p-4 border-t border-[#DCE7D4] bg-[#F6F3EC] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#5C6E5E]">
+        <div className="p-4 border-t border-[#E3EEE7] bg-[#F6F3EC] flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#5C6E5E]">
           <span>
             Studio Admin Master Security • Passwords are automatically updated when photographers change them.
           </span>
@@ -330,7 +330,7 @@ export const AdminAccountsModal: React.FC<AdminAccountsModalProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="px-4 py-1.5 rounded-xl text-xs font-bold bg-[#073B2F] text-white hover:bg-[#0c4e3f] cursor-pointer"
+              className="px-4 py-1.5 rounded-xl text-xs font-bold bg-[#33684C] text-white hover:bg-[#1F4331] cursor-pointer"
             >
               Done
             </button>

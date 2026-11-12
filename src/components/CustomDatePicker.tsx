@@ -120,10 +120,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       {/* Main Clickable Date Field */}
       <div
         onClick={() => setIsOpen(!isOpen)}
-        className={`w-full bg-[#F6F3EC] border rounded-xl pl-3.5 pr-2.5 py-2.5 flex items-center justify-between text-xs font-mono font-bold text-[#073B2F] cursor-pointer transition shadow-2xs ${
+        className={`w-full bg-[#F6F3EC] border rounded-xl pl-3.5 pr-2.5 py-2.5 flex items-center justify-between text-xs font-mono font-bold text-[#12201A] cursor-pointer transition shadow-2xs ${
           isOpen
-            ? 'border-[#073B2F] ring-1 ring-[#073B2F]/40'
-            : 'border-[#DCE7D4] hover:border-[#073B2F]/60'
+            ? 'border-[#33684C] ring-1 ring-[#33684C]/40'
+            : 'border-[#E3EEE7] hover:border-[#33684C]/60'
         }`}
         title="Click to open calendar and choose shoot date"
         role="button"
@@ -136,8 +136,8 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
         }}
       >
         <div className="flex items-center gap-2.5">
-          <CalendarIcon className="w-4 h-4 text-[#073B2F] shrink-0" />
-          <span className="text-[#073B2F] tracking-wider text-xs">
+          <CalendarIcon className="w-4 h-4 text-[#33684C] shrink-0" />
+          <span className="text-[#12201A] tracking-wider text-xs">
             {formatDisplayDate(value)}
           </span>
         </div>
@@ -147,7 +147,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           <button
             type="button"
             onClick={(e) => stepDay(-1, e)}
-            className="p-1 hover:text-[#073B2F] hover:bg-white rounded-md transition"
+            className="p-1 hover:text-[#33684C] hover:bg-white rounded-md transition"
             title="Previous Day"
           >
             <ChevronLeft className="w-3.5 h-3.5" />
@@ -155,7 +155,7 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
           <button
             type="button"
             onClick={(e) => stepDay(1, e)}
-            className="p-1 hover:text-[#073B2F] hover:bg-white rounded-md transition"
+            className="p-1 hover:text-[#33684C] hover:bg-white rounded-md transition"
             title="Next Day"
           >
             <ChevronRight className="w-3.5 h-3.5" />
@@ -167,27 +167,27 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
       {isOpen && (
         <div
           id="custom-date-picker-popover"
-          className="absolute left-0 top-full mt-2 z-[100] w-72 sm:w-80 bg-white border border-[#DCE7D4] rounded-2xl shadow-xl p-4 text-[#073B2F] space-y-3 animate-in fade-in zoom-in-95 duration-150"
+          className="absolute left-0 top-full mt-2 z-[100] w-72 sm:w-80 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-4 text-[#12201A] space-y-3 animate-in fade-in zoom-in-95 duration-150"
         >
           {/* Calendar Header: Month, Year & Arrows */}
-          <div className="flex items-center justify-between pb-2 border-b border-[#DCE7D4]">
+          <div className="flex items-center justify-between pb-2 border-b border-[#E3EEE7]">
             <button
               type="button"
               onClick={prevMonth}
-              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#073B2F] hover:bg-[#F6F3EC] transition"
+              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#33684C] hover:bg-[#F6F3EC] transition"
               title="Previous Month"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
 
-            <span className="font-bold text-sm text-[#073B2F] tracking-wide font-['Space_Grotesk',sans-serif]">
+            <span className="font-bold text-base text-[#12201A] tracking-wide font-headline">
               {monthNames[month]} {year}
             </span>
 
             <button
               type="button"
               onClick={nextMonth}
-              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#073B2F] hover:bg-[#F6F3EC] transition"
+              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#33684C] hover:bg-[#F6F3EC] transition"
               title="Next Month"
             >
               <ChevronRight className="w-4 h-4" />
@@ -230,10 +230,10 @@ export const CustomDatePicker: React.FC<CustomDatePickerProps> = ({
                   }}
                   className={`h-8 w-8 mx-auto rounded-xl flex items-center justify-center font-semibold transition ${
                     isSelected
-                      ? 'bg-[#073B2F] text-white font-bold shadow-xs scale-105'
+                      ? 'bg-[#FFDF70] text-[#12201A] font-bold shadow-xs scale-105'
                       : isDisabled
                       ? 'text-stone-300 opacity-40 cursor-not-allowed'
-                      : 'text-[#073B2F] hover:bg-[#F6F3EC] hover:text-[#073B2F] cursor-pointer'
+                      : 'text-[#12201A] hover:bg-[#F6F3EC] hover:text-[#33684C] cursor-pointer'
                   }`}
                 >
                   {dayNum}

@@ -54,15 +54,15 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-xl w-full my-auto shadow-2xl border border-[#DCE7D4] relative text-[#073B2F] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-3xl max-w-xl w-full my-auto shadow-2xl border border-[#E3EEE7] relative text-[#12201A] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header Bar */}
-        <div className="p-5 sm:p-6 border-b border-[#DCE7D4] flex items-center justify-between bg-[#F6F3EC]">
+        <div className="p-5 sm:p-6 border-b border-[#E3EEE7] flex items-center justify-between bg-[#F6F3EC]">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center">
               <Shield className="w-4 h-4" />
             </div>
             <div>
-              <h3 className="text-base font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-base font-bold text-[#12201A] font-headline">
                 Photographer Profile Details
               </h3>
               <p className="text-xs text-[#5C6E5E]">
@@ -73,7 +73,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
           <button
             type="button"
             onClick={onClose}
-            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition border border-[#DCE7D4]"
+            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition border border-[#E3EEE7] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -96,16 +96,16 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                 type="button"
                 id="btn-detail-modal-approve-now"
                 onClick={() => onToggleStatus(photographer.id)}
-                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0"
+                className="w-full sm:w-auto px-4 py-2.5 rounded-xl bg-[#33684C] hover:bg-[#1F4331] text-white font-bold text-xs flex items-center justify-center gap-1.5 shadow-sm transition active:scale-95 cursor-pointer shrink-0"
               >
-                <CheckCircle2 className="w-4 h-4" />
+                <CheckCircle2 className="w-4 h-4 text-[#FFDF70]" />
                 <span>Approve & Activate Now</span>
               </button>
             </div>
           )}
 
           {/* Profile Header Card */}
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#F6F3EC] border border-[#DCE7D4]">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-2xl bg-[#F6F3EC] border border-[#E3EEE7]">
             <div className="flex items-center gap-3.5">
               {photographer.avatarUrl ? (
                 <img
@@ -117,7 +117,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
               ) : (
                 <div
                   className={`w-16 h-16 rounded-2xl bg-gradient-to-br ${
-                    photographer.avatarColor || 'from-[#073B2F] to-[#125847]'
+                    photographer.avatarColor || 'from-[#33684C] to-[#1F4331]'
                   } text-white flex items-center justify-center font-bold text-xl shadow-xs shrink-0`}
                 >
                   {photographer.name[0]}
@@ -125,10 +125,10 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
               )}
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <h4 className="text-lg font-bold text-[#073B2F]">{photographer.name}</h4>
+                  <h4 className="text-lg font-bold text-[#12201A]">{photographer.name}</h4>
                   {isActive ? (
-                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] font-bold flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-[#073B2F]" />
+                    <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-[#33684C]" />
                       <span>Active</span>
                     </span>
                   ) : (
@@ -138,7 +138,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                     </span>
                   )}
                 </div>
-                <p className="text-xs font-semibold text-[#073B2F] mt-0.5">{photographer.title}</p>
+                <p className="text-xs font-semibold text-[#12201A] mt-0.5">{photographer.title}</p>
                 <div className="flex items-center gap-3 text-xs text-[#5C6E5E] mt-1 font-medium">
                   <span className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-[#5C6E5E]" />
@@ -161,7 +161,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                 className={`px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95 ${
                   isActive
                     ? 'bg-amber-100 hover:bg-amber-200 text-amber-900 border border-amber-300'
-                    : 'bg-[#073B2F] hover:bg-[#0c4e3f] text-white'
+                    : 'bg-[#33684C] hover:bg-[#1F4331] text-white'
                 }`}
               >
                 {isActive ? (
@@ -181,11 +181,11 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
 
           {/* Registration Meta */}
           {photographer.registeredAt && (
-            <div className="text-[11px] text-[#5C6E5E] flex items-center gap-1.5 px-3 py-1.5 bg-[#F6F3EC] rounded-xl border border-[#DCE7D4]">
-              <Calendar className="w-3.5 h-3.5 text-[#073B2F]" />
+            <div className="text-[11px] text-[#5C6E5E] flex items-center gap-1.5 px-3 py-1.5 bg-[#F6F3EC] rounded-xl border border-[#E3EEE7]">
+              <Calendar className="w-3.5 h-3.5 text-[#33684C]" />
               <span>
                 Registered on:{' '}
-                <strong className="text-[#073B2F]">
+                <strong className="text-[#12201A]">
                   {new Date(photographer.registeredAt).toLocaleDateString(undefined, {
                     year: 'numeric',
                     month: 'long',
@@ -200,19 +200,19 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
 
           {/* Contact Details Grid */}
           <div>
-            <h5 className="text-xs font-bold text-[#073B2F] uppercase tracking-wider mb-2">
+            <h5 className="text-xs font-bold text-[#12201A] uppercase tracking-wider mb-2">
               Contact Information
             </h5>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
               {/* Phone */}
-              <div className="p-3 bg-white border border-[#DCE7D4] rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-white border border-[#E3EEE7] rounded-xl flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-[#F6F3EC] text-[#073B2F] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-[#F6F3EC] text-[#33684C] flex items-center justify-center shrink-0">
                     <Phone className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-[10px] text-[#5C6E5E] font-medium">Phone Number</div>
-                    <div className="text-xs font-bold text-[#073B2F] truncate">
+                    <div className="text-xs font-bold text-[#12201A] truncate">
                       {photographer.phone}
                     </div>
                   </div>
@@ -220,7 +220,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                 <button
                   type="button"
                   onClick={() => handleCopy(photographer.phone, 'phone')}
-                  className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#5C6E5E] hover:text-[#073B2F] transition"
+                  className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#5C6E5E] hover:text-[#12201A] transition cursor-pointer"
                   title="Copy phone"
                 >
                   {copiedField === 'phone' ? (
@@ -232,14 +232,14 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
               </div>
 
               {/* Email */}
-              <div className="p-3 bg-white border border-[#DCE7D4] rounded-xl flex items-center justify-between">
+              <div className="p-3 bg-white border border-[#E3EEE7] rounded-xl flex items-center justify-between">
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <div className="w-8 h-8 rounded-lg bg-[#F6F3EC] text-[#073B2F] flex items-center justify-center shrink-0">
+                  <div className="w-8 h-8 rounded-lg bg-[#F6F3EC] text-[#33684C] flex items-center justify-center shrink-0">
                     <Mail className="w-4 h-4" />
                   </div>
                   <div className="min-w-0">
                     <div className="text-[10px] text-[#5C6E5E] font-medium">Email Address</div>
-                    <div className="text-xs font-bold text-[#073B2F] truncate">
+                    <div className="text-xs font-bold text-[#12201A] truncate">
                       {photographer.email}
                     </div>
                   </div>
@@ -247,7 +247,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                 <button
                   type="button"
                   onClick={() => handleCopy(photographer.email, 'email')}
-                  className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#5C6E5E] hover:text-[#073B2F] transition"
+                  className="p-1.5 rounded-lg hover:bg-[#F6F3EC] text-[#5C6E5E] hover:text-[#12201A] transition cursor-pointer"
                   title="Copy email"
                 >
                   {copiedField === 'email' ? (
@@ -261,26 +261,26 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
           </div>
 
           {/* Partner Portal Credentials */}
-          <div className="p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4] space-y-2">
+          <div className="p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7] space-y-2">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
-                <KeyRound className="w-3.5 h-3.5 text-[#073B2F]" />
-                <span className="text-xs font-bold text-[#073B2F]">
+                <KeyRound className="w-3.5 h-3.5 text-[#33684C]" />
+                <span className="text-xs font-bold text-[#12201A]">
                   Partner Portal Credentials
                 </span>
               </div>
               <span className="text-[10px] text-[#5C6E5E]">Admin Access Only</span>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <div className="bg-white p-2.5 rounded-xl border border-[#DCE7D4]">
+              <div className="bg-white p-2.5 rounded-xl border border-[#E3EEE7]">
                 <div className="text-[10px] text-[#5C6E5E]">Login Email</div>
-                <div className="font-mono font-bold text-[#073B2F] truncate">
+                <div className="font-mono font-bold text-[#12201A] truncate">
                   {photographer.loginEmail || photographer.email}
                 </div>
               </div>
-              <div className="bg-white p-2.5 rounded-xl border border-[#DCE7D4]">
+              <div className="bg-white p-2.5 rounded-xl border border-[#E3EEE7]">
                 <div className="text-[10px] text-[#5C6E5E]">Password</div>
-                <div className="font-mono font-bold text-[#073B2F] truncate">
+                <div className="font-mono font-bold text-[#12201A] truncate">
                   {photographer.loginPassword || '••••••••'}
                 </div>
               </div>
@@ -289,14 +289,14 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
 
           {/* Specialties */}
           <div>
-            <h5 className="text-xs font-bold text-[#073B2F] uppercase tracking-wider mb-2">
+            <h5 className="text-xs font-bold text-[#12201A] uppercase tracking-wider mb-2">
               Shoot Specialties & Categories
             </h5>
             <div className="flex flex-wrap gap-1.5">
               {photographer.specialties.map((spec) => (
                 <span
                   key={spec}
-                  className="px-2.5 py-1 rounded-xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] text-xs font-bold"
+                  className="px-2.5 py-1 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] text-xs font-bold"
                 >
                   {spec}
                 </span>
@@ -306,10 +306,10 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
 
           {/* Bio */}
           <div>
-            <h5 className="text-xs font-bold text-[#073B2F] uppercase tracking-wider mb-1.5">
+            <h5 className="text-xs font-bold text-[#12201A] uppercase tracking-wider mb-1.5">
               About & Bio Statement
             </h5>
-            <p className="text-xs text-[#073B2F] leading-relaxed p-3.5 bg-white border border-[#DCE7D4] rounded-2xl">
+            <p className="text-xs text-[#12201A] leading-relaxed p-3.5 bg-white border border-[#E3EEE7] rounded-2xl">
               {photographer.bio}
             </p>
           </div>
@@ -317,14 +317,14 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
           {/* Portfolio Link */}
           {photographer.portfolioUrl && (
             <div>
-              <h5 className="text-xs font-bold text-[#073B2F] uppercase tracking-wider mb-1.5">
+              <h5 className="text-xs font-bold text-[#12201A] uppercase tracking-wider mb-1.5">
                 External Portfolio Link
               </h5>
               <a
                 href={photographer.portfolioUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#DCE7D4] text-xs font-bold text-[#073B2F] hover:text-[#FF6A45] hover:border-[#FF6A45] transition"
+                className="inline-flex items-center gap-1.5 px-3 py-2 rounded-xl bg-white border border-[#E3EEE7] text-xs font-bold text-[#33684C] hover:text-[#1F4331] hover:border-[#33684C] transition"
               >
                 <Globe className="w-3.5 h-3.5" />
                 <span>{photographer.portfolioUrl}</span>
@@ -364,7 +364,7 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
               </div>
             </div>
           ) : (
-            <div className="pt-2 border-t border-[#DCE7D4] flex flex-wrap items-center justify-between gap-2">
+            <div className="pt-2 border-t border-[#E3EEE7] flex flex-wrap items-center justify-between gap-2">
               <button
                 type="button"
                 onClick={() => setIsConfirmingDelete(true)}
@@ -382,16 +382,16 @@ export const PhotographerDetailModal: React.FC<PhotographerDetailModalProps> = (
                       onSelectInCalendar(photographer.id);
                       onClose();
                     }}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#073B2F] hover:bg-[#0c4e3f] text-white transition shadow-2xs cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition shadow-2xs cursor-pointer active:scale-95"
                   >
-                    <Calendar className="w-3.5 h-3.5 text-[#F0FFDA]" />
+                    <Calendar className="w-3.5 h-3.5 text-[#FFDF70]" />
                     <span>View in Calendar</span>
                   </button>
                 )}
                 <button
                   type="button"
                   onClick={onClose}
-                  className="px-4 py-2 rounded-xl text-xs font-bold bg-white hover:bg-stone-50 border border-[#DCE7D4] text-[#073B2F] transition cursor-pointer"
+                  className="px-4 py-2 rounded-xl text-xs font-bold bg-white hover:bg-stone-50 border border-[#E3EEE7] text-[#12201A] transition cursor-pointer"
                 >
                   Close
                 </button>

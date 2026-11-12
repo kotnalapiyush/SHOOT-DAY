@@ -59,7 +59,7 @@ const AVAILABLE_SPECIALTIES: ShootType[] = [
 ];
 
 const AVATAR_COLOR_GRADIENTS = [
-  'from-[#073B2F] to-[#145644]',
+  'from-[#33684C] to-[#1F4331]',
   'from-amber-600 to-amber-700',
   'from-rose-600 to-pink-700',
   'from-orange-600 to-amber-800',
@@ -275,19 +275,20 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
 
   return (
     <div className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
-      <div className="bg-white rounded-3xl max-w-xl w-full my-auto shadow-2xl border border-[#DCE7D4] relative text-[#073B2F] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
+      <div className="bg-white rounded-3xl max-w-xl w-full my-auto shadow-2xl border border-[#E3EEE7] relative text-[#12201A] overflow-hidden animate-in fade-in zoom-in-95 duration-150">
         {/* Header Strip */}
-        <div className="p-5 sm:p-6 border-b border-[#DCE7D4] flex items-center justify-between bg-[#F6F3EC]">
+        {/* Header */}
+        <div className="p-5 sm:p-6 border-b border-[#E3EEE7] flex items-center justify-between bg-[#F6F3EC]">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] flex items-center justify-center shadow-2xs">
-              <Camera className="w-5 h-5 text-[#073B2F]" />
+            <div className="w-10 h-10 rounded-2xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shadow-2xs">
+              <Camera className="w-5 h-5 text-[#33684C]" />
             </div>
             <div>
               <div className="flex items-center gap-2">
-                <h3 className="text-base sm:text-lg font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+                <h3 className="text-base sm:text-lg font-bold text-[#12201A] font-headline">
                   Photographer Sign Up
                 </h3>
-                <span className="text-[10px] px-2 py-0.5 rounded-full bg-[#073B2F] text-[#F0FFDA] font-bold font-mono">
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-[#33684C] text-[#FFDF70] font-bold font-mono">
                   Partner Network
                 </span>
               </div>
@@ -299,7 +300,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
           <button
             type="button"
             onClick={handleClose}
-            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#073B2F] flex items-center justify-center transition border border-[#DCE7D4] cursor-pointer"
+            className="w-8 h-8 rounded-full bg-white hover:bg-stone-200 text-[#5C6E5E] hover:text-[#12201A] flex items-center justify-center transition border border-[#E3EEE7] cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
@@ -308,14 +309,14 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
         {submittedPhotographer ? (
           /* Celebratory Confirmation Screen */
           <div className="p-6 sm:p-8 text-center space-y-4">
-            <div className="w-16 h-16 rounded-full bg-[#F0FFDA] text-[#073B2F] border border-[#DCE7D4] mx-auto flex items-center justify-center shadow-xs animate-bounce">
+            <div className="w-16 h-16 rounded-full bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] mx-auto flex items-center justify-center shadow-xs animate-bounce">
               <CheckCircle2 className="w-9 h-9" />
             </div>
             <div className="space-y-1.5">
-              <h3 className="text-xl sm:text-2xl font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+              <h3 className="text-xl sm:text-2xl font-bold text-[#12201A] font-headline">
                 Registration Submitted!
               </h3>
-              <p className="text-sm font-semibold text-[#073B2F]">
+              <p className="text-sm font-semibold text-[#33684C]">
                 Welcome, {submittedPhotographer.name}
               </p>
               <p className="text-xs text-[#5C6E5E] max-w-md mx-auto leading-relaxed">
@@ -324,25 +325,25 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
             </div>
 
             {/* Profile summary card */}
-            <div className="bg-[#F6F3EC] border border-[#DCE7D4] rounded-2xl p-4 text-left max-w-md mx-auto space-y-2">
+            <div className="bg-[#F6F3EC] border border-[#E3EEE7] rounded-2xl p-4 text-left max-w-md mx-auto space-y-2">
               <div className="flex items-center gap-3">
                 <img
                   src={submittedPhotographer.avatarUrl}
                   alt={submittedPhotographer.name}
-                  className="w-12 h-12 rounded-xl object-cover border border-[#DCE7D4]"
+                  className="w-12 h-12 rounded-xl object-cover border border-[#E3EEE7]"
                 />
                 <div>
-                  <h4 className="text-sm font-bold text-[#073B2F]">{submittedPhotographer.name}</h4>
+                  <h4 className="text-sm font-bold text-[#12201A]">{submittedPhotographer.name}</h4>
                   <p className="text-xs text-[#5C6E5E]">{submittedPhotographer.title} • {submittedPhotographer.city}</p>
                 </div>
               </div>
-              <div className="pt-2 border-t border-[#DCE7D4] text-xs text-[#5C6E5E] space-y-1.5">
-                <div><span className="font-semibold text-[#073B2F]">Login Email:</span> {submittedPhotographer.loginEmail}</div>
-                <div><span className="font-semibold text-[#073B2F]">Phone:</span> {submittedPhotographer.phone}</div>
+              <div className="pt-2 border-t border-[#E3EEE7] text-xs text-[#5C6E5E] space-y-1.5">
+                <div><span className="font-semibold text-[#12201A]">Login Email:</span> {submittedPhotographer.loginEmail}</div>
+                <div><span className="font-semibold text-[#12201A]">Phone:</span> {submittedPhotographer.phone}</div>
                 <div className="flex items-center gap-1.5">
-                  <span className="font-semibold text-[#073B2F]">Status:</span>
-                  <span className="text-amber-900 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md font-bold text-[11px] inline-flex items-center gap-1">
-                    <Clock className="w-3 h-3 text-amber-700" />
+                  <span className="font-semibold text-[#12201A]">Status:</span>
+                  <span className="text-[#12201A] bg-[#FFF3C4] border border-[#FFDF70] px-2 py-0.5 rounded-md font-bold text-[11px] inline-flex items-center gap-1">
+                    <Clock className="w-3 h-3 text-[#33684C]" />
                     Pending Studio Admin Approval
                   </span>
                 </div>
@@ -354,7 +355,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                 type="button"
                 id="btn-register-another-photographer"
                 onClick={handleResetForm}
-                className="w-full sm:w-auto px-4 py-2.5 bg-[#F0FFDA] hover:bg-[#ddf7b7] text-[#073B2F] border border-[#DCE7D4] font-bold rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs active:scale-95"
+                className="w-full sm:w-auto px-4 py-2.5 bg-[#E3EEE7] hover:bg-[#d0e0d6] text-[#33684C] border border-[#E3EEE7] font-bold rounded-xl text-xs transition cursor-pointer flex items-center justify-center gap-1.5 shadow-2xs active:scale-95"
               >
                 <Plus className="w-3.5 h-3.5" />
                 <span>Register Another</span>
@@ -363,7 +364,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
               <button
                 type="button"
                 onClick={handleClose}
-                className="w-full sm:w-auto px-5 py-2.5 bg-[#073B2F] hover:bg-[#0c4e3f] text-white font-bold rounded-xl text-xs transition shadow-xs cursor-pointer active:scale-95"
+                className="w-full sm:w-auto px-5 py-2.5 bg-[#33684C] hover:bg-[#1F4331] text-white font-bold rounded-xl text-xs transition shadow-xs cursor-pointer active:scale-95"
               >
                 Done
               </button>
@@ -386,7 +387,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                       handleClose();
                       onOpenLogin(cleanEmail);
                     }}
-                    className="w-full py-2 px-3 bg-[#073B2F] hover:bg-[#0c4e3f] text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
+                    className="w-full py-2 px-3 bg-[#33684C] hover:bg-[#1F4331] text-white rounded-lg font-bold text-xs flex items-center justify-center gap-1.5 transition cursor-pointer shadow-2xs"
                   >
                     <span>Sign In to This Account Now →</span>
                   </button>
@@ -395,7 +396,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
             )}
 
             {/* Profile Avatar Upload */}
-            <div className="flex items-center gap-4 p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4]">
+            <div className="flex items-center gap-4 p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7]">
               <div className="relative shrink-0">
                 {avatarUrl ? (
                   <img
@@ -412,7 +413,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                 )}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-xs font-bold text-[#073B2F]">Profile Photo</div>
+                <div className="text-xs font-bold text-[#12201A]">Profile Photo</div>
                 <p className="text-[11px] text-[#5C6E5E] mt-0.5">
                   Upload your professional headshot or studio portrait.
                 </p>
@@ -427,7 +428,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                   <button
                     type="button"
                     onClick={() => fileInputRef.current?.click()}
-                    className="px-3 py-1.5 rounded-lg bg-white border border-[#DCE7D4] text-[#073B2F] hover:bg-[#F0FFDA] text-xs font-bold inline-flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
+                    className="px-3 py-1.5 rounded-lg bg-white border border-[#E3EEE7] text-[#33684C] hover:bg-[#E3EEE7] text-xs font-bold inline-flex items-center gap-1.5 transition cursor-pointer shadow-2xs"
                   >
                     <Upload className="w-3.5 h-3.5" />
                     <span>Upload Photo</span>
@@ -448,7 +449,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
             {/* Section: Basic Details */}
             <div className="space-y-3">
               <div>
-                <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                <label className="block text-xs font-bold text-[#12201A] mb-1">
                   Full Name <span className="text-rose-600">*</span>
                 </label>
                 <div className="relative">
@@ -459,7 +460,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                     placeholder="e.g. Aryan Sehgal"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
               </div>
@@ -467,7 +468,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
               {/* City & Experience */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                  <label className="block text-xs font-bold text-[#12201A] mb-1">
                     Primary Base City <span className="text-rose-600">*</span>
                   </label>
                   {!isCustomCity ? (
@@ -481,7 +482,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                             setCity(e.target.value);
                           }
                         }}
-                        className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white cursor-pointer"
+                        className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white cursor-pointer"
                       >
                         {POPULAR_CITIES.map((c) => (
                           <option key={c} value={c}>
@@ -498,13 +499,13 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                         placeholder="Enter your city name"
                         value={customCity}
                         onChange={(e) => setCustomCity(e.target.value)}
-                        className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                        className="w-full px-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                         autoFocus
                       />
                       <button
                         type="button"
                         onClick={() => setIsCustomCity(false)}
-                        className="px-2 py-2 rounded-xl text-[11px] font-bold text-[#5C6E5E] hover:text-[#073B2F] bg-[#F6F3EC]"
+                        className="px-2 py-2 rounded-xl text-[11px] font-bold text-[#5C6E5E] hover:text-[#12201A] bg-[#F6F3EC]"
                         title="Back to list"
                       >
                         List
@@ -514,7 +515,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                  <label className="block text-xs font-bold text-[#12201A] mb-1">
                     Experience (Years) <span className="text-rose-600">*</span>
                   </label>
                   <div className="relative">
@@ -526,7 +527,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                       required
                       value={experienceYears}
                       onChange={(e) => setExperienceYears(e.target.value)}
-                      className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                      className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                     />
                   </div>
                 </div>
@@ -534,7 +535,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
 
               {/* Title / Headline */}
               <div>
-                <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                <label className="block text-xs font-bold text-[#12201A] mb-1">
                   Professional Title / Headline
                 </label>
                 <div className="relative">
@@ -544,23 +545,23 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                     placeholder="e.g. Commercial, Brand & Product Campaign Lead"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
               </div>
 
               {/* Account Credentials: Email & Password */}
-              <div className="p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#DCE7D4] space-y-3">
+              <div className="p-3.5 bg-[#F6F3EC] rounded-2xl border border-[#E3EEE7] space-y-3">
                 <div className="flex items-center gap-2">
-                  <Lock className="w-3.5 h-3.5 text-[#073B2F]" />
-                  <span className="text-xs font-bold text-[#073B2F]">
+                  <Lock className="w-3.5 h-3.5 text-[#33684C]" />
+                  <span className="text-xs font-bold text-[#12201A]">
                     Partner Portal Login Credentials
                   </span>
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-[11px] font-bold text-[#073B2F] mb-1">
+                    <label className="block text-[11px] font-bold text-[#12201A] mb-1">
                       Login Email <span className="text-rose-600">*</span>
                     </label>
                     <div className="relative">
@@ -571,13 +572,13 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                         placeholder="you@domain.com"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
-                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                        className="w-full pl-9 pr-3 py-2 bg-white border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C]"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-[11px] font-bold text-[#073B2F] mb-1">
+                    <label className="block text-[11px] font-bold text-[#12201A] mb-1">
                       Create Password <span className="text-rose-600">*</span>
                     </label>
                     <div className="relative">
@@ -588,12 +589,12 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                         placeholder="Min 5 characters"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
-                        className="w-full pl-3 pr-8 py-2 bg-white border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F]"
+                        className="w-full pl-3 pr-8 py-2 bg-white border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C]"
                       />
                       <button
                         type="button"
                         onClick={() => setShowPassword(!showPassword)}
-                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#073B2F]"
+                        className="absolute right-2.5 top-1/2 -translate-y-1/2 text-[#5C6E5E] hover:text-[#12201A]"
                       >
                         {showPassword ? (
                           <EyeOff className="w-3.5 h-3.5" />
@@ -608,7 +609,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
 
               {/* Phone / WhatsApp */}
               <div>
-                <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                <label className="block text-xs font-bold text-[#12201A] mb-1">
                   Phone / WhatsApp <span className="text-rose-600">*</span>
                 </label>
                 <div className="relative">
@@ -619,14 +620,14 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                     placeholder="+91 98765 43210"
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
-                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white"
+                    className="w-full pl-10 pr-3.5 py-2.5 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white"
                   />
                 </div>
               </div>
 
               {/* Bio / Artist Statement */}
               <div>
-                <label className="block text-xs font-bold text-[#073B2F] mb-1">
+                <label className="block text-xs font-bold text-[#12201A] mb-1">
                   Bio / Artist Statement
                 </label>
                 <textarea
@@ -634,7 +635,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                   placeholder="Share a short bio about your production experience, equipment, creative approach, and brands you've worked with..."
                   value={bio}
                   onChange={(e) => setBio(e.target.value)}
-                  className="w-full p-3 bg-[#F6F3EC] border border-[#DCE7D4] rounded-xl text-xs font-medium text-[#073B2F] focus:outline-none focus:border-[#073B2F] focus:bg-white leading-relaxed"
+                  className="w-full p-3 bg-[#F6F3EC] border border-[#E3EEE7] rounded-xl text-xs font-medium text-[#12201A] focus:outline-none focus:border-[#33684C] focus:bg-white leading-relaxed"
                 />
               </div>
             </div>
@@ -644,9 +645,9 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full py-3.5 px-4 bg-[#FF6A45] hover:bg-[#e55835] text-white font-bold rounded-xl text-sm transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 active:scale-[0.98]"
+                className="w-full py-3.5 px-4 bg-[#33684C] hover:bg-[#1F4331] text-white font-bold rounded-xl text-sm transition shadow-xs flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 active:scale-[0.98]"
               >
-                <Sparkles className="w-4 h-4" />
+                <Sparkles className="w-4 h-4 text-[#FFDF70]" />
                 <span>Complete Registration & Create Profile</span>
               </button>
             </div>
@@ -661,7 +662,7 @@ export const PhotographerSignUpModal: React.FC<PhotographerSignUpModalProps> = (
                     onClose();
                     onOpenLogin();
                   }}
-                  className="text-xs font-bold text-[#073B2F] hover:text-[#FF6A45] underline cursor-pointer"
+                  className="text-xs font-bold text-[#33684C] hover:text-[#1F4331] underline cursor-pointer"
                 >
                   Sign In Here
                 </button>

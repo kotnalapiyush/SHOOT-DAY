@@ -54,17 +54,17 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
     >
       <div
         id="notification-drawer-panel"
-        className="w-full max-w-md bg-white border-l border-[#DCE7D4] h-full flex flex-col shadow-2xl text-[#073B2F] transition-colors"
+        className="w-full max-w-md bg-white border-l border-[#E3EEE7] h-full flex flex-col shadow-2xl text-[#12201A] transition-colors"
         onClick={(e) => e.stopPropagation()}
       >
         {/* Header */}
-        <div className="p-4 sm:p-5 border-b border-[#DCE7D4] flex items-center justify-between">
+        <div className="p-4 sm:p-5 border-b border-[#E3EEE7] flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-xl bg-[#F0FFDA] text-[#073B2F] flex items-center justify-center">
+            <div className="w-8 h-8 rounded-xl bg-[#E3EEE7] text-[#33684C] flex items-center justify-center">
               <Bell className="w-4 h-4" />
             </div>
             <div>
-              <h2 className="text-base font-bold text-[#073B2F] font-['Space_Grotesk',sans-serif]">
+              <h2 className="text-base font-bold text-[#12201A] font-headline">
                 Shoot Booking Alerts
               </h2>
               <p className="text-xs text-[#5C6E5E]">
@@ -79,11 +79,11 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
             <button
               type="button"
               onClick={() => setSoundEnabled(!soundEnabled)}
-              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#073B2F] hover:bg-[#F6F3EC] transition cursor-pointer"
+              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#12201A] hover:bg-[#F6F3EC] transition cursor-pointer"
               title={soundEnabled ? 'Chime sound on' : 'Chime muted'}
             >
               {soundEnabled ? (
-                <Volume2 className="w-4 h-4 text-[#073B2F]" />
+                <Volume2 className="w-4 h-4 text-[#33684C]" />
               ) : (
                 <VolumeX className="w-4 h-4 text-stone-400" />
               )}
@@ -91,7 +91,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
             <button
               type="button"
               onClick={onClose}
-              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#073B2F] hover:bg-[#F6F3EC] text-sm px-2 cursor-pointer font-bold"
+              className="p-1.5 rounded-lg text-[#5C6E5E] hover:text-[#12201A] hover:bg-[#F6F3EC] text-sm px-2 cursor-pointer font-bold"
             >
               ✕
             </button>
@@ -100,13 +100,13 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
 
         {/* Quick action bar */}
         {notifications.length > 0 && (
-          <div className="px-4 py-2 bg-[#F6F3EC] border-b border-[#DCE7D4] flex items-center justify-between text-xs text-[#5C6E5E]">
+          <div className="px-4 py-2 bg-[#F6F3EC] border-b border-[#E3EEE7] flex items-center justify-between text-xs text-[#5C6E5E]">
             <span>Live alerts for Shoot Lobby</span>
             {unreadCount > 0 && (
               <button
                 type="button"
                 onClick={onMarkAllAsRead}
-                className="text-[#FF6A45] hover:underline font-semibold transition cursor-pointer"
+                className="text-[#33684C] hover:underline font-semibold transition cursor-pointer"
               >
                 Mark all read
               </button>
@@ -119,7 +119,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
           {notifications.length === 0 ? (
             <div className="h-64 flex flex-col items-center justify-center text-center p-6 text-[#5C6E5E]">
               <CheckCircle2 className="w-10 h-10 text-[#5C6E5E] mb-2 stroke-1" />
-              <p className="text-sm text-[#073B2F] font-semibold">No new booking alerts</p>
+              <p className="text-sm text-[#12201A] font-semibold">No new booking alerts</p>
               <p className="text-xs text-[#5C6E5E] mt-1 max-w-xs">
                 When clients book your open dates from your calendar, you will get instant alerts right here.
               </p>
@@ -137,10 +137,10 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
               return (
                 <div
                   key={n.id}
-                  className={`p-3.5 rounded-2xl border transition relative cursor-pointer hover:border-[#073B2F] active:scale-[0.99] ${
+                  className={`p-3.5 rounded-2xl border transition relative cursor-pointer hover:border-[#33684C] active:scale-[0.99] ${
                     !n.read
-                      ? 'bg-[#F0FFDA]/60 border-[#DCE7D4]'
-                      : 'bg-[#F6F3EC] border-[#DCE7D4]'
+                      ? 'bg-[#E3EEE7]/50 border-[#E3EEE7]'
+                      : 'bg-[#F6F3EC] border-[#E3EEE7]'
                   }`}
                   onClick={() => {
                     if (!n.read) onMarkAsRead(n.id);
@@ -152,8 +152,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                 >
                   <div className="flex items-start justify-between gap-2 mb-1">
                     <div className="flex items-center gap-1.5 flex-wrap">
-                      <span className="w-2 h-2 rounded-full bg-[#073B2F]" />
-                      <span className="text-xs font-bold text-[#073B2F]">
+                      <span className="w-2 h-2 rounded-full bg-[#33684C]" />
+                      <span className="text-xs font-bold text-[#12201A]">
                         {n.title}
                       </span>
                       {isRegistration && (
@@ -163,8 +163,8 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                             <span>Pending Approval</span>
                           </span>
                         ) : (
-                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-900 border border-emerald-300 font-bold flex items-center gap-1">
-                            <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold flex items-center gap-1">
+                            <CheckCircle2 className="w-3 h-3 text-[#33684C]" />
                             <span>Active</span>
                           </span>
                         )
@@ -179,17 +179,17 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                     </span>
                   </div>
 
-                  <p className="text-xs text-[#073B2F] mt-1 leading-relaxed">
+                  <p className="text-xs text-[#12201A] mt-1 leading-relaxed">
                     {n.message}
                   </p>
 
-                  <div className="mt-2.5 pt-2 border-t border-[#DCE7D4] flex flex-wrap items-center justify-between gap-2 text-xs">
+                  <div className="mt-2.5 pt-2 border-t border-[#E3EEE7] flex flex-wrap items-center justify-between gap-2 text-xs">
                     {isRegistration ? (
-                      <span className="text-[#073B2F] font-bold text-[11px] flex items-center gap-1">
+                      <span className="text-[#12201A] font-bold text-[11px] flex items-center gap-1">
                         <span>👤 Partner Registration</span>
                       </span>
                     ) : (
-                      <span className="text-[#FF6A45] font-mono text-[11px] font-bold">
+                      <span className="text-[#33684C] font-mono text-[11px] font-bold">
                         📅 {formatDateDayMonth(n.date)}
                       </span>
                     )}
@@ -206,10 +206,10 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                                 if (!n.read) onMarkAsRead(n.id);
                                 onApprovePhotographer(targetPhotogId);
                               }}
-                              className="px-2.5 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-xs cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-xl bg-[#33684C] hover:bg-[#1F4331] active:scale-95 text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-xs cursor-pointer"
                               title="Instantly approve and activate this photographer"
                             >
-                              <CheckCircle2 className="w-3.5 h-3.5 text-white" />
+                              <CheckCircle2 className="w-3.5 h-3.5 text-[#FFDF70]" />
                               <span>Approve & Activate</span>
                             </button>
                           )}
@@ -223,11 +223,11 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                                 onViewPhotographerDetailsById(targetPhotogId);
                                 onClose();
                               }}
-                              className="px-2.5 py-1.5 rounded-xl bg-[#073B2F] hover:bg-[#0c4e3f] active:scale-95 text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-xl bg-[#33684C] hover:bg-[#1F4331] active:scale-95 text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer"
                               title="View full photographer profile details"
                             >
                               <span>Review Profile</span>
-                              <ArrowRight className="w-3 h-3 text-[#F0FFDA]" />
+                              <ArrowRight className="w-3 h-3 text-[#FFDF70]" />
                             </button>
                           )}
                         </>
@@ -238,9 +238,9 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                               href={`https://wa.me/${n.clientPhone.replace(/[^0-9]/g, '')}`}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="px-2 py-1 rounded-lg bg-white text-[#073B2F] border border-[#DCE7D4] hover:border-[#073B2F] text-[10px] font-semibold inline-flex items-center gap-1 transition shadow-2xs"
+                              className="px-2 py-1 rounded-lg bg-white text-[#12201A] border border-[#E3EEE7] hover:border-[#33684C] text-[10px] font-semibold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer"
                             >
-                              <MessageCircle className="w-3 h-3 text-[#073B2F]" />
+                              <MessageCircle className="w-3 h-3 text-[#33684C]" />
                               <span>WhatsApp</span>
                             </a>
                           )}
@@ -253,7 +253,7 @@ export const NotificationDrawer: React.FC<NotificationDrawerProps> = ({
                               onSelectShoot(n.photographerId, n.date);
                               onClose();
                             }}
-                            className="px-2.5 py-1 rounded-lg bg-[#073B2F] hover:bg-[#0c4e3f] text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer"
+                            className="px-2.5 py-1 rounded-lg bg-[#33684C] hover:bg-[#1F4331] text-white text-xs font-bold inline-flex items-center gap-1 transition shadow-2xs cursor-pointer active:scale-95"
                           >
                             <span>View</span>
                             <ArrowRight className="w-3 h-3" />
