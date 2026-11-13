@@ -23,10 +23,10 @@ export const ShootLobbyLogo: React.FC<ShootLobbyLogoProps> = ({
   // Height classes by size
   const heightClasses = {
     sm: 'h-8 sm:h-9',
-    md: 'h-10 sm:h-11',
-    lg: 'h-14 sm:h-16',
+    md: 'h-11 sm:h-12',
+    lg: 'h-14 sm:h-[68px]',
     xl: 'h-20 sm:h-24',
-  }[size] || 'h-10 sm:h-11';
+  }[size] || 'h-11 sm:h-12';
 
   // Standalone Camera Icon variant
   if (variant === 'camera' || variant === 'icon') {

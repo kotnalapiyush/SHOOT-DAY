@@ -77,32 +77,32 @@ export const Header: React.FC<HeaderProps> = ({
     <>
       <header
         id="app-main-header"
-        className="sticky top-0 z-40 bg-[#F6F3EC]/90 backdrop-blur-md text-[#12201A] border-b border-[#E3EEE7] shadow-2xs transition-colors duration-200"
+        className="sticky top-0 z-40 bg-[#33684C] text-white border-b border-[#254D38] shadow-sm transition-colors duration-200"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-14 sm:h-16 gap-3">
+          <div className="flex items-center justify-between h-[72px] sm:h-20 gap-3">
             {/* Logo */}
             <div className="flex items-center gap-3 shrink-0">
               <button
                 type="button"
                 onClick={() => setViewMode('client')}
-                className="cursor-pointer focus:outline-none text-left"
+                className="cursor-pointer focus:outline-none text-left flex items-center"
                 title="Shoot Lobby - Home"
               >
-                <ShootLobbyLogo size="md" theme="green" variant="wordmark" />
+                <ShootLobbyLogo size="lg" theme="green" variant="exact" />
               </button>
 
               {authSession && (
-                <div className="hidden md:flex flex-col border-l border-[#E3EEE7] pl-2.5 sm:pl-3 py-0.5 shrink-0 select-none">
+                <div className="hidden md:flex flex-col border-l border-white/25 pl-2.5 sm:pl-3 py-0.5 shrink-0 select-none">
                   <div className="flex items-center gap-1.5">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse shrink-0" />
-                    <p className="text-[11px] text-[#5C6E5E] leading-tight font-semibold whitespace-nowrap">
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#FFDF70] animate-pulse shrink-0" />
+                    <p className="text-[11px] text-[#E3EEE7] leading-tight font-semibold whitespace-nowrap">
                       {authSession.role === 'admin'
                         ? 'Admin Panel'
                         : 'Partner Photographer'}
                     </p>
                   </div>
-                  <p className="text-[10px] text-[#12201A] font-bold tracking-wider uppercase whitespace-nowrap">
+                  <p className="text-[10px] text-white font-bold tracking-wider uppercase whitespace-nowrap">
                     {authSession.role === 'admin'
                       ? 'Master Control'
                       : 'Dashboard'}
@@ -113,17 +113,17 @@ export const Header: React.FC<HeaderProps> = ({
 
             {/* Middle Section if logged in as photographer */}
             {authSession?.role === 'photographer' ? (
-              <div className="hidden lg:flex items-center gap-2.5 bg-white px-3 py-1.5 rounded-2xl border border-[#E3EEE7]">
+              <div className="hidden lg:flex items-center gap-2.5 bg-white/10 px-3 py-1.5 rounded-2xl border border-white/20">
                 <img
                   src={activePhotographer.avatarUrl || 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=400&auto=format&fit=crop&q=80'}
                   alt=""
                   referrerPolicy="no-referrer"
-                  className="w-6 h-6 rounded-full object-cover border border-[#E3EEE7]"
+                  className="w-6 h-6 rounded-full object-cover border border-white/30"
                 />
-                <span className="text-xs font-semibold text-[#5C6E5E]">
-                  Logged in as <strong className="text-[#12201A]">{authSession.name}</strong>
+                <span className="text-xs font-medium text-[#E3EEE7]">
+                  Logged in as <strong className="text-white font-bold">{authSession.name}</strong>
                 </span>
-                <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] font-bold">
+                <span className="text-[10px] px-2 py-0.5 rounded-md bg-[#FFDF70] text-[#12201A] font-bold">
                   {activePhotographer.city}
                 </span>
               </div>
@@ -138,10 +138,10 @@ export const Header: React.FC<HeaderProps> = ({
                       id="btn-return-to-portal"
                       type="button"
                       onClick={() => setViewMode('photographer')}
-                      className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold bg-[#33684C] hover:bg-[#1F4331] text-white transition shadow-xs cursor-pointer active:scale-95"
+                      className="inline-flex items-center gap-1.5 px-2.5 sm:px-3.5 py-1.5 sm:py-2 rounded-xl text-xs font-extrabold bg-[#FFDF70] hover:bg-[#fbd351] text-[#12201A] transition shadow-xs cursor-pointer active:scale-95"
                       title="Return to Calendar & Dashboard"
                     >
-                      <CalendarIcon className="w-3.5 h-3.5 text-[#FFDF70]" />
+                      <CalendarIcon className="w-3.5 h-3.5 text-[#12201A]" />
                       <span className="hidden sm:inline">Calendar & Dashboard</span>
                       <span className="sm:hidden">Calendar</span>
                     </button>
@@ -151,10 +151,10 @@ export const Header: React.FC<HeaderProps> = ({
                     id="btn-share-client-calendar"
                     type="button"
                     onClick={() => setShowShareModal(true)}
-                    className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-white hover:bg-[#F6F3EC] text-[#12201A] border border-[#E3EEE7] transition shadow-2xs cursor-pointer active:scale-95"
+                    className="inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-semibold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition shadow-2xs cursor-pointer active:scale-95"
                     title="Share Shoot Lobby"
                   >
-                    <Share2 className="w-3.5 h-3.5 text-[#5C6E5E]" />
+                    <Share2 className="w-3.5 h-3.5 text-[#E3EEE7]" />
                     <span className="hidden xs:inline">Share</span>
                   </button>
 
@@ -162,14 +162,14 @@ export const Header: React.FC<HeaderProps> = ({
                     id="btn-open-notifications"
                     type="button"
                     onClick={onOpenNotifications}
-                    className="relative p-1.5 sm:p-2 rounded-xl text-[#12201A] hover:text-black bg-white hover:bg-[#F6F3EC] border border-[#E3EEE7] transition shadow-2xs cursor-pointer"
+                    className="relative p-1.5 sm:p-2 rounded-xl text-white hover:text-[#FFDF70] bg-white/10 hover:bg-white/20 border border-white/20 transition shadow-2xs cursor-pointer"
                     aria-label="Booking Notifications"
                   >
                     <Bell className="w-4 h-4" />
                     {unreadCount > 0 && (
                       <span
                         id="unread-notifications-badge"
-                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#33684C] text-[#FFDF70] border border-white text-[10px] font-extrabold flex items-center justify-center animate-pulse"
+                        className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#FFDF70] text-[#12201A] border border-[#33684C] text-[10px] font-extrabold flex items-center justify-center animate-pulse"
                       >
                         {unreadCount}
                       </span>
@@ -183,7 +183,7 @@ export const Header: React.FC<HeaderProps> = ({
                     onClick={onLogout}
                     className={`inline-flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl text-xs font-bold transition shadow-2xs cursor-pointer active:scale-[0.98] ${
                       authSession.role === 'admin'
-                        ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-300 font-extrabold shadow-xs'
+                        ? 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-extrabold shadow-xs'
                         : 'bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200'
                     }`}
                     title={authSession.role === 'admin' ? 'Logout of Admin Panel' : 'Logout of portal'}
@@ -199,7 +199,7 @@ export const Header: React.FC<HeaderProps> = ({
                     id="btn-photographer-signup-header"
                     type="button"
                     onClick={onOpenPhotographerSignUp}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl font-bold text-xs bg-white hover:bg-[#F6F3EC] text-[#12201A] border border-[#E3EEE7] shadow-2xs transition active:scale-[0.98] cursor-pointer"
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 sm:py-2 rounded-xl font-bold text-xs bg-white/95 hover:bg-white text-[#12201A] border border-white/20 shadow-2xs transition active:scale-[0.98] cursor-pointer"
                     title="Register as a photographer to list your calendar"
                   >
                     <UserPlus className="w-3.5 h-3.5 text-[#33684C]" />
