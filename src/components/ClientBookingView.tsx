@@ -216,24 +216,26 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
   return (
     <div id="shoot-lobby-page-root" className="w-full bg-[#F6F3EC]/40 text-[#12201A] pb-16">
       {/* 1. Official Shoot Lobby Brand Hero Section (Brand Guidelines Page 6) */}
-      <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
-        <div className="relative overflow-hidden rounded-3xl bg-[#33684C] text-white p-6 sm:p-9 lg:p-11 shadow-sm">
-          {/* Subtle atmospheric ambient glow */}
-          <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-white/5 blur-3xl pointer-events-none" />
-          <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 rounded-full bg-[#1F4331]/40 blur-2xl pointer-events-none" />
+      <section className="relative z-30 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-4 sm:pt-6">
+        <div className="relative rounded-3xl bg-[#33684C] text-white p-6 sm:p-8 lg:p-10 shadow-sm">
+          {/* Decorative background glow & camera mark clipped cleanly to rounded corners */}
+          <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+            <div className="absolute top-0 right-0 -mr-20 -mt-20 w-80 h-80 rounded-full bg-white/5 blur-3xl" />
+            <div className="absolute bottom-0 left-1/3 -mb-20 w-80 h-80 rounded-full bg-[#1F4331]/40 blur-2xl" />
 
-          {/* Floating Yellow Camera Mark at top right corner as in Page 6 */}
-          <div className="absolute -top-3 -right-3 sm:top-2 sm:right-4 w-24 h-24 sm:w-32 sm:h-32 opacity-95 pointer-events-none select-none z-10">
-            <img
-              src="/assets/shoot-lobby-camera-mark.png"
-              alt="Shoot Lobby Camera Mark"
-              className="w-full h-full object-contain filter drop-shadow-md"
-            />
+            {/* Floating Yellow Camera Mark at top right corner as in Page 6 */}
+            <div className="absolute -top-3 -right-3 sm:top-2 sm:right-4 w-24 h-24 sm:w-32 sm:h-32 opacity-95 select-none z-10">
+              <img
+                src="/assets/shoot-lobby-camera-mark.png"
+                alt="Shoot Lobby Camera Mark"
+                className="w-full h-full object-contain filter drop-shadow-md"
+              />
+            </div>
           </div>
 
-          <div className="relative z-20 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div className="relative z-20 grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_300px] gap-6 lg:gap-8 items-center">
             {/* Left Column: Tag, Headline, Subtitle, Search Filter */}
-            <div className="lg:col-span-7">
+            <div className="min-w-0">
               {/* Tag */}
               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 border border-white/15 text-[11px] font-bold text-[#E3EEE7] tracking-wider uppercase mb-4 backdrop-blur-xs">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#FFDF70]" />
@@ -253,20 +255,10 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
               </p>
 
               {/* Search / Filter Bar Card */}
-              <div
-                className={`bg-white rounded-2xl border border-[#E3EEE7] p-2 sm:p-2.5 transition-all duration-200 w-full shadow-xl text-[#12201A] ${
-                  selectedShootType === 'Other Shoot' ? 'max-w-3xl lg:max-w-5xl' : 'max-w-2xl'
-                }`}
-              >
-              <div
-                className={`grid gap-2.5 items-center ${
-                  selectedShootType === 'Other Shoot'
-                    ? 'grid-cols-1 md:grid-cols-[1fr_1fr_1.35fr_auto]'
-                    : 'grid-cols-1 sm:grid-cols-[1fr_1fr_auto]'
-                }`}
-              >
-                {/* Column 1: Select Date */}
-                <div ref={datePickerRef} className="relative flex">
+              <div className="bg-white rounded-2xl border border-[#E3EEE7] p-2 sm:p-2.5 transition-all duration-200 w-full shadow-xl text-[#12201A]">
+                <div className="flex flex-wrap items-stretch gap-2 sm:gap-2.5 w-full">
+                  {/* Column 1: Select Date */}
+                  <div ref={datePickerRef} className="relative flex flex-[1_1_175px] min-w-0">
                   <button
                     type="button"
                     id="btn-select-date-picker"
@@ -274,14 +266,14 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       setIsDatePopoverOpen(!isDatePopoverOpen);
                       setIsTypeDropdownOpen(false);
                     }}
-                    className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
+                    className={`w-full min-w-0 h-[54px] flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
                       isDatePopoverOpen
                         ? 'border-[#33684C] ring-1 ring-[#33684C]/40 bg-[#F6F3EC]'
                         : 'border-[#E3EEE7] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#33684C]/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
-                      <CalendarIcon className="w-5 h-5 text-[#33684C]" />
+                    <div className="w-9 h-9 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                      <CalendarIcon className="w-4 h-4 text-[#33684C]" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
                       <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
@@ -398,7 +390,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       </div>
 
                       {/* Desktop Anchored Dropdown Popover */}
-                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-80 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-4 z-50 text-[#12201A] animate-in fade-in zoom-in-95 duration-150">
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-80 bg-white border border-[#E3EEE7] rounded-2xl shadow-2xl p-4 z-[70] text-[#12201A] animate-in fade-in zoom-in-95 duration-150">
                         <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#E3EEE7]">
                           <button
                             type="button"
@@ -482,7 +474,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                 </div>
 
                 {/* Column 2: Type of Shoot */}
-                <div ref={typeDropdownRef} className="relative flex">
+                <div ref={typeDropdownRef} className="relative flex flex-[1.25_1_210px] min-w-0">
                   <button
                     type="button"
                     id="btn-select-shoot-type"
@@ -490,14 +482,14 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       setIsTypeDropdownOpen(!isTypeDropdownOpen);
                       setIsDatePopoverOpen(false);
                     }}
-                    className={`w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
+                    className={`w-full min-w-0 h-[54px] flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-2 rounded-xl border transition text-left group outline-none focus:outline-none focus-visible:outline-none select-none ${
                       isTypeDropdownOpen
                         ? 'border-[#33684C] ring-1 ring-[#33684C]/40 bg-[#F6F3EC]'
                         : 'border-[#E3EEE7] bg-white hover:bg-[#F6F3EC]/50 hover:border-[#33684C]/50'
                     }`}
                   >
-                    <div className="w-10 h-10 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
-                      <Camera className="w-5 h-5 text-[#33684C]" />
+                    <div className="w-9 h-9 rounded-xl bg-[#E3EEE7] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                      <Camera className="w-4 h-4 text-[#33684C]" />
                     </div>
                     <div className="flex-1 min-w-0 pr-1">
                       <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
@@ -559,7 +551,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                       </div>
 
                       {/* Desktop Anchored Dropdown */}
-                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-full sm:w-72 bg-white border border-[#E3EEE7] rounded-2xl shadow-xl p-2 z-50 animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
+                      <div className="hidden sm:block absolute left-0 top-full mt-2 w-full sm:w-72 bg-white border border-[#E3EEE7] rounded-2xl shadow-2xl p-2 z-[70] animate-in fade-in zoom-in-95 duration-150 max-h-64 overflow-y-auto">
                         {SHOOT_TYPES.map((type) => {
                           const isSelected = type === selectedShootType;
                           return (
@@ -588,10 +580,10 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
 
                 {/* Column 3: Specify Shoot (separate column appearing when 'Other Shoot' is selected) */}
                 {selectedShootType === 'Other Shoot' && (
-                  <div className="relative flex animate-in fade-in zoom-in-95 duration-150">
-                    <div className="w-full h-[52px] sm:h-[54px] flex items-center gap-3 px-3.5 sm:px-4 py-2 rounded-xl border border-[#E3EEE7] bg-white hover:border-[#33684C]/50 focus-within:border-[#33684C] focus-within:ring-1 focus-within:ring-[#33684C]/40 transition text-left group">
-                      <div className="w-10 h-10 rounded-xl bg-[#F6F3EC] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
-                        <FileText className="w-5 h-5 text-[#33684C]" />
+                  <div className="relative flex flex-[1.25_1_210px] min-w-0 animate-in fade-in zoom-in-95 duration-150">
+                    <div className="w-full min-w-0 h-[54px] flex items-center gap-2.5 sm:gap-3 px-3 sm:px-3.5 py-2 rounded-xl border border-[#E3EEE7] bg-white hover:border-[#33684C]/50 focus-within:border-[#33684C] focus-within:ring-1 focus-within:ring-[#33684C]/40 transition text-left group">
+                      <div className="w-9 h-9 rounded-xl bg-[#F6F3EC] text-[#33684C] border border-[#E3EEE7] flex items-center justify-center shrink-0">
+                        <FileText className="w-4 h-4 text-[#33684C]" />
                       </div>
                       <div className="flex-1 min-w-0 pr-1">
                         <div className="text-[11px] text-[#5C6E5E] font-medium leading-tight mb-0.5 whitespace-nowrap">
@@ -615,17 +607,17 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
                   type="button"
                   id="btn-find-available-photographers"
                   onClick={handleFindClick}
-                  className="w-full sm:w-auto h-[50px] sm:h-[52px] px-6 sm:px-7 bg-[#FFDF70] hover:bg-[#fbd351] active:scale-[0.98] text-[#12201A] font-extrabold rounded-xl flex items-center justify-center gap-2 transition text-xs sm:text-sm whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none shrink-0 shadow-xs cursor-pointer select-none"
+                  className="flex-[0.5_0_185px] max-w-full h-[54px] px-5 bg-[#FFDF70] hover:bg-[#fbd351] active:scale-[0.98] text-[#12201A] font-extrabold rounded-xl flex items-center justify-center gap-2 transition text-xs sm:text-sm whitespace-nowrap outline-none focus:outline-none focus-visible:outline-none shadow-xs cursor-pointer select-none"
                 >
                   <span>Check availability</span>
-                  <ArrowRight className="w-4 h-4 text-[#12201A]" />
+                  <ArrowRight className="w-4 h-4 text-[#12201A] shrink-0" />
                 </button>
+                </div>
               </div>
             </div>
-          </div>
 
           {/* Right Column: Live Studio Availability Interactive Calendar Card (Brand Guidelines Page 6) */}
-          <div className="hidden lg:flex lg:col-span-5 justify-end">
+          <div className="hidden lg:flex justify-end">
             <div className="bg-white rounded-2xl p-4 sm:p-5 shadow-2xl text-[#12201A] w-full max-w-[310px] border border-white/20 select-none">
               {/* Header */}
               <div className="flex items-center justify-between pb-3 mb-2 border-b border-[#E3EEE7]">
@@ -748,7 +740,7 @@ export const ClientBookingView: React.FC<ClientBookingViewProps> = ({
     </section>
 
       {/* 2. Available Photographers Section (Guidelines Page 6) */}
-      <section ref={resultsRef} className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12">
+      <section ref={resultsRef} className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 sm:pt-12">
         {/* Section Heading in Baskervville Serif */}
         <div className="mb-6 sm:mb-8">
           <h2 className="text-2xl sm:text-3xl font-normal text-[#12201A] tracking-tight font-headline">
